@@ -1,0 +1,316 @@
+<!DOCTYPE html>
+<!--[if IE 8]><html class="no-js lt-ie9" lang="en" > <![endif]-->
+<!--[if gt IE 8]><!--> <html class="no-js" lang="en" > <!--<![endif]-->
+<head>
+  <meta charset="utf-8">
+  <meta http-equiv="X-UA-Compatible" content="IE=edge">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  
+  
+  <link rel="shortcut icon" href="../img/favicon.ico">
+  <title>Getting Started - Welcome to the Craftr Documentation!</title>
+  <link href='https://fonts.googleapis.com/css?family=Lato:400,700|Roboto+Slab:400,700|Inconsolata:400,700' rel='stylesheet' type='text/css'>
+
+  <link rel="stylesheet" href="../css/theme.css" type="text/css" />
+  <link rel="stylesheet" href="../css/theme_extra.css" type="text/css" />
+  <link rel="stylesheet" href="../css/highlight.css">
+  
+  <script>
+    // Current page data
+    var mkdocs_page_name = "Getting Started";
+    var mkdocs_page_input_path = "getting-started.md";
+    var mkdocs_page_url = "/getting-started/";
+  </script>
+  
+  <script src="../js/jquery-2.1.1.min.js"></script>
+  <script src="../js/modernizr-2.8.3.min.js"></script>
+  <script type="text/javascript" src="../js/highlight.pack.js"></script> 
+  
+</head>
+
+<body class="wy-body-for-nav" role="document">
+
+  <div class="wy-grid-for-nav">
+
+    
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side stickynav">
+      <div class="wy-side-nav-search">
+        <a href=".." class="icon icon-home"> Welcome to the Craftr Documentation!</a>
+        <div role="search">
+  <form id ="rtd-search-form" class="wy-form" action="../search.html" method="get">
+    <input type="text" name="q" placeholder="Search docs" />
+  </form>
+</div>
+      </div>
+
+      <div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="main navigation">
+	<ul class="current">
+          
+            <li>
+    <li class="toctree-l1 ">
+        <a class="" href="..">Home</a>
+        
+    </li>
+<li>
+          
+            <li>
+    <li class="toctree-l1 ">
+        <a class="" href="../changes/">Changelog</a>
+        
+    </li>
+<li>
+          
+            <li>
+    <ul class="subnav">
+    <li><span>Reference</span></li>
+
+        
+            
+    <li class="toctree-l1 current">
+        <a class="current" href="./">Getting Started</a>
+        
+            <ul>
+            
+            </ul>
+        
+    </li>
+
+        
+            
+    <li class="toctree-l1 ">
+        <a class="" href="../config/">Build Configuration</a>
+        
+    </li>
+
+        
+            
+    <li class="toctree-l1 ">
+        <a class="" href="../builtins/">Built-ins</a>
+        
+    </li>
+
+        
+            
+    <li class="toctree-l1 ">
+        <a class="" href="../loaders/">Loaders</a>
+        
+    </li>
+
+        
+            
+    <li class="toctree-l1 ">
+        <a class="" href="../tasks/">Tasks</a>
+        
+    </li>
+
+        
+            
+    <li class="toctree-l1 ">
+        <a class="" href="../generators/">Generators</a>
+        
+    </li>
+
+        
+            
+    <li class="toctree-l1 ">
+        <a class="" href="../transition/">Transition from Craftr 1</a>
+        
+    </li>
+
+        
+            
+    <li class="toctree-l1 ">
+        <a class="" href="../faq/">FAQ</a>
+        
+    </li>
+
+        
+    </ul>
+<li>
+          
+        </ul>
+      </div>
+      &nbsp;
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap">
+
+      
+      <nav class="wy-nav-top" role="navigation" aria-label="top navigation">
+        <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+        <a href="..">Welcome to the Craftr Documentation!</a>
+      </nav>
+
+      
+      <div class="wy-nav-content">
+        <div class="rst-content">
+          <div role="navigation" aria-label="breadcrumbs navigation">
+  <ul class="wy-breadcrumbs">
+    <li><a href="..">Docs</a> &raquo;</li>
+    
+      
+        
+          <li>Reference &raquo;</li>
+        
+      
+    
+    <li>Getting Started</li>
+    <li class="wy-breadcrumbs-aside">
+      
+    </li>
+  </ul>
+  <hr/>
+</div>
+          <div role="main">
+            <div class="section">
+              
+                <blockquote>
+<p><strong>Note</strong>: The example we create in this tutorial can also be found in the
+<a href="../examples/examples.c">examples/examples.c</a> folder.</p>
+</blockquote>
+<p>Every project that is compiled with Craftr needs at least a manifest and a
+build script. Craftr provides a convenient way to generate a template for you.
+Choose your project directory and run the following command:</p>
+<pre><code>$ craftr startpackage examples.c .
+$ ls
+Craftrfile  manifest.json
+$ cat Craftrfile
+# examples.c
+$ cat manifest.json
+{
+  "name": "examples.c",
+  "version": "1.0.0",
+  "author": "",
+  "url": "",
+  "dependencies": {},
+  "options": {}
+}
+</code></pre>
+<p>We're going to compile some C source files into an executable program. For
+that we need the <code>craftr.lang.cxx</code> package that provides us with a
+cross-platform interface to compile C and C++ source code. Open the
+<code>manifest.json</code> and add <code>craftr.lang.cxx</code> to the dependencies.</p>
+<pre><code class="json">$ cat manifest.json
+{
+  &quot;name&quot;: &quot;examples.c&quot;,
+  &quot;version&quot;: &quot;1.0.0&quot;,
+  &quot;author&quot;: &quot;&quot;,
+  &quot;url&quot;: &quot;&quot;,
+  &quot;dependencies&quot;: {
+    &quot;craftr.lang.cxx&quot;: &quot;1.x&quot;
+  },
+  &quot;options&quot;: {}
+}
+</code></pre>
+
+<blockquote>
+<p>The <code>"1.x"</code> part is a version selector that specifies the version of the
+package that we depend on. We use <code>1.x</code> to denote that we accept any version
+which a major version number of <code>1</code>. For more information on version
+selectors, check out the <a href="https://github.com/NiklasRosenstein/py-nr/blob/b26ceffbd8722e535c49fc6f74715d5a0641a35e/nr/types/version.py#L268-L283"><code>VersionSelector</code> documentation</a>.</p>
+</blockquote>
+<p>Now let's assume we have the following two C source files in our project
+directory as well.</p>
+<pre><code class="c">$ cat src/main.c
+
+extern void say_hello(char const* name, char const* weather);
+
+int main(int argc, char** argv) {
+  if (argc != 3) {
+    printf(&quot;error: usage: %s name weather\n&quot;);
+    return 0;
+  }
+  say_hello(argv[1], argv[2]);
+  return 0;
+}
+
+$ cat src/hello.c
+
+#include &lt;stdio.h&gt;
+
+void say_hello(char const* name, char const* weather) {
+  printf(&quot;Hello, %s. You are facing a %s day\n&quot;, name, weather);
+}
+</code></pre>
+
+<p>We want our build script to compile these two files into object files and then
+link them together into an executable. Additionally, the build script should
+allow us to make a test run of the program.</p>
+<pre><code class="python">$ cat Craftrfile
+# examples.c
+
+from os import environ
+load_module('craftr.lang.cxx.*')
+
+program = cxx_binary(
+  inputs = c_compile(sources = glob(['src/*.c'])),
+  output = 'main'
+)
+
+run = runtarget(program, environ.get('USERNAME', 'John'), &quot;sunny&quot;)
+</code></pre>
+
+<p>And that's it. To compile our program, we first need to export a Ninja build
+manifest, then we can build it. Our <code>run</code> target is explicit by default, meaning
+that Ninja will not run it unless it is specified as an input or specified as
+a target to build on the command-line.</p>
+<pre><code>$ craftr export
+craftr.lang.cxx: loading "craftr.lang.cxx.msvc" (with craftr.lang.cxx.msvc.toolkit="")
+craftr.lang.cxx:   cxc.name="msvc"
+craftr.lang.cxx:   cxc.target_arch="x64"
+craftr.lang.cxx:   cxc.version="19.00.23918"
+$ craftr build
+[1/3] msvc compile (C:\Users\niklas\Desktop\test\build\examples.c-1.0.0\obj\src\main.obj)
+[2/3] msvc compile (C:\Users\niklas\Desktop\test\build\examples.c-1.0.0\obj\src\hello.obj)
+[3/3] msvc link (C:\Users\niklas\Desktop\test\build\examples.c-1.0.0\main.exe)
+$ craftr build run
+[0/1] C:\Users\niklas\Desktop\test\build\examples.c-1.0.0\main.exe niklas sunny
+Hello, niklas. You are facing a sunny day
+</code></pre>
+              
+            </div>
+          </div>
+          <footer>
+  
+    <div class="rst-footer-buttons" role="navigation" aria-label="footer navigation">
+      
+        <a href="../config/" class="btn btn-neutral float-right" title="Build Configuration">Next <span class="icon icon-circle-arrow-right"></span></a>
+      
+      
+        <a href="../changes/" class="btn btn-neutral" title="Changelog"><span class="icon icon-circle-arrow-left"></span> Previous</a>
+      
+    </div>
+  
+
+  <hr/>
+
+  <div role="contentinfo">
+    <!-- Copyright etc -->
+    
+  </div>
+
+  Built with <a href="http://www.mkdocs.org">MkDocs</a> using a <a href="https://github.com/snide/sphinx_rtd_theme">theme</a> provided by <a href="https://readthedocs.org">Read the Docs</a>.
+</footer>
+	  
+        </div>
+      </div>
+
+    </section>
+    
+  </div>
+
+  <div class="rst-versions" role="note" style="cursor: pointer">
+    <span class="rst-current-version" data-toggle="rst-current-version">
+      
+      
+        <span><a href="../changes/" style="color: #fcfcfc;">&laquo; Previous</a></span>
+      
+      
+        <span style="margin-left: 15px"><a href="../config/" style="color: #fcfcfc">Next &raquo;</a></span>
+      
+    </span>
+</div>
+    <script src="../js/theme.js"></script>
+
+</body>
+</html>

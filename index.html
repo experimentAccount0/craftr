@@ -1,0 +1,313 @@
+<!DOCTYPE html>
+<!--[if IE 8]><html class="no-js lt-ie9" lang="en" > <![endif]-->
+<!--[if gt IE 8]><!--> <html class="no-js" lang="en" > <!--<![endif]-->
+<head>
+  <meta charset="utf-8">
+  <meta http-equiv="X-UA-Compatible" content="IE=edge">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta name="description" content="None">
+  
+  <link rel="shortcut icon" href="./img/favicon.ico">
+  <title>Home - Welcome to the Craftr Documentation!</title>
+  <link href='https://fonts.googleapis.com/css?family=Lato:400,700|Roboto+Slab:400,700|Inconsolata:400,700' rel='stylesheet' type='text/css'>
+
+  <link rel="stylesheet" href="./css/theme.css" type="text/css" />
+  <link rel="stylesheet" href="./css/theme_extra.css" type="text/css" />
+  <link rel="stylesheet" href="./css/highlight.css">
+  
+  <script>
+    // Current page data
+    var mkdocs_page_name = "Home";
+    var mkdocs_page_input_path = "index.md";
+    var mkdocs_page_url = "/";
+  </script>
+  
+  <script src="./js/jquery-2.1.1.min.js"></script>
+  <script src="./js/modernizr-2.8.3.min.js"></script>
+  <script type="text/javascript" src="./js/highlight.pack.js"></script> 
+  
+</head>
+
+<body class="wy-body-for-nav" role="document">
+
+  <div class="wy-grid-for-nav">
+
+    
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side stickynav">
+      <div class="wy-side-nav-search">
+        <a href="." class="icon icon-home"> Welcome to the Craftr Documentation!</a>
+        <div role="search">
+  <form id ="rtd-search-form" class="wy-form" action="./search.html" method="get">
+    <input type="text" name="q" placeholder="Search docs" />
+  </form>
+</div>
+      </div>
+
+      <div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="main navigation">
+	<ul class="current">
+          
+            <li>
+    <li class="toctree-l1 current">
+        <a class="current" href=".">Home</a>
+        
+            <ul>
+            
+                <li class="toctree-l3"><a href="#craftr-2x">Craftr 2.x</a></li>
+                
+                    <li><a class="toctree-l4" href="#features">Features</a></li>
+                
+                    <li><a class="toctree-l4" href="#contributions">Contributions</a></li>
+                
+                    <li><a class="toctree-l4" href="#installation">Installation</a></li>
+                
+                    <li><a class="toctree-l4" href="#requirements">Requirements</a></li>
+                
+                    <li><a class="toctree-l4" href="#license">License</a></li>
+                
+            
+            </ul>
+        
+    </li>
+<li>
+          
+            <li>
+    <li class="toctree-l1 ">
+        <a class="" href="changes/">Changelog</a>
+        
+    </li>
+<li>
+          
+            <li>
+    <ul class="subnav">
+    <li><span>Reference</span></li>
+
+        
+            
+    <li class="toctree-l1 ">
+        <a class="" href="getting-started/">Getting Started</a>
+        
+    </li>
+
+        
+            
+    <li class="toctree-l1 ">
+        <a class="" href="config/">Build Configuration</a>
+        
+    </li>
+
+        
+            
+    <li class="toctree-l1 ">
+        <a class="" href="builtins/">Built-ins</a>
+        
+    </li>
+
+        
+            
+    <li class="toctree-l1 ">
+        <a class="" href="loaders/">Loaders</a>
+        
+    </li>
+
+        
+            
+    <li class="toctree-l1 ">
+        <a class="" href="tasks/">Tasks</a>
+        
+    </li>
+
+        
+            
+    <li class="toctree-l1 ">
+        <a class="" href="generators/">Generators</a>
+        
+    </li>
+
+        
+            
+    <li class="toctree-l1 ">
+        <a class="" href="transition/">Transition from Craftr 1</a>
+        
+    </li>
+
+        
+            
+    <li class="toctree-l1 ">
+        <a class="" href="faq/">FAQ</a>
+        
+    </li>
+
+        
+    </ul>
+<li>
+          
+        </ul>
+      </div>
+      &nbsp;
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap">
+
+      
+      <nav class="wy-nav-top" role="navigation" aria-label="top navigation">
+        <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+        <a href=".">Welcome to the Craftr Documentation!</a>
+      </nav>
+
+      
+      <div class="wy-nav-content">
+        <div class="rst-content">
+          <div role="navigation" aria-label="breadcrumbs navigation">
+  <ul class="wy-breadcrumbs">
+    <li><a href=".">Docs</a> &raquo;</li>
+    
+      
+    
+    <li>Home</li>
+    <li class="wy-breadcrumbs-aside">
+      
+    </li>
+  </ul>
+  <hr/>
+</div>
+          <div role="main">
+            <div class="section">
+              
+                <h1 id="craftr-2x">Craftr 2.x</h1>
+<p><a href="https://pypi.python.org/pypi/craftr-build"><img alt="PyPI Version" src="https://img.shields.io/pypi/v/craftr-build.svg" /></a>
+<a href="https://bestpractices.coreinfrastructure.org/projects/530"><img alt="CII Best Practices" src="https://bestpractices.coreinfrastructure.org/projects/530/badge" /></a></p>
+<blockquote>
+<p>Note: Craftr 2.x is different from the initial Craftr version in many ways
+and can not be used interchangibly. The latest version of Craftr 1.x can be
+found under the <a href="https://github.com/craftr-build/craftr/tree/v1.1.4-unreleased">v1.1.4-unreleased</a>
+tag.</p>
+</blockquote>
+<p>Craftr is a meta build system based on <a href="https://www.python.org/">Python 3</a> scripts which produces
+<a href="https://github.com/ninja-build/ninja">Ninja</a> build manifests. It enforces the use of modular build definitions
+that can be re-used easily. Craftr provides a standard library to support
+various programming languages and common libraries out of the box:</p>
+<ul>
+<li>C/C++ (cURL, DLib, GoogleTest, GoogleBenchmark, tiny-dnn, Qt5, SDL2, Boost, getopt)</li>
+<li>Cython</li>
+<li>C#</li>
+<li>Java</li>
+<li>Vala</li>
+</ul>
+<p>Additional links:</p>
+<ul>
+<li><a href="https://github.com/craftr-build/craftr/tree/master/doc">Documentation</a></li>
+<li><a href="https://github.com/craftr-build/craftr/tree/master/doc/getting-started.md">Getting Started</a></li>
+<li><a href="https://github.com/craftr-build/craftr/wiki">Craftr 2.x Wiki</a></li>
+</ul>
+<h2 id="features">Features</h2>
+<ul>
+<li>[x] Moduler build scripts (Craftr packages) with dependency management</li>
+<li>[x] Uses <code>pkg-config</code> where available, otherwise (eg. on Windows) the source
+      code will be downloaded and compiled</li>
+<li>[x] Tasks allow to embed actual Python functions into the build graph</li>
+<li>[ ] Package manager (hosted on <a href="https://craftr.net">Craftr.net</a>)</li>
+<li>[ ] Dependency-version lockfiles</li>
+</ul>
+<h2 id="contributions">Contributions</h2>
+<p>Craftr is a one-man-show and an immature piece of software. I am happy about
+every contribution and feedback, be it questions, criticism, feature requests,
+bug reports or pull requests!</p>
+<p>I would love to see Craftr used by more people. If you think it's worth to
+give it a shot, don't hesitate to ask if you're getting stuck!</p>
+<p>Issue Tracker: https://github.com/craftr-build/craftr/issues
+Twitter: <a href="./twitter.com/rosensteinn">@rosensteinn</a> <a href="https://twitter.com/craftr_build">@craftr_build</a></p>
+<h2 id="installation">Installation</h2>
+<p>Craftr 2.x does not have a stable release yet, though the <code>2.0.0.devx</code> tags
+are already available on PyPI. If you do not explicitly specify the version
+number, Pip will install Craftr 1.x.</p>
+<pre><code>$ pip install craftr-build==2.0.0.dev5
+</code></pre>
+<p>To get the cutting edge development version, I suggest installing Craftr
+from the Git repository into a virtualenv.</p>
+<pre><code>$ virtualenv -p python3 env &amp;&amp; source env/bin/activate
+$ git clone https://github.com/craftr-build/craftr.git -b development
+$ cd craftr
+$ pip install -e .
+</code></pre>
+<h2 id="requirements">Requirements</h2>
+<ul>
+<li><a href="https://github.com/ninja-build/ninja">Ninja</a> 1.7.1 or newer</li>
+<li><a href="https://www.python.org/">Python</a> 3.4, 3.5</li>
+</ul>
+<h3 id="python">Python</h3>
+<ul>
+<li><a href="https://pypi.python.org/pypi/colorama">colorama</a> (optional, Windows)</li>
+<li><a href="https://pypi.python.org/pypi/glob2">glob2</a></li>
+<li><a href="https://pypi.python.org/pypi/jsonschema">jsonschema</a></li>
+<li><a href="https://pypi.python.org/pypi/ninja_syntax">ninja_syntax</a></li>
+<li><a href="https://pypi.python.org/pypi/nr">nr</a></li>
+<li><a href="https://pypi.python.org/pypi/py-require">py-require</a></li>
+<li><a href="https://pypi.python.org/pypi/termcolor">termcolor</a> (optional)</li>
+<li><a href="https://pypi.python.org/pypi/werkzeug">werkzeug</a></li>
+</ul>
+<h2 id="license">License</h2>
+<pre><code>The Craftr build system
+Copyright (C) 2016  Niklas Rosenstein
+
+This program is free software: you can redistribute it and/or modify
+it under the terms of the GNU General Public License as published by
+the Free Software Foundation, either version 3 of the License, or
+(at your option) any later version.
+
+This program is distributed in the hope that it will be useful,
+but WITHOUT ANY WARRANTY; without even the implied warranty of
+MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+GNU General Public License for more details.
+
+You should have received a copy of the GNU General Public License
+along with this program.  If not, see &lt;http://www.gnu.org/licenses/&gt;.
+</code></pre>
+<p>For more information, see the <code>LICENSE.txt</code> file.</p>
+              
+            </div>
+          </div>
+          <footer>
+  
+    <div class="rst-footer-buttons" role="navigation" aria-label="footer navigation">
+      
+        <a href="changes/" class="btn btn-neutral float-right" title="Changelog">Next <span class="icon icon-circle-arrow-right"></span></a>
+      
+      
+    </div>
+  
+
+  <hr/>
+
+  <div role="contentinfo">
+    <!-- Copyright etc -->
+    
+  </div>
+
+  Built with <a href="http://www.mkdocs.org">MkDocs</a> using a <a href="https://github.com/snide/sphinx_rtd_theme">theme</a> provided by <a href="https://readthedocs.org">Read the Docs</a>.
+</footer>
+	  
+        </div>
+      </div>
+
+    </section>
+    
+  </div>
+
+  <div class="rst-versions" role="note" style="cursor: pointer">
+    <span class="rst-current-version" data-toggle="rst-current-version">
+      
+      
+      
+        <span style="margin-left: 15px"><a href="changes/" style="color: #fcfcfc">Next &raquo;</a></span>
+      
+    </span>
+</div>
+    <script src="./js/theme.js"></script>
+
+</body>
+</html>
+
+<!--
+MkDocs version : 0.16.1
+Build Date UTC : 2017-01-05 19:32:52
+-->

@@ -1,0 +1,396 @@
+<!DOCTYPE html>
+<!--[if IE 8]><html class="no-js lt-ie9" lang="en" > <![endif]-->
+<!--[if gt IE 8]><!--> <html class="no-js" lang="en" > <!--<![endif]-->
+<head>
+  <meta charset="utf-8">
+  <meta http-equiv="X-UA-Compatible" content="IE=edge">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  
+  
+  <link rel="shortcut icon" href="../img/favicon.ico">
+  <title>Built-ins - Welcome to the Craftr Documentation!</title>
+  <link href='https://fonts.googleapis.com/css?family=Lato:400,700|Roboto+Slab:400,700|Inconsolata:400,700' rel='stylesheet' type='text/css'>
+
+  <link rel="stylesheet" href="../css/theme.css" type="text/css" />
+  <link rel="stylesheet" href="../css/theme_extra.css" type="text/css" />
+  <link rel="stylesheet" href="../css/highlight.css">
+  
+  <script>
+    // Current page data
+    var mkdocs_page_name = "Built-ins";
+    var mkdocs_page_input_path = "builtins.md";
+    var mkdocs_page_url = "/builtins/";
+  </script>
+  
+  <script src="../js/jquery-2.1.1.min.js"></script>
+  <script src="../js/modernizr-2.8.3.min.js"></script>
+  <script type="text/javascript" src="../js/highlight.pack.js"></script> 
+  
+</head>
+
+<body class="wy-body-for-nav" role="document">
+
+  <div class="wy-grid-for-nav">
+
+    
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side stickynav">
+      <div class="wy-side-nav-search">
+        <a href=".." class="icon icon-home"> Welcome to the Craftr Documentation!</a>
+        <div role="search">
+  <form id ="rtd-search-form" class="wy-form" action="../search.html" method="get">
+    <input type="text" name="q" placeholder="Search docs" />
+  </form>
+</div>
+      </div>
+
+      <div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="main navigation">
+	<ul class="current">
+          
+            <li>
+    <li class="toctree-l1 ">
+        <a class="" href="..">Home</a>
+        
+    </li>
+<li>
+          
+            <li>
+    <li class="toctree-l1 ">
+        <a class="" href="../changes/">Changelog</a>
+        
+    </li>
+<li>
+          
+            <li>
+    <ul class="subnav">
+    <li><span>Reference</span></li>
+
+        
+            
+    <li class="toctree-l1 ">
+        <a class="" href="../getting-started/">Getting Started</a>
+        
+    </li>
+
+        
+            
+    <li class="toctree-l1 ">
+        <a class="" href="../config/">Build Configuration</a>
+        
+    </li>
+
+        
+            
+    <li class="toctree-l1 current">
+        <a class="current" href="./">Built-ins</a>
+        
+            <ul>
+            
+                <li class="toctree-l3"><a href="#package-specific-variables">Package-specific variables</a></li>
+                
+                    <li><a class="toctree-l4" href="#project_dir">project_dir</a></li>
+                
+                    <li><a class="toctree-l4" href="#options">options</a></li>
+                
+            
+                <li class="toctree-l3"><a href="#variables">Variables</a></li>
+                
+                    <li><a class="toctree-l4" href="#logger">logger</a></li>
+                
+                    <li><a class="toctree-l4" href="#session">session</a></li>
+                
+            
+                <li class="toctree-l3"><a href="#data">Data</a></li>
+                
+                    <li><a class="toctree-l4" href="#default">Default</a></li>
+                
+            
+                <li class="toctree-l3"><a href="#functions">Functions</a></li>
+                
+                    <li><a class="toctree-l4" href="#gtn">gtn()</a></li>
+                
+                    <li><a class="toctree-l4" href="#include_defs">include_defs()</a></li>
+                
+                    <li><a class="toctree-l4" href="#glob">glob()</a></li>
+                
+                    <li><a class="toctree-l4" href="#local">local()</a></li>
+                
+                    <li><a class="toctree-l4" href="#buildlocal">buildlocal()</a></li>
+                
+                    <li><a class="toctree-l4" href="#relocate_files">relocate_files()</a></li>
+                
+                    <li><a class="toctree-l4" href="#filter">filter()</a></li>
+                
+                    <li><a class="toctree-l4" href="#map">map()</a></li>
+                
+                    <li><a class="toctree-l4" href="#zip">zip()</a></li>
+                
+                    <li><a class="toctree-l4" href="#load">load()</a></li>
+                
+                    <li><a class="toctree-l4" href="#load_file">load_file()</a></li>
+                
+                    <li><a class="toctree-l4" href="#gentool">gentool()</a></li>
+                
+                    <li><a class="toctree-l4" href="#gentarget">gentarget()</a></li>
+                
+                    <li><a class="toctree-l4" href="#gentask">gentask()</a></li>
+                
+                    <li><a class="toctree-l4" href="#task">task()</a></li>
+                
+                    <li><a class="toctree-l4" href="#genalias">genalias()</a></li>
+                
+                    <li><a class="toctree-l4" href="#runtarget">runtarget()</a></li>
+                
+                    <li><a class="toctree-l4" href="#write_response_file">write_response_file()</a></li>
+                
+                    <li><a class="toctree-l4" href="#error">error()</a></li>
+                
+                    <li><a class="toctree-l4" href="#return_">return_()</a></li>
+                
+                    <li><a class="toctree-l4" href="#append_path">append_PATH()</a></li>
+                
+                    <li><a class="toctree-l4" href="#external_fileurls-filename-none-directory-none-copy_file_urls-false-name-none">external_file(*urls, filename = None, directory = None, copy_file_urls = False, name = None)</a></li>
+                
+                    <li><a class="toctree-l4" href="#external_archiveurls-directory-none-name-none">external_archive(*urls, directory = None, name = None)</a></li>
+                
+                    <li><a class="toctree-l4" href="#pkg_configpkg_name-static-false">pkg_config(pkg_name, static = False)</a></li>
+                
+            
+                <li class="toctree-l3"><a href="#classes">Classes</a></li>
+                
+                    <li><a class="toctree-l4" href="#namespace">Namespace</a></li>
+                
+                    <li><a class="toctree-l4" href="#targetbuilder">TargetBuilder</a></li>
+                
+                    <li><a class="toctree-l4" href="#framework">Framework</a></li>
+                
+            
+                <li class="toctree-l3"><a href="#exceptions">Exceptions</a></li>
+                
+                    <li><a class="toctree-l4" href="#moduleerror">ModuleError</a></li>
+                
+                    <li><a class="toctree-l4" href="#modulereturn">ModuleReturn</a></li>
+                
+                    <li><a class="toctree-l4" href="#modulenotfound">ModuleNotFound</a></li>
+                
+                    <li><a class="toctree-l4" href="#tooldetectionerror">ToolDetectionError</a></li>
+                
+            
+                <li class="toctree-l3"><a href="#modules">Modules</a></li>
+                
+                    <li><a class="toctree-l4" href="#path">path</a></li>
+                
+                    <li><a class="toctree-l4" href="#shell">shell</a></li>
+                
+                    <li><a class="toctree-l4" href="#platform">platform</a></li>
+                
+            
+            </ul>
+        
+    </li>
+
+        
+            
+    <li class="toctree-l1 ">
+        <a class="" href="../loaders/">Loaders</a>
+        
+    </li>
+
+        
+            
+    <li class="toctree-l1 ">
+        <a class="" href="../tasks/">Tasks</a>
+        
+    </li>
+
+        
+            
+    <li class="toctree-l1 ">
+        <a class="" href="../generators/">Generators</a>
+        
+    </li>
+
+        
+            
+    <li class="toctree-l1 ">
+        <a class="" href="../transition/">Transition from Craftr 1</a>
+        
+    </li>
+
+        
+            
+    <li class="toctree-l1 ">
+        <a class="" href="../faq/">FAQ</a>
+        
+    </li>
+
+        
+    </ul>
+<li>
+          
+        </ul>
+      </div>
+      &nbsp;
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap">
+
+      
+      <nav class="wy-nav-top" role="navigation" aria-label="top navigation">
+        <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+        <a href="..">Welcome to the Craftr Documentation!</a>
+      </nav>
+
+      
+      <div class="wy-nav-content">
+        <div class="rst-content">
+          <div role="navigation" aria-label="breadcrumbs navigation">
+  <ul class="wy-breadcrumbs">
+    <li><a href="..">Docs</a> &raquo;</li>
+    
+      
+        
+          <li>Reference &raquo;</li>
+        
+      
+    
+    <li>Built-ins</li>
+    <li class="wy-breadcrumbs-aside">
+      
+    </li>
+  </ul>
+  <hr/>
+</div>
+          <div role="main">
+            <div class="section">
+              
+                <p>This document describes the available built-in data members and functions in
+a <code>Craftrfile</code> build script. Except for the package-specific variables, all
+built-in functions and classes are defined in the <code>craftr.defaults</code> module.</p>
+<h2 id="package-specific-variables">Package-specific variables</h2>
+<h3 id="project_dir"><code>project_dir</code></h3>
+<p>The project directory. This is usually the same as the directory of the
+Craftr package manifest (<code>manifest.json</code>), but can be altered with the
+<code>project_dir</code> field in the manifest.</p>
+<p>This variable has direct influence on the behaviour of the <code>local()</code> function.</p>
+<h3 id="options"><code>options</code></h3>
+<p>An object that has as its members all options defined in the package manifest.</p>
+<pre><code class="python">if options.bad_weather:
+  logger.warn('be careful, you are choosing a build environment with bad weather')
+</code></pre>
+
+<h2 id="variables">Variables</h2>
+<h3 id="logger"><code>logger</code></h3>
+<p>A <code>craftr.core.logging.BaseLogger</code> instance. Use its <code>.debug()</code>, <code>.info()</code>,
+<code>.warn()</code> and <code>.error()</code> members to print information during the execution of
+the build script.</p>
+<p>See also: <code>error()</code> built-in function</p>
+<h3 id="session"><code>session</code></h3>
+<p>The current <code>craftr.core.session.Session</code> object that manages the build process
+and Craftr packages. Sometimes you will want to modify its <code>.options</code> member
+or retrieve the currently executed Craftr module from its <code>.module</code> member.</p>
+<h2 id="data">Data</h2>
+<h3 id="default"><code>Default</code></h3>
+<p>A singleton that can be used in places where <code>None</code> can not be used as a
+placeholder because it infers another special meaning. This is often used
+for <code>suffix</code> parameters of target generators.</p>
+<pre><code class="python">if suffix is Default:
+  suffix = derive_suffix_from_context()
+if suffix is not None:
+  output = path.addsuffix(output, suffix)
+</code></pre>
+
+<h2 id="functions">Functions</h2>
+<h3 id="gtn"><code>gtn()</code></h3>
+<h3 id="include_defs"><code>include_defs()</code></h3>
+<h3 id="glob"><code>glob()</code></h3>
+<h3 id="local"><code>local()</code></h3>
+<h3 id="buildlocal"><code>buildlocal()</code></h3>
+<h3 id="relocate_files"><code>relocate_files()</code></h3>
+<h3 id="filter"><code>filter()</code></h3>
+<h3 id="map"><code>map()</code></h3>
+<h3 id="zip"><code>zip()</code></h3>
+<h3 id="load"><code>load()</code></h3>
+<h3 id="load_file"><code>load_file()</code></h3>
+<h3 id="gentool"><code>gentool()</code></h3>
+<h3 id="gentarget"><code>gentarget()</code></h3>
+<h3 id="gentask"><code>gentask()</code></h3>
+<h3 id="task"><code>task()</code></h3>
+<h3 id="genalias"><code>genalias()</code></h3>
+<h3 id="runtarget"><code>runtarget()</code></h3>
+<h3 id="write_response_file"><code>write_response_file()</code></h3>
+<h3 id="error"><code>error()</code></h3>
+<h3 id="return_"><code>return_()</code></h3>
+<h3 id="append_path"><code>append_PATH()</code></h3>
+<h3 id="external_fileurls-filename-none-directory-none-copy_file_urls-false-name-none"><code>external_file(*urls, filename = None, directory = None, copy_file_urls = False, name = None)</code></h3>
+<h3 id="external_archiveurls-directory-none-name-none"><code>external_archive(*urls, directory = None, name = None)</code></h3>
+<h3 id="pkg_configpkg_name-static-false"><code>pkg_config(pkg_name, static = False)</code></h3>
+<p>Uses <code>pkg-config</code> to read the flags for the library specified with <em>pkg_name</em>
+and returns a Framework object. If <code>pkg-config</code> is not available on the platform
+or the library can not be found, <code>pkg_config.Error</code> is raised.</p>
+<pre><code class="python">from craftr.loaders import pkg_config
+try:
+  cURL = pkg_config('libcurl')
+except pkg_config.Error:
+  # compile from source or whatever
+</code></pre>
+
+<h2 id="classes">Classes</h2>
+<h3 id="namespace"><code>Namespace</code></h3>
+<h3 id="targetbuilder"><code>TargetBuilder</code></h3>
+<h3 id="framework"><code>Framework</code></h3>
+<h2 id="exceptions">Exceptions</h2>
+<h3 id="moduleerror"><code>ModuleError</code></h3>
+<h3 id="modulereturn"><code>ModuleReturn</code></h3>
+<h3 id="modulenotfound"><code>ModuleNotFound</code></h3>
+<h3 id="tooldetectionerror"><code>ToolDetectionError</code></h3>
+<h2 id="modules">Modules</h2>
+<h3 id="path"><code>path</code></h3>
+<h3 id="shell"><code>shell</code></h3>
+<h3 id="platform"><code>platform</code></h3>
+              
+            </div>
+          </div>
+          <footer>
+  
+    <div class="rst-footer-buttons" role="navigation" aria-label="footer navigation">
+      
+        <a href="../loaders/" class="btn btn-neutral float-right" title="Loaders">Next <span class="icon icon-circle-arrow-right"></span></a>
+      
+      
+        <a href="../config/" class="btn btn-neutral" title="Build Configuration"><span class="icon icon-circle-arrow-left"></span> Previous</a>
+      
+    </div>
+  
+
+  <hr/>
+
+  <div role="contentinfo">
+    <!-- Copyright etc -->
+    
+  </div>
+
+  Built with <a href="http://www.mkdocs.org">MkDocs</a> using a <a href="https://github.com/snide/sphinx_rtd_theme">theme</a> provided by <a href="https://readthedocs.org">Read the Docs</a>.
+</footer>
+	  
+        </div>
+      </div>
+
+    </section>
+    
+  </div>
+
+  <div class="rst-versions" role="note" style="cursor: pointer">
+    <span class="rst-current-version" data-toggle="rst-current-version">
+      
+      
+        <span><a href="../config/" style="color: #fcfcfc;">&laquo; Previous</a></span>
+      
+      
+        <span style="margin-left: 15px"><a href="../loaders/" style="color: #fcfcfc">Next &raquo;</a></span>
+      
+    </span>
+</div>
+    <script src="../js/theme.js"></script>
+
+</body>
+</html>

@@ -1,0 +1,283 @@
+<!DOCTYPE html>
+<!--[if IE 8]><html class="no-js lt-ie9" lang="en" > <![endif]-->
+<!--[if gt IE 8]><!--> <html class="no-js" lang="en" > <!--<![endif]-->
+<head>
+  <meta charset="utf-8">
+  <meta http-equiv="X-UA-Compatible" content="IE=edge">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  
+  
+  <link rel="shortcut icon" href="../img/favicon.ico">
+  <title>Changelog - Welcome to the Craftr Documentation!</title>
+  <link href='https://fonts.googleapis.com/css?family=Lato:400,700|Roboto+Slab:400,700|Inconsolata:400,700' rel='stylesheet' type='text/css'>
+
+  <link rel="stylesheet" href="../css/theme.css" type="text/css" />
+  <link rel="stylesheet" href="../css/theme_extra.css" type="text/css" />
+  <link rel="stylesheet" href="../css/highlight.css">
+  
+  <script>
+    // Current page data
+    var mkdocs_page_name = "Changelog";
+    var mkdocs_page_input_path = "changes.md";
+    var mkdocs_page_url = "/changes/";
+  </script>
+  
+  <script src="../js/jquery-2.1.1.min.js"></script>
+  <script src="../js/modernizr-2.8.3.min.js"></script>
+  <script type="text/javascript" src="../js/highlight.pack.js"></script> 
+  
+</head>
+
+<body class="wy-body-for-nav" role="document">
+
+  <div class="wy-grid-for-nav">
+
+    
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side stickynav">
+      <div class="wy-side-nav-search">
+        <a href=".." class="icon icon-home"> Welcome to the Craftr Documentation!</a>
+        <div role="search">
+  <form id ="rtd-search-form" class="wy-form" action="../search.html" method="get">
+    <input type="text" name="q" placeholder="Search docs" />
+  </form>
+</div>
+      </div>
+
+      <div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="main navigation">
+	<ul class="current">
+          
+            <li>
+    <li class="toctree-l1 ">
+        <a class="" href="..">Home</a>
+        
+    </li>
+<li>
+          
+            <li>
+    <li class="toctree-l1 current">
+        <a class="current" href="./">Changelog</a>
+        
+            <ul>
+            
+                <li class="toctree-l3"><a href="#v200dev6">v2.0.0.dev6</a></li>
+                
+            
+            </ul>
+        
+    </li>
+<li>
+          
+            <li>
+    <ul class="subnav">
+    <li><span>Reference</span></li>
+
+        
+            
+    <li class="toctree-l1 ">
+        <a class="" href="../getting-started/">Getting Started</a>
+        
+    </li>
+
+        
+            
+    <li class="toctree-l1 ">
+        <a class="" href="../config/">Build Configuration</a>
+        
+    </li>
+
+        
+            
+    <li class="toctree-l1 ">
+        <a class="" href="../builtins/">Built-ins</a>
+        
+    </li>
+
+        
+            
+    <li class="toctree-l1 ">
+        <a class="" href="../loaders/">Loaders</a>
+        
+    </li>
+
+        
+            
+    <li class="toctree-l1 ">
+        <a class="" href="../tasks/">Tasks</a>
+        
+    </li>
+
+        
+            
+    <li class="toctree-l1 ">
+        <a class="" href="../generators/">Generators</a>
+        
+    </li>
+
+        
+            
+    <li class="toctree-l1 ">
+        <a class="" href="../transition/">Transition from Craftr 1</a>
+        
+    </li>
+
+        
+            
+    <li class="toctree-l1 ">
+        <a class="" href="../faq/">FAQ</a>
+        
+    </li>
+
+        
+    </ul>
+<li>
+          
+        </ul>
+      </div>
+      &nbsp;
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap">
+
+      
+      <nav class="wy-nav-top" role="navigation" aria-label="top navigation">
+        <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+        <a href="..">Welcome to the Craftr Documentation!</a>
+      </nav>
+
+      
+      <div class="wy-nav-content">
+        <div class="rst-content">
+          <div role="navigation" aria-label="breadcrumbs navigation">
+  <ul class="wy-breadcrumbs">
+    <li><a href="..">Docs</a> &raquo;</li>
+    
+      
+    
+    <li>Changelog</li>
+    <li class="wy-breadcrumbs-aside">
+      
+    </li>
+  </ul>
+  <hr/>
+</div>
+          <div role="main">
+            <div class="section">
+              
+                <h1 id="v200dev6">v2.0.0.dev6</h1>
+<p>API Changes</p>
+<ul>
+<li>add <code>pkg_config(static = False)</code> parameter</li>
+<li>add <code>pkg_config()</code>, <code>external_file()</code> and <code>external_archive()</code> to <code>craftr/defaults.py</code></li>
+<li>add <code>glob(ignore_false_excludes=False)</code> parameter</li>
+<li>add <code>BaseLogger.flush()</code> method</li>
+<li>add <code>craftr.utils.path.getmtime()</code> and <code>.getimtime()</code></li>
+<li>add <code>write_response_file(suffix='')</code> parameter</li>
+<li>add <code>Default</code> singleton to built-in namespace</li>
+<li>add <code>gentask()</code> and <code>task()</code> built-in functions (see #163)</li>
+<li>change <code>Target</code> objects can now be passed to the <code>frameworks = [...]</code> argument
+  of target generators that use the <code>TargetBuilder</code> class. These input targets
+  will automatically added to the implicit dependencies and their frameworks
+  be added</li>
+<li>change <code>Tool</code> objects can now be passed into the <code>commands = [[...]]</code> argument
+  of targets generators</li>
+<li>change <code>path.norm()</code> now makes sure that path is lowercased on Windows</li>
+<li>change <code>load_file()</code> now adds the loaded file to <code>Module.dependent_files</code></li>
+<li>rename <code>load_module()</code> to <code>load()</code>, using the old name displays a warning</li>
+</ul>
+<p>Library Changes</p>
+<ul>
+<li>add <code>craftr.lib.sdl2</code> (tested on Windows only)</li>
+<li>add <code>craftr.lib.zlib</code> (tested on Windows only)</li>
+<li>add <code>uic()</code> and <code>moc()</code> target generators to <code>craftr.lib.qt5</code> (tested on Windows only)</li>
+<li>add support for <code>source_directory</code> argument in <code>cxx.c_compile()</code> and <code>cxx.cpp_compile()</code>
+  (actually implemented in <code>craftr.lang.cxx.common</code> and <code>craftr.lang.cxx.msvc</code>), see #154</li>
+<li>add <code>craftr.lang.csharp:compile()</code> to be used for unstarred import, and add docstrings</li>
+<li>add <code>exflags</code> option to <code>craftr.lang.cxx.common</code> module (see #152)</li>
+<li>change <code>craftr.lib.cURLpp</code> always requires RTTI enabled</li>
+<li>change <code>craftr.lang.cxx.msvc</code> now adds the static input library generated for DLLs to the outputs</li>
+<li>change MSVC <code>compile()</code> now supports response-files for long list of includes</li>
+</ul>
+<p>Behaviour Changes</p>
+<ul>
+<li>Experimental change not raising an exception in <code>craftr/core/build.py</code> inside
+  <code>replace_argument_inout_vars()</code> when multiple outputs are specified to support
+  the previously mentioned change</li>
+<li>Update verbose logging behaviour when the same module was detected twice</li>
+<li>Build-directory is now removed again if nothing was exported (eg. when
+  using <code>craftr build</code> without formerly exporting the build files)</li>
+<li>Output before Ninja is executed is now flushed to make sure all data is
+  flushed to the terminal before Ninja outputs to the pipe</li>
+<li>When using <code>craftr build</code>, Craftr now checks if any of the files that generated
+  the build data (ie. manifests and Craftrfiles) have changed since the build
+  files was generated and notifies the user in that case (see #162)</li>
+<li><code>craftr.core.logging.DefaultLogger</code> now logs the module and line number from
+  which the log occurred, padded to the right side of the terminal</li>
+<li>Craftr now exports a variable <code>Craftr_run_command</code> into the Ninja manifest</li>
+<li>Fix invalid Ninja manifests generated with foreach Targets with no inputs (see #151)</li>
+</ul>
+<p>Internal API Changes</p>
+<ul>
+<li>add <code>craftr.core.session.Module.current_line</code> property</li>
+<li>add <code>Module.scriptfile</code> property</li>
+<li>add <code>Module.dependent_files</code> attribute</li>
+<li>add <code>Manifest.filename</code> attribute</li>
+<li>add <code>craftr.core.build.Graph.add_task()</code> and <code>.tasks</code> members</li>
+<li>add <code>craftr.core.build.Task</code> class</li>
+<li>change <code>Manifest.parse()</code> no longer accepts a file-like object</li>
+</ul>
+<p>Command-line Changes</p>
+<ul>
+<li>add <code>-P/--project-dir</code> parameters to <code>craftr</code></li>
+<li>add <code>craftr options [-m MODULE] [-r] [-d]</code> command (see #166)</li>
+<li>add <code>craftr deptree [-m MODULE]</code> command (see #166)</li>
+<li>add <code>craftr help [name]</code> command (see #167)</li>
+<li>fix <code>craftr run</code> command</li>
+<li>add <code>[task] [task_args...]</code> arguments to <code>craftr run</code> (for internal use mostly)</li>
+</ul>
+              
+            </div>
+          </div>
+          <footer>
+  
+    <div class="rst-footer-buttons" role="navigation" aria-label="footer navigation">
+      
+        <a href="../getting-started/" class="btn btn-neutral float-right" title="Getting Started">Next <span class="icon icon-circle-arrow-right"></span></a>
+      
+      
+        <a href=".." class="btn btn-neutral" title="Home"><span class="icon icon-circle-arrow-left"></span> Previous</a>
+      
+    </div>
+  
+
+  <hr/>
+
+  <div role="contentinfo">
+    <!-- Copyright etc -->
+    
+  </div>
+
+  Built with <a href="http://www.mkdocs.org">MkDocs</a> using a <a href="https://github.com/snide/sphinx_rtd_theme">theme</a> provided by <a href="https://readthedocs.org">Read the Docs</a>.
+</footer>
+	  
+        </div>
+      </div>
+
+    </section>
+    
+  </div>
+
+  <div class="rst-versions" role="note" style="cursor: pointer">
+    <span class="rst-current-version" data-toggle="rst-current-version">
+      
+      
+        <span><a href=".." style="color: #fcfcfc;">&laquo; Previous</a></span>
+      
+      
+        <span style="margin-left: 15px"><a href="../getting-started/" style="color: #fcfcfc">Next &raquo;</a></span>
+      
+    </span>
+</div>
+    <script src="../js/theme.js"></script>
+
+</body>
+</html>
