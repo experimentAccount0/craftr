@@ -2,13 +2,13 @@
     "docs": [
         {
             "location": "/",
-            "text": "Craftr 2\n\n\n\n\n\n\nCraftr is a meta build system based on \nPython 3\n scripts which produces\n\nNinja\n build manifests. It enforces the use of modular build definitions\nthat can be re-used easily and ships with a standard library supporting\nvarious programming languages and common libraries.\n\n\n\n\nDocumentation\n\n\nGetting Started\n\n\nCraftr 2.x Wiki\n\n\n\n\nFeatures\n\n\n\n\n[x] Aims to be cross-platform compatible (regularly tested on Windows, Mac OS and Linux)\n\n\n[x] Build definitions divided into versioned modules\n\n\n[x] Embedd actual Python functions into the build process (keyword Tasks)\n\n\n[x] Dependency-lock files for fully reproducible builds\n\n\n[ ] Package manager (hosted on \nCraftr.net\n)\n\n\n\n\nBasic Usage\n\n\n$ craftr version                            # Print Craftr version and exit\n$ craftr export                             # Generate Ninja manifest\n$ craftr build [target [target [...]]]      # Build all or the specified target(s)\n$ craftr clean [-r] [target [target [...]]] # Clean all or the specified target(s)\n$ craftr startpackage <name> [directory]    # Start a new Craftr project (manifest, Craftrfile)\n$ craftr lock                               # Generate a .dependency-lock file (after craftr export)\n\n\n\nC++ Example\n\n\ncxx = load('craftr.lang.cxx')\nprogram = cxx.executable(\n  inputs = cxx.compile_cpp(sources = glob('src/**/*.cpp')),\n  output = 'main'\n)\n\n\n\n\nJava Example\n\n\njava = load('craftr.lang.java')\njar = java.jar(\n  inputs = java.compile(src_dir = local('src')),\n  output = 'myapp',\n  entry_point = 'Main'\n)\n\n\n\n\nC# Example\n\n\ncs = load('craftr.lang.csharp')\napp = cs.compile(\n  sources = glob('src/**/*.cs'),\n  output = 'Main',\n  target = 'exe'\n)\n\n\n\n\nCython Exmple\n\n\ncython = load('craftr.lang.cython')\nprimes = cython.project(\n  sources = [local('Primes.pyx')],\n  main = local('Main.pyx')\n)\nrun = runtarget(primes.main)\n\n\n\n\nHow to Contribute\n\n\nPlease \ncreate an Issue\n if\nyou have any questions, problems or feature requests.\n\n\nInstallation\n\n\nMake sure you specify the specific version you want to install since there is\nno untagged version of Craftr 2.x available on PyPI yet and otherwise Pip will\ninstall Craftr 1.x (which is quite different). To get the newest stable version\nof Craftr 2, use\n\n\n$ pip install craftr-build==2.0.0.dev7\n\n\n\nTo get the cutting edge development version, I suggest installing Craftr\nfrom the Git repository into a virtualenv.\n\n\n$ virtualenv -p python3 env && source env/bin/activate\n$ git clone https://github.com/craftr-build/craftr.git -b development\n$ cd craftr\n$ pip install -e .\n\n\n\nRequirements\n\n\n\n\nNinja\n 1.7.1 or newer\n\n\nCPython\n 3.4 or 3.5\n\n\n\n\nPython Dependencies (automatically installed)\n\n\n\n\ncolorama\n (optional, Windows)\n\n\nglob2\n\n\njsonschema\n\n\nninja_syntax\n\n\nnr\n\n\npy-require\n\n\ntermcolor\n (optional)\n\n\nwerkzeug\n\n\n\n\nLicense\n\n\nThe Craftr build system\nCopyright (C) 2016  Niklas Rosenstein\n\nThis program is free software: you can redistribute it and/or modify\nit under the terms of the GNU General Public License as published by\nthe Free Software Foundation, either version 3 of the License, or\n(at your option) any later version.\n\nThis program is distributed in the hope that it will be useful,\nbut WITHOUT ANY WARRANTY; without even the implied warranty of\nMERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the\nGNU General Public License for more details.\n\nYou should have received a copy of the GNU General Public License\nalong with this program.  If not, see <http://www.gnu.org/licenses/>.\n\n\n\nFor more information, see the \nLICENSE.txt\n file.",
+            "text": "The Craftr build system\n\n\n\n\n\n\nCraftr is a meta build system based on \nPython 3\n scripts which produces\n\nNinja\n build manifests. It enforces the use of modular build definitions\nthat can be re-used easily and ships with a standard library supporting\nvarious programming languages and common libraries.\n\n\n\n\nDocumentation\n\n\nGetting Started\n\n\nCraftr 2.x Wiki\n\n\n\n\nFeatures\n\n\n\n\n[x] Aims to be cross-platform compatible (regularly tested on Windows, Mac OS and Linux)\n\n\n[x] Build definitions divided into versioned modules\n\n\n[x] Embedd actual Python functions into the build process (keyword Tasks)\n\n\n[x] Dependency-lock files for fully reproducible builds\n\n\n[ ] Package manager (hosted on \nCraftr.net\n)\n\n\n\n\nBasic Usage\n\n\n$ craftr version                            # Print Craftr version and exit\n$ craftr export                             # Generate Ninja manifest\n$ craftr build [target [target [...]]]      # Build all or the specified target(s)\n$ craftr clean [-r] [target [target [...]]] # Clean all or the specified target(s)\n$ craftr startpackage <name> [directory]    # Start a new Craftr project (manifest, Craftrfile)\n$ craftr lock                               # Generate a .dependency-lock file (after craftr export)\n\n\n\n\nC++ Example\n\n\ncxx = load('craftr.lang.cxx')\nprogram = cxx.executable(\n  inputs = cxx.compile_cpp(sources = glob('src/**/*.cpp')),\n  output = 'main'\n)\n\n\n\n\nJava Example\n\n\njava = load('craftr.lang.java')\njar = java.jar(\n  inputs = java.compile(src_dir = local('src')),\n  output = 'myapp',\n  entry_point = 'Main'\n)\n\n\n\n\nC# Example\n\n\ncs = load('craftr.lang.csharp')\napp = cs.compile(\n  sources = glob('src/**/*.cs'),\n  output = 'Main',\n  target = 'exe'\n)\n\n\n\n\nCython Exmple\n\n\ncython = load('craftr.lang.cython')\nprimes = cython.project(\n  sources = [local('Primes.pyx')],\n  main = local('Main.pyx')\n)\nrun = runtarget(primes.main)\n\n\n\n\nHow to Contribute\n\n\nPlease \ncreate an Issue\n if\nyou have any questions, problems or feature requests.\n\n\nInstallation\n\n\nMake sure you specify the specific version you want to install since there is\nno untagged version of Craftr 2.x available on PyPI yet and otherwise Pip will\ninstall Craftr 1.x (which is quite different). To get the newest stable version\nof Craftr 2, use\n\n\n$ pip install craftr-build==2.0.0.dev7\n\n\n\n\nTo get the cutting edge development version, I suggest installing Craftr\nfrom the Git repository into a virtualenv.\n\n\n$ virtualenv -p python3 env && source env/bin/activate\n$ git clone https://github.com/craftr-build/craftr.git -b development\n$ cd craftr\n$ pip install -e .\n\n\n\n\nRequirements\n\n\n\n\nNinja\n 1.7.1 or newer\n\n\nCPython\n 3.4 or 3.5\n\n\n\n\nPython Dependencies (automatically installed)\n\n\n\n\ncolorama\n (optional, Windows)\n\n\nglob2\n\n\njsonschema\n\n\nninja_syntax\n\n\nnr\n\n\npy-require\n\n\ntermcolor\n (optional)\n\n\nwerkzeug\n\n\n\n\nLicense\n\n\nThe Craftr build system\nCopyright (C) 2016  Niklas Rosenstein\n\nThis program is free software: you can redistribute it and/or modify\nit under the terms of the GNU General Public License as published by\nthe Free Software Foundation, either version 3 of the License, or\n(at your option) any later version.\n\nThis program is distributed in the hope that it will be useful,\nbut WITHOUT ANY WARRANTY; without even the implied warranty of\nMERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the\nGNU General Public License for more details.\n\nYou should have received a copy of the GNU General Public License\nalong with this program.  If not, see <http://www.gnu.org/licenses/>.\n\n\n\n\nFor more information, see the \nLICENSE.txt\n file.",
             "title": "Home"
         },
         {
-            "location": "/#craftr-2",
+            "location": "/#the-craftr-build-system",
             "text": "Craftr is a meta build system based on  Python 3  scripts which produces Ninja  build manifests. It enforces the use of modular build definitions\nthat can be re-used easily and ships with a standard library supporting\nvarious programming languages and common libraries.   Documentation  Getting Started  Craftr 2.x Wiki   Features   [x] Aims to be cross-platform compatible (regularly tested on Windows, Mac OS and Linux)  [x] Build definitions divided into versioned modules  [x] Embedd actual Python functions into the build process (keyword Tasks)  [x] Dependency-lock files for fully reproducible builds  [ ] Package manager (hosted on  Craftr.net )   Basic Usage  $ craftr version                            # Print Craftr version and exit\n$ craftr export                             # Generate Ninja manifest\n$ craftr build [target [target [...]]]      # Build all or the specified target(s)\n$ craftr clean [-r] [target [target [...]]] # Clean all or the specified target(s)\n$ craftr startpackage <name> [directory]    # Start a new Craftr project (manifest, Craftrfile)\n$ craftr lock                               # Generate a .dependency-lock file (after craftr export)  C++ Example  cxx = load('craftr.lang.cxx')\nprogram = cxx.executable(\n  inputs = cxx.compile_cpp(sources = glob('src/**/*.cpp')),\n  output = 'main'\n)  Java Example  java = load('craftr.lang.java')\njar = java.jar(\n  inputs = java.compile(src_dir = local('src')),\n  output = 'myapp',\n  entry_point = 'Main'\n)  C# Example  cs = load('craftr.lang.csharp')\napp = cs.compile(\n  sources = glob('src/**/*.cs'),\n  output = 'Main',\n  target = 'exe'\n)  Cython Exmple  cython = load('craftr.lang.cython')\nprimes = cython.project(\n  sources = [local('Primes.pyx')],\n  main = local('Main.pyx')\n)\nrun = runtarget(primes.main)",
-            "title": "Craftr 2"
+            "title": "The Craftr build system"
         },
         {
             "location": "/#how-to-contribute",
@@ -31,6 +31,391 @@
             "title": "License"
         },
         {
+            "location": "/getting-started/",
+            "text": "Note\n: The example we create in this tutorial can also be found in the\n\nexamples/examples.c\n folder.\n\n\n\n\nEvery project that is compiled with Craftr needs at least a manifest and a\nbuild script. Craftr provides a convenient way to generate a template for you.\nChoose your project directory and run the following command\n\n\n$ craftr startpackage examples.c .\n\n\n\n\nThen open the \nmanifest.cson\n file that was created and add the generic C/C++\nmodule as a dependency. With \n\"*\"\n we specify that the newest version of the\nmodule that is available should be used.\n\n\nname: \"examples.c\"\nversion: \"1.0.0\"\ndependencies:\n  \"craftr.lang.cxx\": \"*\"\noptions:\n\n\n\n\nNow let's assume we have the following two C source files in our project\ndirectory as well.\n\n\n$ cat src/main.c\n\nextern void say_hello(char const* name, char const* weather);\n\nint main(int argc, char** argv) {\n  if (argc != 3) {\n    printf(\"error: usage: %s name weather\\n\");\n    return 0;\n  }\n  say_hello(argv[1], argv[2]);\n  return 0;\n}\n\n$ cat src/hello.c\n\n#include <stdio.h>\n\nvoid say_hello(char const* name, char const* weather) {\n  printf(\"Hello, %s. You are facing a %s day\\n\", name, weather);\n}\n\n\n\n\nWe want our build script to compile these two files into object files and then\nlink them together into an executable. Additionally, the build script should\nallow us to make a test run of the program.\n\n\n$ cat Craftrfile\n# examples.c\n\ncxx = load('craftr.lang.cxx')\n\nprogram = cxx.binary(\n  inputs = cxx.c_compile(sources = glob(['src/*.c'])),\n  output = 'main'\n)\n\nfrom os import environ\nrun = runtarget(program, environ.get('USERNAME', 'John'), \"sunny\")\n\n\n\n\nAnd that's it. To compile our program, we first need to export a Ninja build\nmanifest, then we can build it. Our \nrun\n target is explicit by default, meaning\nthat Ninja will not run it unless it is specified as an input or specified as\na target to build on the command-line.\n\n\n$ craftr export\ncraftr.lang.cxx: loading \"craftr.lang.cxx.msvc\" (with craftr.lang.cxx.msvc.toolkit=\"\")\ncraftr.lang.cxx:   cxc.name=\"msvc\"\ncraftr.lang.cxx:   cxc.target_arch=\"x64\"\ncraftr.lang.cxx:   cxc.version=\"19.00.23918\"\n$ craftr build\n[1/3] msvc compile (C:\\Users\\niklas\\Desktop\\test\\build\\examples.c-1.0.0\\obj\\src\\main.obj)\n[2/3] msvc compile (C:\\Users\\niklas\\Desktop\\test\\build\\examples.c-1.0.0\\obj\\src\\hello.obj)\n[3/3] msvc link (C:\\Users\\niklas\\Desktop\\test\\build\\examples.c-1.0.0\\main.exe)\n$ craftr build run\n[0/1] C:\\Users\\niklas\\Desktop\\test\\build\\examples.c-1.0.0\\main.exe niklas sunny\nHello, niklas. You are facing a sunny day",
+            "title": "Getting Started"
+        },
+        {
+            "location": "/ref/package/",
+            "text": "A Craftr \npackage\n consists of at least two files: A manifest and build script.\nWe also call the build script \nmodule\n. These files can be placed in your\nproject root directory or in a sub-directory with the name \ncraftr/\n. The nested\nstructure is usually used for larger projects that have a complex file tree to\nkeep the root directory cleaner.\n\n\nAlso, there can be a \n.craftrconfig\n depending on where the \nmanifest.cson\n\nis located which will be loaded before anything else. For more information on\nconfiguration, see the \nConfig documentation\n.\n\n\n  Standard                   Nested\n\n|  project/               |  project/\n|    .craftrconfig        |    craftr/\n|    manifest.cson        |      .craftrconfig\n|    Craftrfile           |      manifest.cson\n|    source/              |      Craftrfile\n|                         |    source/\n\n\n\n\nNote that in the nested format, you want to make sure to set the\n\nproject_dir\n field in the manifest to \n\"..\"\n.\n\n\nPackage manifest\n\n\nBelow you can find a list of all the available fields in a \nmanifest.cson\n file.\nNote that you can use the \ncraftr startpackage\n command to quickly generate a\nmanifest for your project.\n\n\nExample manifest:\n\n\nname: \"craftr.lib.curlpp\"\nversion: \"1.0.0\"\ndependencies:\n  \"craftr.lang.cxx\": \"*\"\n  \"craftr.lib.curl\": \"*\"\noptions:\n  version:\n    type: \"string\"\n    default: \"v0.7.3\"\n  static:\n    type: \"bool\"\n    help: \"Whether to build a static or dynamic library. Must match the linkage of cURL.\"\n    default: true\n  rtti:\n    type: \"bool\"\n    default: true\n\n\n\n\nname\n\n\nRequired\n. The name of the Craftr package. This name must only consist of\nletters, digits, dots and underscores. The name of a package must be unique\nin the Craftr ecosystem, however if you are sure that you will never submit\nthe package to [Craftr.net], you can choose whatever you like.\n\n\nversion\n\n\nRequired\n. A semantic versioning number for the package. This version number\nis used to find and load the correct package version when resoloving dependencies.\nNote that Craftr can load the same package multiple times, given they have\ndifferent version numbers.\n\n\ndescription\n\n\nOptional\n. A short description of what the package does and what it is used\nfor.\n\n\nauthor\n\n\nOptional\n. The name of the author of the package and optionally his/her email\naddress. If given, the email address should be enclosed in angle brackets, like\n\n\"John Peter <john.peter@fakemail.com>\"\n.\n\n\nurl\n\n\nOptional\n. URL to the project website. Most likely a link to the GitHub page.\n\n\noptions\n\n\nOptional\n. An object that describes available options for the package. The\nfields for this object are the option names. These fields again map to objects\nthat describe the option parameter \nor\n simply the option type name. Example:\n\n\noptions\":\n  directory: \"path\"\n  build_examples:\n    \"type\": \"bool\"\n    \"help\": \"Whether to build example files\"\n\n\n\n\nAvailable fields:\n\n\ntype\n\n\nRequire\n. The type of the option. Available option types are \n\"bool\"\n,\n\n\"triplet\"\n and \n\"string\"\n.\n\n\ndefault\n\n\nOptional\n. The default value of the option if no explicit value is defined.\nThe default value of this field depends on the option \ntype\n.\n\n\nhelp\n\n\nOptional\n. A short description of what the option is used for.\n\n\ninherit\n\n\nOptional\n. Defaults to \ntrue\n. If this field is \ntrue\n and the value of the\noption is not defined explicitly, the global option with the same name will be\ninherited. For example if your package is called \nsome.cool.package\n and the\noption name is \nbuild_examples\n, then the full qualified option name would be\n\nsome.cool.package.build_examples\n. Now if this option is not set but a global\noption \nbuild_examples\n is set, this value will be used for the option.\n\n\ndependencies\n\n\nOptional\n. An object that describes the dependencies of the package. The\nfields of this object are the names of the required Craftr packages. The\nvalue of each field is a \nversion criteria\n, that is a string which specifies\none exact version number or a range of accepted version numbers. The format is\nsimilar to \nnpm\n version selectors. Examples:\n\n\n\"craftr.lib.curl\": \"*\"          // any version, but the newest we can get\n\"craftr.lib.curl\": \"=1.2.9\"     // exactly version 1.2.9\n\"craftr.lib.curl\": \"1.3 - 1.8\"  // any version between 1.3.0 and 1.8.0\n\"craftr.lib.curl\": \"2.x.2\"      // major and patch version 2, but any minor version\n\n\n\n\nNote that Craftr will refuse to load modules with \nload_module()\n that are not\nlisted in the manifest \ndependencies\n!\n\n\n\n\nImportant\n: Keep in mind that the version number defined in the\n\ndependencies\n are the version numbers of Craftr packages, not necessarily\nthe version of the actual library that can be used with it.\n\n\n\n\nmain\n\n\nOptional\n. The name of the build script. Usually you don't need/want to set\nthis field. The default value is \n\"Craftrfile\"\n.\n\n\nproject_dir\n\n\nOptional\n. A relative path the alters the \nproject_dir\n variable in the Craftr\nbuild script. This influences the way the \nlocal()\n built-in function behaves.\nFor more information on built-in functions, see the \nBuiltins documentation\n.\n\n\nNote that you usually want this field to be set to \n\"..\"\n if you are using the\nnested project structure. The \ncraftr startpackage\n command has a \n-n/--nested\n\noption which creates a nested project structure and also sets this \nproject_dir\n\nfield.",
+            "title": "Package Description"
+        },
+        {
+            "location": "/ref/package/#package-manifest",
+            "text": "Below you can find a list of all the available fields in a  manifest.cson  file.\nNote that you can use the  craftr startpackage  command to quickly generate a\nmanifest for your project.  Example manifest:  name: \"craftr.lib.curlpp\"\nversion: \"1.0.0\"\ndependencies:\n  \"craftr.lang.cxx\": \"*\"\n  \"craftr.lib.curl\": \"*\"\noptions:\n  version:\n    type: \"string\"\n    default: \"v0.7.3\"\n  static:\n    type: \"bool\"\n    help: \"Whether to build a static or dynamic library. Must match the linkage of cURL.\"\n    default: true\n  rtti:\n    type: \"bool\"\n    default: true",
+            "title": "Package manifest"
+        },
+        {
+            "location": "/ref/package/#name",
+            "text": "Required . The name of the Craftr package. This name must only consist of\nletters, digits, dots and underscores. The name of a package must be unique\nin the Craftr ecosystem, however if you are sure that you will never submit\nthe package to [Craftr.net], you can choose whatever you like.",
+            "title": "name"
+        },
+        {
+            "location": "/ref/package/#version",
+            "text": "Required . A semantic versioning number for the package. This version number\nis used to find and load the correct package version when resoloving dependencies.\nNote that Craftr can load the same package multiple times, given they have\ndifferent version numbers.",
+            "title": "version"
+        },
+        {
+            "location": "/ref/package/#description",
+            "text": "Optional . A short description of what the package does and what it is used\nfor.",
+            "title": "description"
+        },
+        {
+            "location": "/ref/package/#author",
+            "text": "Optional . The name of the author of the package and optionally his/her email\naddress. If given, the email address should be enclosed in angle brackets, like \"John Peter <john.peter@fakemail.com>\" .",
+            "title": "author"
+        },
+        {
+            "location": "/ref/package/#url",
+            "text": "Optional . URL to the project website. Most likely a link to the GitHub page.",
+            "title": "url"
+        },
+        {
+            "location": "/ref/package/#options",
+            "text": "Optional . An object that describes available options for the package. The\nfields for this object are the option names. These fields again map to objects\nthat describe the option parameter  or  simply the option type name. Example:  options\":\n  directory: \"path\"\n  build_examples:\n    \"type\": \"bool\"\n    \"help\": \"Whether to build example files\"  Available fields:",
+            "title": "options"
+        },
+        {
+            "location": "/ref/package/#type",
+            "text": "Require . The type of the option. Available option types are  \"bool\" , \"triplet\"  and  \"string\" .",
+            "title": "type"
+        },
+        {
+            "location": "/ref/package/#default",
+            "text": "Optional . The default value of the option if no explicit value is defined.\nThe default value of this field depends on the option  type .",
+            "title": "default"
+        },
+        {
+            "location": "/ref/package/#help",
+            "text": "Optional . A short description of what the option is used for.",
+            "title": "help"
+        },
+        {
+            "location": "/ref/package/#inherit",
+            "text": "Optional . Defaults to  true . If this field is  true  and the value of the\noption is not defined explicitly, the global option with the same name will be\ninherited. For example if your package is called  some.cool.package  and the\noption name is  build_examples , then the full qualified option name would be some.cool.package.build_examples . Now if this option is not set but a global\noption  build_examples  is set, this value will be used for the option.",
+            "title": "inherit"
+        },
+        {
+            "location": "/ref/package/#dependencies",
+            "text": "Optional . An object that describes the dependencies of the package. The\nfields of this object are the names of the required Craftr packages. The\nvalue of each field is a  version criteria , that is a string which specifies\none exact version number or a range of accepted version numbers. The format is\nsimilar to  npm  version selectors. Examples:  \"craftr.lib.curl\": \"*\"          // any version, but the newest we can get\n\"craftr.lib.curl\": \"=1.2.9\"     // exactly version 1.2.9\n\"craftr.lib.curl\": \"1.3 - 1.8\"  // any version between 1.3.0 and 1.8.0\n\"craftr.lib.curl\": \"2.x.2\"      // major and patch version 2, but any minor version  Note that Craftr will refuse to load modules with  load_module()  that are not\nlisted in the manifest  dependencies !   Important : Keep in mind that the version number defined in the dependencies  are the version numbers of Craftr packages, not necessarily\nthe version of the actual library that can be used with it.",
+            "title": "dependencies"
+        },
+        {
+            "location": "/ref/package/#main",
+            "text": "Optional . The name of the build script. Usually you don't need/want to set\nthis field. The default value is  \"Craftrfile\" .",
+            "title": "main"
+        },
+        {
+            "location": "/ref/package/#project_dir",
+            "text": "Optional . A relative path the alters the  project_dir  variable in the Craftr\nbuild script. This influences the way the  local()  built-in function behaves.\nFor more information on built-in functions, see the  Builtins documentation .  Note that you usually want this field to be set to  \"..\"  if you are using the\nnested project structure. The  craftr startpackage  command has a  -n/--nested \noption which creates a nested project structure and also sets this  project_dir \nfield.",
+            "title": "project_dir"
+        },
+        {
+            "location": "/ref/targets/",
+            "text": "Targets\n\n\nIn Craftr, build targets are represented by the \ncraftr.core.build.Target\n\nclass. Instances of this class are usually not created directly, but instead\nby using a \ncraftr.targetbuilder.TargetBuilder\n object. A target contains the\nfollowing information:\n\n\n\n\nA \nname\n that is unique to the entire build process. This name is exported\n  as a phony target to the Ninja manifest, allowing you to specifically select\n  the target to be built from the command-line.\n\n\nOne or more \ncommands\n that are executed by Ninja to create the \noutputs\n\n  from the \ninputs\n (eg. compile a source file into an object file, link an\n  executable, create an archive from a list of files, etc.)\n\n\nLists of filenames for the \ninputs\n and \noutputs\n, \nimplicit_deps\n\n  and \norder_only_deps\n.\n\n\nA boolean flag that marks the Target as \nexplicit\n (thus, it is only built\n  when required by another target or specified on the command-line).\n\n\nA boolean flag that specifies whether the Target operates on the \ninputs\n\n  and \noutputs\n in a \nforeach\n manner, or if the command is only executed.\n\n\nOptionally, \ncwd\n  as the path to an alternate working directory when the\n  \ncommands\n are executed.\n\n\nAn \nenviron\n dictionary with additional environment variables to be set\n  before the \ncommands\n are executed.\n\n\nA list of \nframeworks\n that should be taken into account when the Target is\n  treated as an input to another target. See the \nFrameworks\n\n  Documentation for more information.\n\n\n\n\n... and a few more less commonly used things.\n\n\nUsing the TargetBuilder\n\n\nCreating a Target directly is not very common as there is quite a few things\nto handle to make Craftr's target generator functions as convenient as they\nare. Many target generators support retrieving options from a list of\nFrameworks and additionally from keyword-arguments specified to the generator\nfunction.\n\n\nThis is an example function that uses the \nTargetBuilder\n to create a target\nfrom a list of input source files and additional options.\n\n\n1)   def compile(sources, output, frameworks=(), name=None, **kwargs):\n2)     builder = TargetBuilder(gtn(name, 'compile'), kwargs, frameworks, sources, [output])\n3)     include = builder.get_list('include')\n4)     debug = builder.get('debug', options.debug)\n\n5)     command = ['gcc', '$in', '-o', '$out']\n       command += ['-I{}'.format(x) for x in include]\n       if debug:\n         command += ['-g', '-O0']\n\n6)     return builder.build([command])\n\n\n\n\nLet's look at what's happening here step-by-step.\n\n\n\n\ndef compile()\n defines a new Python function. It accepts 4 positional\n   arguments, two of which must always be specified. Also, it accepts\n   arbitrary keyword arguments. These will be taken into account together with\n   the \nFrameworks\n and take absolute precedence should a parameter appear\n   multiple times.\n\n\nWe create a TargetBuilder with all that information. Note how we use\n   \ngtn(name, 'compile')\n to find the actual target name. It will attempt\n   to determine the name from the variable that the result of \ncompile()\n\n   is being assigned. If it can not, it will default to the name \n'compile_XXXX'\n\n   where \nXXXX\n is a numeric suffix to avoid collisions.\n\n\nWe retrieve the option \ninclude\n from the \n**kwargs\n and the \nframeworks\n\n   that have been passed to the \ncompile()\n function. Using \nget_list()\n will\n   concatenate all values that can be found in all Frameworks.\n\n\nWe retrieve the option \ndebug\n. This will return the first value that is\n   found, or otherwise the second argument as a fallback (defaults to \nNone\n).\n   Note that we can only use \noptions.debug\n if it has been specified as an\n   option in the manifest of our package that provides the \ncompile()\n function.\n\n\nCreate some useful command to compile the source files. Note how \n$in\n and\n   \n$out\n are used to reference the \ninputs\n and \noutputs\n.\n\n\nCreate the actual Target from the specified list of commands (since we only\n  have a single command, we have to wrap it in an additional list).\n\n\n\n\nThe \ncompile()\n function could then be called like this:\n\n\ncurl = pkg_config('curl')\n\nmain = compile(\n  sources = glob('src/*.c'),\n  output = 'main',\n  include = [local('include')],\n  debug = True,\n  frameworks = [curl]\n)\n\n\n\n\nNote that if you pass keyword parameters that are not actually handled in the\ntarget generator function (ie. with \nbuilder.get()\n or \nget_list()\n), Craftr\nwill print a warning that the parameter is unused.\n\n\n\n\nNote\n\n\nThe above example would only work on a platform that provides GCC,\npkg-config and the cURL library.",
+            "title": "Targets"
+        },
+        {
+            "location": "/ref/targets/#targets",
+            "text": "In Craftr, build targets are represented by the  craftr.core.build.Target \nclass. Instances of this class are usually not created directly, but instead\nby using a  craftr.targetbuilder.TargetBuilder  object. A target contains the\nfollowing information:   A  name  that is unique to the entire build process. This name is exported\n  as a phony target to the Ninja manifest, allowing you to specifically select\n  the target to be built from the command-line.  One or more  commands  that are executed by Ninja to create the  outputs \n  from the  inputs  (eg. compile a source file into an object file, link an\n  executable, create an archive from a list of files, etc.)  Lists of filenames for the  inputs  and  outputs ,  implicit_deps \n  and  order_only_deps .  A boolean flag that marks the Target as  explicit  (thus, it is only built\n  when required by another target or specified on the command-line).  A boolean flag that specifies whether the Target operates on the  inputs \n  and  outputs  in a  foreach  manner, or if the command is only executed.  Optionally,  cwd   as the path to an alternate working directory when the\n   commands  are executed.  An  environ  dictionary with additional environment variables to be set\n  before the  commands  are executed.  A list of  frameworks  that should be taken into account when the Target is\n  treated as an input to another target. See the  Frameworks \n  Documentation for more information.   ... and a few more less commonly used things.",
+            "title": "Targets"
+        },
+        {
+            "location": "/ref/targets/#using-the-targetbuilder",
+            "text": "Creating a Target directly is not very common as there is quite a few things\nto handle to make Craftr's target generator functions as convenient as they\nare. Many target generators support retrieving options from a list of\nFrameworks and additionally from keyword-arguments specified to the generator\nfunction.  This is an example function that uses the  TargetBuilder  to create a target\nfrom a list of input source files and additional options.  1)   def compile(sources, output, frameworks=(), name=None, **kwargs):\n2)     builder = TargetBuilder(gtn(name, 'compile'), kwargs, frameworks, sources, [output])\n3)     include = builder.get_list('include')\n4)     debug = builder.get('debug', options.debug)\n\n5)     command = ['gcc', '$in', '-o', '$out']\n       command += ['-I{}'.format(x) for x in include]\n       if debug:\n         command += ['-g', '-O0']\n\n6)     return builder.build([command])  Let's look at what's happening here step-by-step.   def compile()  defines a new Python function. It accepts 4 positional\n   arguments, two of which must always be specified. Also, it accepts\n   arbitrary keyword arguments. These will be taken into account together with\n   the  Frameworks  and take absolute precedence should a parameter appear\n   multiple times.  We create a TargetBuilder with all that information. Note how we use\n    gtn(name, 'compile')  to find the actual target name. It will attempt\n   to determine the name from the variable that the result of  compile() \n   is being assigned. If it can not, it will default to the name  'compile_XXXX' \n   where  XXXX  is a numeric suffix to avoid collisions.  We retrieve the option  include  from the  **kwargs  and the  frameworks \n   that have been passed to the  compile()  function. Using  get_list()  will\n   concatenate all values that can be found in all Frameworks.  We retrieve the option  debug . This will return the first value that is\n   found, or otherwise the second argument as a fallback (defaults to  None ).\n   Note that we can only use  options.debug  if it has been specified as an\n   option in the manifest of our package that provides the  compile()  function.  Create some useful command to compile the source files. Note how  $in  and\n    $out  are used to reference the  inputs  and  outputs .  Create the actual Target from the specified list of commands (since we only\n  have a single command, we have to wrap it in an additional list).   The  compile()  function could then be called like this:  curl = pkg_config('curl')\n\nmain = compile(\n  sources = glob('src/*.c'),\n  output = 'main',\n  include = [local('include')],\n  debug = True,\n  frameworks = [curl]\n)  Note that if you pass keyword parameters that are not actually handled in the\ntarget generator function (ie. with  builder.get()  or  get_list() ), Craftr\nwill print a warning that the parameter is unused.   Note  The above example would only work on a platform that provides GCC,\npkg-config and the cURL library.",
+            "title": "Using the TargetBuilder"
+        },
+        {
+            "location": "/ref/tasks/",
+            "text": "Tasks\n\n\nCraftr allows you to embed actual Python functions into the build process. We\ncall this concept \"tasks\". Tasks end up being plain rules and build instructions\nin the Ninja manifest. They will then be invoked using the \ncraftr run\n command.\nNote that for each task that is executed, your build-script is also executed\nanother time.\n\n\nYou can build functions that create tasks, so you can create multiple instances\nof the same task with different inputs, or you just create a task once from a\nsingle function.\n\n\nA simple example\n\n\ngit = load('craftr.utils.git').Git(project_dir)  # Git repository helper for this project\n\n@task(outputs = [buildlocal('include/gitversion.h')])\ndef gitversion(inputs, outputs):\n    with open(outputs[0], 'w') as fp:\n      fp.write('#pragma once\\n'\n              '#define GITVERSION \"{}\"\\n'\n        .format(git.describe()))\n\n\n\n\nWe can then compile a C-program that includes the generated \ngitversion.h\n\nfile, but we must ensure that the task is executed \nbefore\n the C-program\nis compiled.\n\n\ncxx = load('craftr.lang.cxx')\napp = cxx.binary(\n  output = 'main',\n  inputs = cxx.c_compile(\n    sources = glob(['src/*.c']),\n    include = [buildlocal('include')]\n  ) << gitversion\n)\n\n\n\n\nTask generators\n\n\nWe can generalise the \ngitversion\n task so it can be used multiple times.\n\n\nGit = load('craftr.utils.git').Git  # Git repository helper for this project\n\ndef write_gitversion(project_dir = None):\n  if not project_dir:\n    project_dir = session.module.project_dir\n  git = Git(project_dir)\n\n  def worker(inputs, outputs):\n    with open(outputs[0], 'w') as fp:\n      fp.write('#pragma once\\n'\n              '#define GITVERSION \"{}\"\\n'\n        .format(git.describe()))\n\n  outputs = [buildlocal('include/gitversion.h')]\n  return gentask(worker, outputs = outputs, name = gtn())\n\ngitversion = write_gitversion()",
+            "title": "Tasks"
+        },
+        {
+            "location": "/ref/tasks/#tasks",
+            "text": "Craftr allows you to embed actual Python functions into the build process. We\ncall this concept \"tasks\". Tasks end up being plain rules and build instructions\nin the Ninja manifest. They will then be invoked using the  craftr run  command.\nNote that for each task that is executed, your build-script is also executed\nanother time.  You can build functions that create tasks, so you can create multiple instances\nof the same task with different inputs, or you just create a task once from a\nsingle function.",
+            "title": "Tasks"
+        },
+        {
+            "location": "/ref/tasks/#a-simple-example",
+            "text": "git = load('craftr.utils.git').Git(project_dir)  # Git repository helper for this project\n\n@task(outputs = [buildlocal('include/gitversion.h')])\ndef gitversion(inputs, outputs):\n    with open(outputs[0], 'w') as fp:\n      fp.write('#pragma once\\n'\n              '#define GITVERSION \"{}\"\\n'\n        .format(git.describe()))  We can then compile a C-program that includes the generated  gitversion.h \nfile, but we must ensure that the task is executed  before  the C-program\nis compiled.  cxx = load('craftr.lang.cxx')\napp = cxx.binary(\n  output = 'main',\n  inputs = cxx.c_compile(\n    sources = glob(['src/*.c']),\n    include = [buildlocal('include')]\n  ) << gitversion\n)",
+            "title": "A simple example"
+        },
+        {
+            "location": "/ref/tasks/#task-generators",
+            "text": "We can generalise the  gitversion  task so it can be used multiple times.  Git = load('craftr.utils.git').Git  # Git repository helper for this project\n\ndef write_gitversion(project_dir = None):\n  if not project_dir:\n    project_dir = session.module.project_dir\n  git = Git(project_dir)\n\n  def worker(inputs, outputs):\n    with open(outputs[0], 'w') as fp:\n      fp.write('#pragma once\\n'\n              '#define GITVERSION \"{}\"\\n'\n        .format(git.describe()))\n\n  outputs = [buildlocal('include/gitversion.h')]\n  return gentask(worker, outputs = outputs, name = gtn())\n\ngitversion = write_gitversion()",
+            "title": "Task generators"
+        },
+        {
+            "location": "/ref/loaders/",
+            "text": "If you're project provides some examples that depend on huge binary data,\nyou can download these files when necessary:\n\n\nif options.build_examples:\n  example_data = external_file(\"http://url.to/example/data.bin\")\n  # ... build examples here\n\n\n\n\nMany build scripts for projects that are not usually built with Craftr\nuse the \nexternal_archive()\n function to download a source archive and\nbuild from that.\n\n\nsource_directory = external_archive(\n  \"https://curl.haxx.se/download/curl-{}.tar.gz\".format(options.version)\n)\n\n# ...\n\n\n\n\nFor details on these functions, check the \nBuilt-ins Documentation",
+            "title": "Loaders"
+        },
+        {
+            "location": "/ref/builtins/",
+            "text": "This document describes the available built-in data members and functions in\na \nCraftrfile\n build script. Except for the package-specific variables, all\nbuilt-in functions and classes are defined in the \ncraftr.defaults\n module.\n\n\nPackage-specific variables\n\n\nproject_dir\n\n\nThe project directory. This is usually the same as the directory of the\nCraftr package manifest (\nmanifest.cson\n), but can be altered with the\n\nproject_dir\n field in the manifest.\n\n\nThis variable has direct influence on the behaviour of the \nlocal()\n function.\n\n\noptions\n\n\nAn object that has as its members all options defined in the package manifest.\n\n\nif options.bad_weather:\n  logger.warn('be careful, you are choosing a build environment with bad weather')\n\n\n\n\nVariables\n\n\nlogger\n\n\nA \ncraftr.core.logging.BaseLogger\n instance. Use its \n.debug()\n, \n.info()\n,\n\n.warn()\n and \n.error()\n members to print information during the execution of\nthe build script.\n\n\nSee also: \nerror()\n built-in function\n\n\nsession\n\n\nThe current \ncraftr.core.session.Session\n object that manages the build process\nand Craftr packages. Sometimes you will want to modify its \n.options\n member\nor retrieve the currently executed Craftr module from its \n.module\n member.\n\n\nData\n\n\nDefault\n\n\nA singleton that can be used in places where \nNone\n can not be used as a\nplaceholder because it infers another special meaning. This is often used\nfor \nsuffix\n parameters of target generators.\n\n\nif suffix is Default:\n  suffix = derive_suffix_from_context()\nif suffix is not None:\n  output = path.addsuffix(output, suffix)\n\n\n\n\nFunctions\n\n\ngtn()\n\n\ninclude_defs()\n\n\nglob()\n\n\nlocal()\n\n\nbuildlocal()\n\n\nrelocate_files()\n\n\nfilter()\n\n\nmap()\n\n\nzip()\n\n\nload()\n\n\nload_file()\n\n\ngentool()\n\n\ngentarget()\n\n\ngentask()\n\n\ntask()\n\n\ngenalias()\n\n\nruntarget()\n\n\nwrite_response_file()\n\n\nerror()\n\n\nreturn_()\n\n\nappend_PATH()\n\n\nexternal_file(*urls, filename = None, directory = None, copy_file_urls = False, name = None)\n\n\nexternal_archive(*urls, directory = None, name = None)\n\n\npkg_config(pkg_name, static = False)\n\n\nUses \npkg-config\n to read the flags for the library specified with \npkg_name\n\nand returns a Framework object. If \npkg-config\n is not available on the platform\nor the library can not be found, \npkg_config.Error\n is raised.\n\n\nfrom craftr.loaders import pkg_config\ntry:\n  cURL = pkg_config('libcurl')\nexcept pkg_config.Error:\n  # compile from source or whatever\n\n\n\n\nClasses\n\n\nNamespace\n\n\nTargetBuilder\n\n\nFramework\n\n\nExceptions\n\n\nModuleError\n\n\nModuleReturn\n\n\nModuleNotFound\n\n\nToolDetectionError\n\n\nModules\n\n\npath\n\n\nshell\n\n\nplatform",
+            "title": "Built-ins"
+        },
+        {
+            "location": "/ref/builtins/#package-specific-variables",
+            "text": "",
+            "title": "Package-specific variables"
+        },
+        {
+            "location": "/ref/builtins/#project_dir",
+            "text": "The project directory. This is usually the same as the directory of the\nCraftr package manifest ( manifest.cson ), but can be altered with the project_dir  field in the manifest.  This variable has direct influence on the behaviour of the  local()  function.",
+            "title": "project_dir"
+        },
+        {
+            "location": "/ref/builtins/#options",
+            "text": "An object that has as its members all options defined in the package manifest.  if options.bad_weather:\n  logger.warn('be careful, you are choosing a build environment with bad weather')",
+            "title": "options"
+        },
+        {
+            "location": "/ref/builtins/#variables",
+            "text": "",
+            "title": "Variables"
+        },
+        {
+            "location": "/ref/builtins/#logger",
+            "text": "A  craftr.core.logging.BaseLogger  instance. Use its  .debug() ,  .info() , .warn()  and  .error()  members to print information during the execution of\nthe build script.  See also:  error()  built-in function",
+            "title": "logger"
+        },
+        {
+            "location": "/ref/builtins/#session",
+            "text": "The current  craftr.core.session.Session  object that manages the build process\nand Craftr packages. Sometimes you will want to modify its  .options  member\nor retrieve the currently executed Craftr module from its  .module  member.",
+            "title": "session"
+        },
+        {
+            "location": "/ref/builtins/#data",
+            "text": "",
+            "title": "Data"
+        },
+        {
+            "location": "/ref/builtins/#default",
+            "text": "A singleton that can be used in places where  None  can not be used as a\nplaceholder because it infers another special meaning. This is often used\nfor  suffix  parameters of target generators.  if suffix is Default:\n  suffix = derive_suffix_from_context()\nif suffix is not None:\n  output = path.addsuffix(output, suffix)",
+            "title": "Default"
+        },
+        {
+            "location": "/ref/builtins/#functions",
+            "text": "",
+            "title": "Functions"
+        },
+        {
+            "location": "/ref/builtins/#gtn",
+            "text": "",
+            "title": "gtn()"
+        },
+        {
+            "location": "/ref/builtins/#include_defs",
+            "text": "",
+            "title": "include_defs()"
+        },
+        {
+            "location": "/ref/builtins/#glob",
+            "text": "",
+            "title": "glob()"
+        },
+        {
+            "location": "/ref/builtins/#local",
+            "text": "",
+            "title": "local()"
+        },
+        {
+            "location": "/ref/builtins/#buildlocal",
+            "text": "",
+            "title": "buildlocal()"
+        },
+        {
+            "location": "/ref/builtins/#relocate_files",
+            "text": "",
+            "title": "relocate_files()"
+        },
+        {
+            "location": "/ref/builtins/#filter",
+            "text": "",
+            "title": "filter()"
+        },
+        {
+            "location": "/ref/builtins/#map",
+            "text": "",
+            "title": "map()"
+        },
+        {
+            "location": "/ref/builtins/#zip",
+            "text": "",
+            "title": "zip()"
+        },
+        {
+            "location": "/ref/builtins/#load",
+            "text": "",
+            "title": "load()"
+        },
+        {
+            "location": "/ref/builtins/#load_file",
+            "text": "",
+            "title": "load_file()"
+        },
+        {
+            "location": "/ref/builtins/#gentool",
+            "text": "",
+            "title": "gentool()"
+        },
+        {
+            "location": "/ref/builtins/#gentarget",
+            "text": "",
+            "title": "gentarget()"
+        },
+        {
+            "location": "/ref/builtins/#gentask",
+            "text": "",
+            "title": "gentask()"
+        },
+        {
+            "location": "/ref/builtins/#task",
+            "text": "",
+            "title": "task()"
+        },
+        {
+            "location": "/ref/builtins/#genalias",
+            "text": "",
+            "title": "genalias()"
+        },
+        {
+            "location": "/ref/builtins/#runtarget",
+            "text": "",
+            "title": "runtarget()"
+        },
+        {
+            "location": "/ref/builtins/#write_response_file",
+            "text": "",
+            "title": "write_response_file()"
+        },
+        {
+            "location": "/ref/builtins/#error",
+            "text": "",
+            "title": "error()"
+        },
+        {
+            "location": "/ref/builtins/#return_",
+            "text": "",
+            "title": "return_()"
+        },
+        {
+            "location": "/ref/builtins/#append_path",
+            "text": "",
+            "title": "append_PATH()"
+        },
+        {
+            "location": "/ref/builtins/#external_fileurls-filename-none-directory-none-copy_file_urls-false-name-none",
+            "text": "",
+            "title": "external_file(*urls, filename = None, directory = None, copy_file_urls = False, name = None)"
+        },
+        {
+            "location": "/ref/builtins/#external_archiveurls-directory-none-name-none",
+            "text": "",
+            "title": "external_archive(*urls, directory = None, name = None)"
+        },
+        {
+            "location": "/ref/builtins/#pkg_configpkg_name-static-false",
+            "text": "Uses  pkg-config  to read the flags for the library specified with  pkg_name \nand returns a Framework object. If  pkg-config  is not available on the platform\nor the library can not be found,  pkg_config.Error  is raised.  from craftr.loaders import pkg_config\ntry:\n  cURL = pkg_config('libcurl')\nexcept pkg_config.Error:\n  # compile from source or whatever",
+            "title": "pkg_config(pkg_name, static = False)"
+        },
+        {
+            "location": "/ref/builtins/#classes",
+            "text": "",
+            "title": "Classes"
+        },
+        {
+            "location": "/ref/builtins/#namespace",
+            "text": "",
+            "title": "Namespace"
+        },
+        {
+            "location": "/ref/builtins/#targetbuilder",
+            "text": "",
+            "title": "TargetBuilder"
+        },
+        {
+            "location": "/ref/builtins/#framework",
+            "text": "",
+            "title": "Framework"
+        },
+        {
+            "location": "/ref/builtins/#exceptions",
+            "text": "",
+            "title": "Exceptions"
+        },
+        {
+            "location": "/ref/builtins/#moduleerror",
+            "text": "",
+            "title": "ModuleError"
+        },
+        {
+            "location": "/ref/builtins/#modulereturn",
+            "text": "",
+            "title": "ModuleReturn"
+        },
+        {
+            "location": "/ref/builtins/#modulenotfound",
+            "text": "",
+            "title": "ModuleNotFound"
+        },
+        {
+            "location": "/ref/builtins/#tooldetectionerror",
+            "text": "",
+            "title": "ToolDetectionError"
+        },
+        {
+            "location": "/ref/builtins/#modules",
+            "text": "",
+            "title": "Modules"
+        },
+        {
+            "location": "/ref/builtins/#path",
+            "text": "",
+            "title": "path"
+        },
+        {
+            "location": "/ref/builtins/#shell",
+            "text": "",
+            "title": "shell"
+        },
+        {
+            "location": "/ref/builtins/#platform",
+            "text": "",
+            "title": "platform"
+        },
+        {
+            "location": "/ref/config/",
+            "text": "Configuration values in Craftr are stored in the \nSession.options\n dictionary.\nThere are those options that are defined in Craftr packages and are automatically\nvalidated, but they are not limited by these definitions.\n\n\nNote that options that are not listed in Craftr package manifests do \nnot\n\nhave the \ninheriting\n behaviour, thus the full qualified option name must\nbe defined.\n\n\nOptions\n\n\ncraftr.ninja\n\n\nThe path or name of the Ninja executable to invoke. Defaults to the \nNINJA\n\nenvironment variable or simply \nninja\n.\n\n\nConfiguring\n\n\nOn the command-line, you can use the \n-d/--option\n argument to set options.\nThese options override every option read from configuration files. Alternatively,\nyou can specify one or more configuration files to load with the \n-c/--config\n\nargument. If none are specified, the file \n.craftrconfig\n in the current working\ndirectory is loaded if it exists.\n\n\nIf present, the file \n.craftrconfig\n in the users home directory will always\nbe loaded.\n\n\nConfiguration files are simple \n.ini\n files with two additions:\n\n\nInclude configuration files\n\n\nA configuration file can include another configuration file using the\n\ninclude\n section directive. Note that the \nif-exists\n portion is optional\nand can be used if you don't want it to be an error if the included file\ndoes not exist.\n\n\n[include \"path/to/file.ini\" if-exists]\n\n\n\n\nSetting global options\n\n\nThe \n[__global__]\n section can be used to define options without a prefix.\n\n\n[__global__]\ndebug = true",
+            "title": "Build Configuration"
+        },
+        {
+            "location": "/ref/config/#options",
+            "text": "",
+            "title": "Options"
+        },
+        {
+            "location": "/ref/config/#craftrninja",
+            "text": "The path or name of the Ninja executable to invoke. Defaults to the  NINJA \nenvironment variable or simply  ninja .",
+            "title": "craftr.ninja"
+        },
+        {
+            "location": "/ref/config/#configuring",
+            "text": "On the command-line, you can use the  -d/--option  argument to set options.\nThese options override every option read from configuration files. Alternatively,\nyou can specify one or more configuration files to load with the  -c/--config \nargument. If none are specified, the file  .craftrconfig  in the current working\ndirectory is loaded if it exists.  If present, the file  .craftrconfig  in the users home directory will always\nbe loaded.  Configuration files are simple  .ini  files with two additions:",
+            "title": "Configuring"
+        },
+        {
+            "location": "/ref/config/#include-configuration-files",
+            "text": "A configuration file can include another configuration file using the include  section directive. Note that the  if-exists  portion is optional\nand can be used if you don't want it to be an error if the included file\ndoes not exist.  [include \"path/to/file.ini\" if-exists]",
+            "title": "Include configuration files"
+        },
+        {
+            "location": "/ref/config/#setting-global-options",
+            "text": "The  [__global__]  section can be used to define options without a prefix.  [__global__]\ndebug = true",
+            "title": "Setting global options"
+        },
+        {
             "location": "/changes/",
             "text": "v2.0.0.dev7\n\n\nBugfixes\n\n\n\n\nFix function \ncxx_extend_framework()\n that is kept for backwards compatibility,\n  which was missing to call the new \ncxx.extend_framework()\n.\n\n\nFix \nNameError\n in \n'craftr build'\n command\n\n\nfix \nerrno.ENOTTY\n raised on Linux CI runners (eg. GitLab)\n\n\n\n\nChanges\n\n\n\n\nIf terminal size can not be determined, assume 120 characters wide\n  instead of 80\n\n\n\n\nv2.0.0.dev6\n\n\nGeneral Changes\n\n\n\n\nDefault manifest configuration format is now CSON (\nmanifest.cson\n),\n  JSON being kept for backwards compatibility (see #168)\n\n\nFix crash on Travis CI with \ntty.terminal_size()\n (see #169)\n\n\nAdd \ncraftr lock\n command which generates \n.dependency-lock\n file in the\n  same directory as the project's Manifest (see #155)\n\n\n\n\nAPI Changes\n\n\n\n\nadd \npkg_config(static = False)\n parameter\n\n\nadd \npkg_config()\n, \nexternal_file()\n and \nexternal_archive()\n to \ncraftr/defaults.py\n\n\nadd \nglob(ignore_false_excludes=False)\n parameter\n\n\nadd \nBaseLogger.flush()\n method\n\n\nadd \ncraftr.utils.path.getmtime()\n and \n.getimtime()\n\n\nadd \nwrite_response_file(suffix='')\n parameter\n\n\nadd \nDefault\n singleton to built-in namespace\n\n\nadd \ngentask()\n and \ntask()\n built-in functions (see #163)\n\n\nadd \nTarget.runprefix\n parameter and attribute\n\n\nadd \nSession.main_module\n member\n\n\nadd \nModule.dependencies\n member\n\n\nchange \nTarget\n objects can now be passed to the \nframeworks = [...]\n argument\n  of target generators that use the \nTargetBuilder\n class. These input targets\n  will automatically added to the implicit dependencies and their frameworks\n  be added\n\n\nchange \nTool\n objects can now be passed into the \ncommands = [[...]]\n argument\n  of targets generators\n\n\nchange \nruntarget()\n to take \nTarget.runprefix\n into account\n\n\nchange \npath.norm()\n now makes sure that path is lowercased on Windows\n\n\nchange \nload_file()\n now adds the loaded file to \nModule.dependent_files\n\n\nchange \nglob(patterns)\n now accepts a string additionally to a list of strings\n\n\nrename \nload_module()\n to \nload()\n, using the old name displays a warning\n\n\n\n\nLibrary Changes\n\n\n\n\nadd \ncraftr.lib.sdl2\n (tested on Windows only)\n\n\nadd \ncraftr.lib.zlib\n (tested on Windows only)\n\n\nadd \nuic()\n and \nmoc()\n target generators to \ncraftr.lib.qt5\n (tested on Windows only)\n\n\nadd support for \nsource_directory\n argument in \ncxx.c_compile()\n and \ncxx.cpp_compile()\n\n  (actually implemented in \ncraftr.lang.cxx.common\n and \ncraftr.lang.cxx.msvc\n), see #154\n\n\nadd \ncraftr.lang.csharp:compile()\n to be used for unstarred import, and add docstrings\n\n\nadd \nexflags\n option to \ncraftr.lang.cxx.common\n module (see #152)\n\n\nadd \nccprefix\n option to \ncraftr.lang.cxx.common\n module (related to #149)\n\n\nadd to \ncraftr.lang.cxx\n functions \nstatic_library()\n and \nshared_library()\n\n\nchange \ncraftr.lang.cxx\n member names, old names are still available with a\n  deprecation notice. \nbinary() -> executable()\n, \nc_compile() -> compile_c()\n,\n  \ncpp_compile() -> compile_cpp()\n\n\nchange \ncraftr.lib.cURLpp\n always requires RTTI enabled\n\n\nchange \ncraftr.lang.cxx.msvc\n now adds the static input library generated for DLLs to the outputs\n\n\nchange MSVC \ncompile()\n now supports response-files for long list of includes\n\n\nupdate default download version of \ncraftr.lib.zlib\n to \n1.2.10\n\n\n\n\nBehaviour Changes\n\n\n\n\nExperimental change not raising an exception in \ncraftr/core/build.py\n inside\n  \nreplace_argument_inout_vars()\n when multiple outputs are specified to support\n  the previously mentioned change\n\n\nUpdate verbose logging behaviour when the same module was detected twice\n\n\nBuild-directory is now removed again if nothing was exported (eg. when\n  using \ncraftr build\n without formerly exporting the build files)\n\n\nOutput before Ninja is executed is now flushed to make sure all data is\n  flushed to the terminal before Ninja outputs to the pipe\n\n\nWhen using \ncraftr build\n, Craftr now checks if any of the files that generated\n  the build data (ie. manifests and Craftrfiles) have changed since the build\n  files was generated and notifies the user in that case (see #162)\n\n\ncraftr.core.logging.DefaultLogger\n now logs the module and line number from\n  which the log occurred, padded to the right side of the terminal\n\n\nCraftr now exports a variable \nCraftr_run_command\n into the Ninja manifest\n\n\nFix invalid Ninja manifests generated with foreach Targets with no inputs (see #151)\n\n\n\n\nInternal API Changes\n\n\n\n\nadd \ncraftr.core.session.Module.current_line\n property\n\n\nadd \nModule.scriptfile\n property\n\n\nadd \nModule.dependent_files\n attribute\n\n\nadd \nManifest.filename\n attribute\n\n\nadd \ncraftr.core.build.Graph.add_task()\n and \n.tasks\n members\n\n\nadd \ncraftr.core.build.Task\n class\n\n\nadd \ntty.terminal_size(default)\n parameter\n\n\nchange \nManifest.parse()\n no longer accepts a file-like object\n\n\n\n\nCommand-line Changes\n\n\n\n\nadd \n-P/--project-dir\n parameters to \ncraftr\n\n\nadd \ncraftr options [-m MODULE] [-r] [-d]\n command (see #166)\n\n\nadd \ncraftr deptree [-m MODULE]\n command (see #166)\n\n\nadd \ncraftr help [name]\n command (see #167)\n\n\nfix \ncraftr run\n command\n\n\nadd \n[task] [task_args...]\n arguments to \ncraftr run\n (for internal use mostly)",
             "title": "Changelog"
@@ -46,343 +431,8 @@
             "title": "v2.0.0.dev6"
         },
         {
-            "location": "/getting-started/",
-            "text": "Note\n: The example we create in this tutorial can also be found in the\n\nexamples/examples.c\n folder.\n\n\n\n\nEvery project that is compiled with Craftr needs at least a manifest and a\nbuild script. Craftr provides a convenient way to generate a template for you.\nChoose your project directory and run the following command\n\n\n$ craftr startpackage examples.c .\n\n\n\nThen open the \nmanifest.cson\n file that was created and add the generic C/C++\nmodule as a dependency. With \n\"*\"\n we specify that the newest version of the\nmodule that is available should be used.\n\n\nname: \"examples.c\"\nversion: \"1.0.0\"\ndependencies:\n  \"craftr.lang.cxx\": \"*\"\noptions:\n\n\n\n\nNow let's assume we have the following two C source files in our project\ndirectory as well.\n\n\n$ cat src/main.c\n\nextern void say_hello(char const* name, char const* weather);\n\nint main(int argc, char** argv) {\n  if (argc != 3) {\n    printf(\"error: usage: %s name weather\\n\");\n    return 0;\n  }\n  say_hello(argv[1], argv[2]);\n  return 0;\n}\n\n$ cat src/hello.c\n\n#include <stdio.h>\n\nvoid say_hello(char const* name, char const* weather) {\n  printf(\"Hello, %s. You are facing a %s day\\n\", name, weather);\n}\n\n\n\n\nWe want our build script to compile these two files into object files and then\nlink them together into an executable. Additionally, the build script should\nallow us to make a test run of the program.\n\n\n$ cat Craftrfile\n# examples.c\n\ncxx = load('craftr.lang.cxx')\n\nprogram = cxx.binary(\n  inputs = cxx.c_compile(sources = glob(['src/*.c'])),\n  output = 'main'\n)\n\nfrom os import environ\nrun = runtarget(program, environ.get('USERNAME', 'John'), \"sunny\")\n\n\n\n\nAnd that's it. To compile our program, we first need to export a Ninja build\nmanifest, then we can build it. Our \nrun\n target is explicit by default, meaning\nthat Ninja will not run it unless it is specified as an input or specified as\na target to build on the command-line.\n\n\n$ craftr export\ncraftr.lang.cxx: loading \"craftr.lang.cxx.msvc\" (with craftr.lang.cxx.msvc.toolkit=\"\")\ncraftr.lang.cxx:   cxc.name=\"msvc\"\ncraftr.lang.cxx:   cxc.target_arch=\"x64\"\ncraftr.lang.cxx:   cxc.version=\"19.00.23918\"\n$ craftr build\n[1/3] msvc compile (C:\\Users\\niklas\\Desktop\\test\\build\\examples.c-1.0.0\\obj\\src\\main.obj)\n[2/3] msvc compile (C:\\Users\\niklas\\Desktop\\test\\build\\examples.c-1.0.0\\obj\\src\\hello.obj)\n[3/3] msvc link (C:\\Users\\niklas\\Desktop\\test\\build\\examples.c-1.0.0\\main.exe)\n$ craftr build run\n[0/1] C:\\Users\\niklas\\Desktop\\test\\build\\examples.c-1.0.0\\main.exe niklas sunny\nHello, niklas. You are facing a sunny day",
-            "title": "Getting Started"
-        },
-        {
-            "location": "/config/",
-            "text": "Configuration values in Craftr are stored in the \nSession.options\n dictionary.\nThere are those options that are defined in Craftr packages and are automatically\nvalidated, but they are not limited by these definitions.\n\n\nNote that options that are not listed in Craftr package manifests do \nnot\n\nhave the \ninheriting\n behaviour, thus the full qualified option name must\nbe defined.\n\n\nOptions\n\n\ncraftr.ninja\n\n\nThe path or name of the Ninja executable to invoke. Defaults to the \nNINJA\n\nenvironment variable or simply \nninja\n.\n\n\nConfiguring\n\n\nOn the command-line, you can use the \n-d/--option\n argument to set options.\nThese options override every option read from configuration files. Alternatively,\nyou can specify one or more configuration files to load with the \n-c/--config\n\nargument. If none are specified, the file \n.craftrconfig\n in the current working\ndirectory is loaded if it exists.\n\n\nIf present, the file \n.craftrconfig\n in the users home directory will always\nbe loaded.\n\n\nConfiguration files are simple \n.ini\n files with two additions:\n\n\nInclude configuration files\n\n\nA configuration file can include another configuration file using the\n\ninclude\n section directive. Note that the \nif-exists\n portion is optional\nand can be used if you don't want it to be an error if the included file\ndoes not exist.\n\n\n[include \"path/to/file.ini\" if-exists]\n\n\n\n\nSetting global options\n\n\nThe \n[__global__]\n section can be used to define options without a prefix.\n\n\n[__global__]\ndebug = true",
-            "title": "Build Configuration"
-        },
-        {
-            "location": "/config/#options",
-            "text": "",
-            "title": "Options"
-        },
-        {
-            "location": "/config/#craftrninja",
-            "text": "The path or name of the Ninja executable to invoke. Defaults to the  NINJA \nenvironment variable or simply  ninja .",
-            "title": "craftr.ninja"
-        },
-        {
-            "location": "/config/#configuring",
-            "text": "On the command-line, you can use the  -d/--option  argument to set options.\nThese options override every option read from configuration files. Alternatively,\nyou can specify one or more configuration files to load with the  -c/--config \nargument. If none are specified, the file  .craftrconfig  in the current working\ndirectory is loaded if it exists.  If present, the file  .craftrconfig  in the users home directory will always\nbe loaded.  Configuration files are simple  .ini  files with two additions:",
-            "title": "Configuring"
-        },
-        {
-            "location": "/config/#include-configuration-files",
-            "text": "A configuration file can include another configuration file using the include  section directive. Note that the  if-exists  portion is optional\nand can be used if you don't want it to be an error if the included file\ndoes not exist.  [include \"path/to/file.ini\" if-exists]",
-            "title": "Include configuration files"
-        },
-        {
-            "location": "/config/#setting-global-options",
-            "text": "The  [__global__]  section can be used to define options without a prefix.  [__global__]\ndebug = true",
-            "title": "Setting global options"
-        },
-        {
-            "location": "/builtins/",
-            "text": "This document describes the available built-in data members and functions in\na \nCraftrfile\n build script. Except for the package-specific variables, all\nbuilt-in functions and classes are defined in the \ncraftr.defaults\n module.\n\n\nPackage-specific variables\n\n\nproject_dir\n\n\nThe project directory. This is usually the same as the directory of the\nCraftr package manifest (\nmanifest.cson\n), but can be altered with the\n\nproject_dir\n field in the manifest.\n\n\nThis variable has direct influence on the behaviour of the \nlocal()\n function.\n\n\noptions\n\n\nAn object that has as its members all options defined in the package manifest.\n\n\nif options.bad_weather:\n  logger.warn('be careful, you are choosing a build environment with bad weather')\n\n\n\n\nVariables\n\n\nlogger\n\n\nA \ncraftr.core.logging.BaseLogger\n instance. Use its \n.debug()\n, \n.info()\n,\n\n.warn()\n and \n.error()\n members to print information during the execution of\nthe build script.\n\n\nSee also: \nerror()\n built-in function\n\n\nsession\n\n\nThe current \ncraftr.core.session.Session\n object that manages the build process\nand Craftr packages. Sometimes you will want to modify its \n.options\n member\nor retrieve the currently executed Craftr module from its \n.module\n member.\n\n\nData\n\n\nDefault\n\n\nA singleton that can be used in places where \nNone\n can not be used as a\nplaceholder because it infers another special meaning. This is often used\nfor \nsuffix\n parameters of target generators.\n\n\nif suffix is Default:\n  suffix = derive_suffix_from_context()\nif suffix is not None:\n  output = path.addsuffix(output, suffix)\n\n\n\n\nFunctions\n\n\ngtn()\n\n\ninclude_defs()\n\n\nglob()\n\n\nlocal()\n\n\nbuildlocal()\n\n\nrelocate_files()\n\n\nfilter()\n\n\nmap()\n\n\nzip()\n\n\nload()\n\n\nload_file()\n\n\ngentool()\n\n\ngentarget()\n\n\ngentask()\n\n\ntask()\n\n\ngenalias()\n\n\nruntarget()\n\n\nwrite_response_file()\n\n\nerror()\n\n\nreturn_()\n\n\nappend_PATH()\n\n\nexternal_file(*urls, filename = None, directory = None, copy_file_urls = False, name = None)\n\n\nexternal_archive(*urls, directory = None, name = None)\n\n\npkg_config(pkg_name, static = False)\n\n\nUses \npkg-config\n to read the flags for the library specified with \npkg_name\n\nand returns a Framework object. If \npkg-config\n is not available on the platform\nor the library can not be found, \npkg_config.Error\n is raised.\n\n\nfrom craftr.loaders import pkg_config\ntry:\n  cURL = pkg_config('libcurl')\nexcept pkg_config.Error:\n  # compile from source or whatever\n\n\n\n\nClasses\n\n\nNamespace\n\n\nTargetBuilder\n\n\nFramework\n\n\nExceptions\n\n\nModuleError\n\n\nModuleReturn\n\n\nModuleNotFound\n\n\nToolDetectionError\n\n\nModules\n\n\npath\n\n\nshell\n\n\nplatform",
-            "title": "Built-ins"
-        },
-        {
-            "location": "/builtins/#package-specific-variables",
-            "text": "",
-            "title": "Package-specific variables"
-        },
-        {
-            "location": "/builtins/#project_dir",
-            "text": "The project directory. This is usually the same as the directory of the\nCraftr package manifest ( manifest.cson ), but can be altered with the project_dir  field in the manifest.  This variable has direct influence on the behaviour of the  local()  function.",
-            "title": "project_dir"
-        },
-        {
-            "location": "/builtins/#options",
-            "text": "An object that has as its members all options defined in the package manifest.  if options.bad_weather:\n  logger.warn('be careful, you are choosing a build environment with bad weather')",
-            "title": "options"
-        },
-        {
-            "location": "/builtins/#variables",
-            "text": "",
-            "title": "Variables"
-        },
-        {
-            "location": "/builtins/#logger",
-            "text": "A  craftr.core.logging.BaseLogger  instance. Use its  .debug() ,  .info() , .warn()  and  .error()  members to print information during the execution of\nthe build script.  See also:  error()  built-in function",
-            "title": "logger"
-        },
-        {
-            "location": "/builtins/#session",
-            "text": "The current  craftr.core.session.Session  object that manages the build process\nand Craftr packages. Sometimes you will want to modify its  .options  member\nor retrieve the currently executed Craftr module from its  .module  member.",
-            "title": "session"
-        },
-        {
-            "location": "/builtins/#data",
-            "text": "",
-            "title": "Data"
-        },
-        {
-            "location": "/builtins/#default",
-            "text": "A singleton that can be used in places where  None  can not be used as a\nplaceholder because it infers another special meaning. This is often used\nfor  suffix  parameters of target generators.  if suffix is Default:\n  suffix = derive_suffix_from_context()\nif suffix is not None:\n  output = path.addsuffix(output, suffix)",
-            "title": "Default"
-        },
-        {
-            "location": "/builtins/#functions",
-            "text": "",
-            "title": "Functions"
-        },
-        {
-            "location": "/builtins/#gtn",
-            "text": "",
-            "title": "gtn()"
-        },
-        {
-            "location": "/builtins/#include_defs",
-            "text": "",
-            "title": "include_defs()"
-        },
-        {
-            "location": "/builtins/#glob",
-            "text": "",
-            "title": "glob()"
-        },
-        {
-            "location": "/builtins/#local",
-            "text": "",
-            "title": "local()"
-        },
-        {
-            "location": "/builtins/#buildlocal",
-            "text": "",
-            "title": "buildlocal()"
-        },
-        {
-            "location": "/builtins/#relocate_files",
-            "text": "",
-            "title": "relocate_files()"
-        },
-        {
-            "location": "/builtins/#filter",
-            "text": "",
-            "title": "filter()"
-        },
-        {
-            "location": "/builtins/#map",
-            "text": "",
-            "title": "map()"
-        },
-        {
-            "location": "/builtins/#zip",
-            "text": "",
-            "title": "zip()"
-        },
-        {
-            "location": "/builtins/#load",
-            "text": "",
-            "title": "load()"
-        },
-        {
-            "location": "/builtins/#load_file",
-            "text": "",
-            "title": "load_file()"
-        },
-        {
-            "location": "/builtins/#gentool",
-            "text": "",
-            "title": "gentool()"
-        },
-        {
-            "location": "/builtins/#gentarget",
-            "text": "",
-            "title": "gentarget()"
-        },
-        {
-            "location": "/builtins/#gentask",
-            "text": "",
-            "title": "gentask()"
-        },
-        {
-            "location": "/builtins/#task",
-            "text": "",
-            "title": "task()"
-        },
-        {
-            "location": "/builtins/#genalias",
-            "text": "",
-            "title": "genalias()"
-        },
-        {
-            "location": "/builtins/#runtarget",
-            "text": "",
-            "title": "runtarget()"
-        },
-        {
-            "location": "/builtins/#write_response_file",
-            "text": "",
-            "title": "write_response_file()"
-        },
-        {
-            "location": "/builtins/#error",
-            "text": "",
-            "title": "error()"
-        },
-        {
-            "location": "/builtins/#return_",
-            "text": "",
-            "title": "return_()"
-        },
-        {
-            "location": "/builtins/#append_path",
-            "text": "",
-            "title": "append_PATH()"
-        },
-        {
-            "location": "/builtins/#external_fileurls-filename-none-directory-none-copy_file_urls-false-name-none",
-            "text": "",
-            "title": "external_file(*urls, filename = None, directory = None, copy_file_urls = False, name = None)"
-        },
-        {
-            "location": "/builtins/#external_archiveurls-directory-none-name-none",
-            "text": "",
-            "title": "external_archive(*urls, directory = None, name = None)"
-        },
-        {
-            "location": "/builtins/#pkg_configpkg_name-static-false",
-            "text": "Uses  pkg-config  to read the flags for the library specified with  pkg_name \nand returns a Framework object. If  pkg-config  is not available on the platform\nor the library can not be found,  pkg_config.Error  is raised.  from craftr.loaders import pkg_config\ntry:\n  cURL = pkg_config('libcurl')\nexcept pkg_config.Error:\n  # compile from source or whatever",
-            "title": "pkg_config(pkg_name, static = False)"
-        },
-        {
-            "location": "/builtins/#classes",
-            "text": "",
-            "title": "Classes"
-        },
-        {
-            "location": "/builtins/#namespace",
-            "text": "",
-            "title": "Namespace"
-        },
-        {
-            "location": "/builtins/#targetbuilder",
-            "text": "",
-            "title": "TargetBuilder"
-        },
-        {
-            "location": "/builtins/#framework",
-            "text": "",
-            "title": "Framework"
-        },
-        {
-            "location": "/builtins/#exceptions",
-            "text": "",
-            "title": "Exceptions"
-        },
-        {
-            "location": "/builtins/#moduleerror",
-            "text": "",
-            "title": "ModuleError"
-        },
-        {
-            "location": "/builtins/#modulereturn",
-            "text": "",
-            "title": "ModuleReturn"
-        },
-        {
-            "location": "/builtins/#modulenotfound",
-            "text": "",
-            "title": "ModuleNotFound"
-        },
-        {
-            "location": "/builtins/#tooldetectionerror",
-            "text": "",
-            "title": "ToolDetectionError"
-        },
-        {
-            "location": "/builtins/#modules",
-            "text": "",
-            "title": "Modules"
-        },
-        {
-            "location": "/builtins/#path",
-            "text": "",
-            "title": "path"
-        },
-        {
-            "location": "/builtins/#shell",
-            "text": "",
-            "title": "shell"
-        },
-        {
-            "location": "/builtins/#platform",
-            "text": "",
-            "title": "platform"
-        },
-        {
-            "location": "/loaders/",
-            "text": "If you're project provides some examples that depend on huge binary data,\nyou can download these files when necessary:\n\n\nif options.build_examples:\n  example_data = external_file(\"http://url.to/example/data.bin\")\n  # ... build examples here\n\n\n\n\nMany build scripts for projects that are not usually built with Craftr\nuse the \nexternal_archive()\n function to download a source archive and\nbuild from that.\n\n\nsource_directory = external_archive(\n  \"https://curl.haxx.se/download/curl-{}.tar.gz\".format(options.version)\n)\n\n# ...\n\n\n\n\nFor details on these functions, check the \nBuilt-ins Documentation",
-            "title": "Loaders"
-        },
-        {
-            "location": "/tasks/",
-            "text": "Tasks\n\n\nCraftr allows you to embed actual Python functions into the build process. We\ncall this concept \"tasks\". Tasks end up being plain rules and build instructions\nin the Ninja manifest. They will then be invoked using the \ncraftr run\n command.\nNote that for each task that is executed, your build-script is also executed\nanother time.\n\n\nYou can build functions that create tasks, so you can create multiple instances\nof the same task with different inputs, or you just create a task once from a\nsingle function.\n\n\nA simple example\n\n\ngit = load('craftr.utils.git').Git(project_dir)  # Git repository helper for this project\n\n@task(outputs = [buildlocal('include/gitversion.h')])\ndef gitversion(inputs, outputs):\n    with open(outputs[0], 'w') as fp:\n      fp.write('#pragma once\\n'\n              '#define GITVERSION \"{}\"\\n'\n        .format(git.describe()))\n\n\n\n\nWe can then compile a C-program that includes the generated \ngitversion.h\n\nfile, but we must ensure that the task is executed \nbefore\n the C-program\nis compiled.\n\n\ncxx = load('craftr.lang.cxx')\napp = cxx.binary(\n  output = 'main',\n  inputs = cxx.c_compile(\n    sources = glob(['src/*.c']),\n    include = [buildlocal('include')]\n  ) << gitversion\n)\n\n\n\n\nTask generators\n\n\nWe can generalise the \ngitversion\n task so it can be used multiple times.\n\n\nGit = load('craftr.utils.git').Git  # Git repository helper for this project\n\ndef write_gitversion(project_dir = None):\n  if not project_dir:\n    project_dir = session.module.project_dir\n  git = Git(project_dir)\n\n  def worker(inputs, outputs):\n    with open(outputs[0], 'w') as fp:\n      fp.write('#pragma once\\n'\n              '#define GITVERSION \"{}\"\\n'\n        .format(git.describe()))\n\n  outputs = [buildlocal('include/gitversion.h')]\n  return gentask(worker, outputs = outputs, name = gtn())\n\ngitversion = write_gitversion()",
-            "title": "Tasks"
-        },
-        {
-            "location": "/tasks/#tasks",
-            "text": "Craftr allows you to embed actual Python functions into the build process. We\ncall this concept \"tasks\". Tasks end up being plain rules and build instructions\nin the Ninja manifest. They will then be invoked using the  craftr run  command.\nNote that for each task that is executed, your build-script is also executed\nanother time.  You can build functions that create tasks, so you can create multiple instances\nof the same task with different inputs, or you just create a task once from a\nsingle function.  A simple example  git = load('craftr.utils.git').Git(project_dir)  # Git repository helper for this project\n\n@task(outputs = [buildlocal('include/gitversion.h')])\ndef gitversion(inputs, outputs):\n    with open(outputs[0], 'w') as fp:\n      fp.write('#pragma once\\n'\n              '#define GITVERSION \"{}\"\\n'\n        .format(git.describe()))  We can then compile a C-program that includes the generated  gitversion.h \nfile, but we must ensure that the task is executed  before  the C-program\nis compiled.  cxx = load('craftr.lang.cxx')\napp = cxx.binary(\n  output = 'main',\n  inputs = cxx.c_compile(\n    sources = glob(['src/*.c']),\n    include = [buildlocal('include')]\n  ) << gitversion\n)  Task generators  We can generalise the  gitversion  task so it can be used multiple times.  Git = load('craftr.utils.git').Git  # Git repository helper for this project\n\ndef write_gitversion(project_dir = None):\n  if not project_dir:\n    project_dir = session.module.project_dir\n  git = Git(project_dir)\n\n  def worker(inputs, outputs):\n    with open(outputs[0], 'w') as fp:\n      fp.write('#pragma once\\n'\n              '#define GITVERSION \"{}\"\\n'\n        .format(git.describe()))\n\n  outputs = [buildlocal('include/gitversion.h')]\n  return gentask(worker, outputs = outputs, name = gtn())\n\ngitversion = write_gitversion()",
-            "title": "Tasks"
-        },
-        {
-            "location": "/generators/",
-            "text": "Most of them time you will be using functions that generate build targets\nfrom some input information instead of hardcoding the exact command-line\narguments for a target. These we call \"target generators\".\n\n\nYou can create a target manually with the \ngentarget()\n builtin function\nvery easily and this is useful if you need exact control over the command\nthat is run for the target.\n\n\nmain = gentarget(\n  commands = ['gcc $in -o $out'.split()],\n  inputs = glob(['src/*.c']),\n  outputs = ['main']\n)\n\n\n\n\nBut that is of course not portable to platforms that do not have the GCC\ncompiler. Also, maybe you need some more logic to generate the build command,\nand in that case you might also want to reuse that logic on another target.\n\n\nSimple target generator\n\n\nSo instead of hardcoding the command, let's wrap it in a function that\ngenereates it for us.\n\n\ndef gcc_binary(sources, output, name=None):\n  command = 'gcc $in -o $out'.split()\n  return gentarget([command], sources, [output], name=gtn(name, 'gcc_binary'))\n\nmain = gcc_binary(\n  sources = glob(['src/*.c']),\n  output = 'main'\n)\n\n\n\n\nI think everything is here is straightforward, except maybe for the\n\ngtn(name, 'gcc_binary')\n part. What this function does is deriving the name\nof the target from the variable that the result of the function is assigned\nto, in this case the target name will be \nmain\n (prefixed with the identifer\nof your Craftr package). We can however specify an alternative name for the\ntarget with the \nname\n argument, or otherwise if the function is not assigned\nto a variable and no \nname\n argument is specified, default to the specified\n\n'gcc_binary'\n name (with some numeric suffix to avoid target name collision).\n\n\nNow this was a lot to take into. You don't need to fully understand what's\nhappening, you only need to understand that \ngtn()\n is what is used to derive\ntarget names from when implementing target generators.\n\n\nThe TargetBuilder\n\n\nThe \nTargetBuilder\n class does a lot of stuff for us that is very useful when\nimplementing target generators. Most of the target generators provided by\nCraftr's standard library use this class. It's constructor takes 4 important\narguments:\n\n\n\n\nname\n -- The name of the target. Again, use \ngtn(name, 'alternative')\n\n   as value for this parameter.\n\n\noption_kwargs\n -- Optional, this is usually a dictionary of additional\n   keyword arguments that have been passed when calling the target generator\n   function. These keyword arguments are included into the \nOptionMerge\n that\n   is created internally by the \nTargetBuilder\n (more on that later).\n\n\nframeworks\n -- Optional, a list of \nFramework\n objects which are to be\n   include in the \nOptionMerge\n that is created internally by the\n   \nTargetBuilder\n (more on that later). Unlike the \noption_kwargs\n, these\n   frameworks are inherited by the created \nTarget\n\n\ninputs\n -- Optional, inputs for the target. This can be a single \nTarget\n\n   object, or a list of mixed \nTarget\n objects and strings which must be\n   filenames. For every \nTarget\n in this parameter, its output files are\n   included in the list of input files (see \nTargetBuilder.inputs\n) and all\n   frameworks from these targets are inherited (see \nTargetBuilder.frameworks\n).\n\n\n\n\nNow after the \nTargetBuilder\n was created, it has three important methods:\n\n\n\n\nget(key, default)\n -- Get an option from the \nOptionMerge\n created by the\n  \nTargetBuilder\n. This effectively returns the first value found for \nkey\n\n  in the \noption_kwargs\n and \nframeworks\n specified on construction as\n  well as any inherited frameworks.\n\n\nget_list(key)\n -- Like \nget()\n, but this expects all values found under\n  \nkey\n to be lists and joins them all into one list. This is especially useful\n  for specifying accumulating options like include directories, preprocessor\n  defines, library search paths and link library names, etc.\n\n\nbuild(commands, inputs=None, outputs=None, implicit_deps=None, order_only_deps=None, metadata=None, **kwargs)\n\n  -- Create a \nTarget\n object. Basically all these arguments are passed to the\n  \ncraftr.core.build.Target\n constructor and the \nTargetBuilder.name\n is used as\n  the targets name. Note that \ncommands\n must always be a list of commands,\n  and every command must be a list of strings (the arguments).\n\n\n\n\nLooking at our above exaple, let's do it with a \nTargetBuilder\n and extend it\na bit further:\n\n\ndef gcc_binary(sources, output, name=None, frameworks=(), **kwargs):\n  builder = TargetBuilder(gtn(name, 'gcc_binary'), kwargs, frameworks, sources)\n  output = buildlocal(path.addsuffix(output, platform.bin))\n  command = ['gcc', '$in', '-o', '$out']\n  for fn in builder.get_list('include'):\n    command.append('-I' + fn)\n  for define in builder.get_list('defines'):\n    command.append('-D' + define)\n  for lib in builder.get_list('libs'):\n    command.append('-l' + lib)\n  if builder.get('debug', False):\n    command += ['-g', '-O0']\n  return builder.build([command], outputs=[output])\n\nsome_library = Framework('some_library',\n  include = [local('vendor/some_library/include')],\n  defines = ['USE_SOME_LIBRARY=1'],\n  libs = ['some_library']\n)\n\nmain = gcc_binary(\n  sources = glob(['src/*.c']),\n  output = 'main',\n  include = [local('include')],\n  debug = True,\n  frameworks = [some_library]\n)",
-            "title": "Generators"
-        },
-        {
-            "location": "/generators/#simple-target-generator",
-            "text": "So instead of hardcoding the command, let's wrap it in a function that\ngenereates it for us.  def gcc_binary(sources, output, name=None):\n  command = 'gcc $in -o $out'.split()\n  return gentarget([command], sources, [output], name=gtn(name, 'gcc_binary'))\n\nmain = gcc_binary(\n  sources = glob(['src/*.c']),\n  output = 'main'\n)  I think everything is here is straightforward, except maybe for the gtn(name, 'gcc_binary')  part. What this function does is deriving the name\nof the target from the variable that the result of the function is assigned\nto, in this case the target name will be  main  (prefixed with the identifer\nof your Craftr package). We can however specify an alternative name for the\ntarget with the  name  argument, or otherwise if the function is not assigned\nto a variable and no  name  argument is specified, default to the specified 'gcc_binary'  name (with some numeric suffix to avoid target name collision).  Now this was a lot to take into. You don't need to fully understand what's\nhappening, you only need to understand that  gtn()  is what is used to derive\ntarget names from when implementing target generators.",
-            "title": "Simple target generator"
-        },
-        {
-            "location": "/generators/#the-targetbuilder",
-            "text": "The  TargetBuilder  class does a lot of stuff for us that is very useful when\nimplementing target generators. Most of the target generators provided by\nCraftr's standard library use this class. It's constructor takes 4 important\narguments:   name  -- The name of the target. Again, use  gtn(name, 'alternative') \n   as value for this parameter.  option_kwargs  -- Optional, this is usually a dictionary of additional\n   keyword arguments that have been passed when calling the target generator\n   function. These keyword arguments are included into the  OptionMerge  that\n   is created internally by the  TargetBuilder  (more on that later).  frameworks  -- Optional, a list of  Framework  objects which are to be\n   include in the  OptionMerge  that is created internally by the\n    TargetBuilder  (more on that later). Unlike the  option_kwargs , these\n   frameworks are inherited by the created  Target  inputs  -- Optional, inputs for the target. This can be a single  Target \n   object, or a list of mixed  Target  objects and strings which must be\n   filenames. For every  Target  in this parameter, its output files are\n   included in the list of input files (see  TargetBuilder.inputs ) and all\n   frameworks from these targets are inherited (see  TargetBuilder.frameworks ).   Now after the  TargetBuilder  was created, it has three important methods:   get(key, default)  -- Get an option from the  OptionMerge  created by the\n   TargetBuilder . This effectively returns the first value found for  key \n  in the  option_kwargs  and  frameworks  specified on construction as\n  well as any inherited frameworks.  get_list(key)  -- Like  get() , but this expects all values found under\n   key  to be lists and joins them all into one list. This is especially useful\n  for specifying accumulating options like include directories, preprocessor\n  defines, library search paths and link library names, etc.  build(commands, inputs=None, outputs=None, implicit_deps=None, order_only_deps=None, metadata=None, **kwargs) \n  -- Create a  Target  object. Basically all these arguments are passed to the\n   craftr.core.build.Target  constructor and the  TargetBuilder.name  is used as\n  the targets name. Note that  commands  must always be a list of commands,\n  and every command must be a list of strings (the arguments).   Looking at our above exaple, let's do it with a  TargetBuilder  and extend it\na bit further:  def gcc_binary(sources, output, name=None, frameworks=(), **kwargs):\n  builder = TargetBuilder(gtn(name, 'gcc_binary'), kwargs, frameworks, sources)\n  output = buildlocal(path.addsuffix(output, platform.bin))\n  command = ['gcc', '$in', '-o', '$out']\n  for fn in builder.get_list('include'):\n    command.append('-I' + fn)\n  for define in builder.get_list('defines'):\n    command.append('-D' + define)\n  for lib in builder.get_list('libs'):\n    command.append('-l' + lib)\n  if builder.get('debug', False):\n    command += ['-g', '-O0']\n  return builder.build([command], outputs=[output])\n\nsome_library = Framework('some_library',\n  include = [local('vendor/some_library/include')],\n  defines = ['USE_SOME_LIBRARY=1'],\n  libs = ['some_library']\n)\n\nmain = gcc_binary(\n  sources = glob(['src/*.c']),\n  output = 'main',\n  include = [local('include')],\n  debug = True,\n  frameworks = [some_library]\n)",
-            "title": "The TargetBuilder"
-        },
-        {
-            "location": "/transition/",
-            "text": "This document should give you a quick idea of how to transition your Craftr 1\nbuild scripts to Craftr 2.x. Not too much has changed in terms of the build\nscripts, mainly the way other scripts are imported is different.\n\n\nInstead of using Python-style imports, you use the \nload_module()\n builtin\nfunction in Craftr 2. Below we show the old and new way of importing the C/C++\ntarget generators.\n\n\nfrom craftr.ext.platform import cc, cxx, ld, ar    # old\ncxc = load_module('craftr.lang.cxx').cxc                  # new\n\n\n\n\nHowever what we usually do in Craftr 2 now is to use star-imports to\nload the contents of the module into the global namespace.\n\n\nload_module('craftr.lang.cxx.*')\n\n\n\n\nDoing the transition\n\n\nUse the \ncraftr startpackage\n command to create the manifest and build script\nfiles in your project. If you want to keep your root directory clean, use the\n\n-n/--nested\n option.\n\n\n$ cd my-project\n$ craftr startpackage my_project . --nested\n\n\n\nOpen the \nmanifest.json\n file and make sure to include all the dependencies\nthat you need (eg. \n\"craftr.lang.cxx\": \"*\"\n). Craftr 2 refuses to load a module if\nit is not defined in the package's dependencies.\n\n\nNow you can basically copy the content from your old \nCraftfile.py\n to the\nnew \nCraftrfile\n and make the adjustments.\n\n\nCompiler abstraction changes\n\n\nC/C++\n\n\nIn Craftr 1, there were separate objects depending on what you wanted to\ndo: compile C, C++, link or create a static library. In Craftr 2, there is\none object that can do all of it: \ncxc\n. There have been some changes to\nthe \ncompile()\n and \nlink()\n interface, but the most important one is that\n\ncompile()\n now requires a \nlanguage\n parameter which can be either one of\n\n'c', 'c++', 'asm'\n.\n\n\nThe \nlang.cxx\n module provides the following three new functions that should\nbe used instead:\n\n\n\n\nc_compile()\n\n\ncpp_compile()\n\n\ncxx_binary()\n\n\ncxx_link()\n\n\n\n\nNote that \ncxx_link()\n has a \nlink_style\n parameter that is \n'static'\n by\ndefault but can be set to \n'shared'\n to produce a shared library.\n\n\nCython\n\n\nThe interface is pretty much the same, only \ncythonc.compile_project()\n is now\nonly \ncythonc.compile()\n. There are named wrapper available when using starred\nimports, namely\n\n\n\n\ncython_compile()\n\n\ncython_project()\n\n\n\n\nJava\n\n\n\n\njava_compile()\n\n\njava_jar()\n\n\n\n\nC\n\n\n\n\ncsharp_compile()",
-            "title": "Transition from Craftr 1"
-        },
-        {
-            "location": "/transition/#doing-the-transition",
-            "text": "Use the  craftr startpackage  command to create the manifest and build script\nfiles in your project. If you want to keep your root directory clean, use the -n/--nested  option.  $ cd my-project\n$ craftr startpackage my_project . --nested  Open the  manifest.json  file and make sure to include all the dependencies\nthat you need (eg.  \"craftr.lang.cxx\": \"*\" ). Craftr 2 refuses to load a module if\nit is not defined in the package's dependencies.  Now you can basically copy the content from your old  Craftfile.py  to the\nnew  Craftrfile  and make the adjustments.",
-            "title": "Doing the transition"
-        },
-        {
-            "location": "/transition/#compiler-abstraction-changes",
-            "text": "",
-            "title": "Compiler abstraction changes"
-        },
-        {
-            "location": "/transition/#cc",
-            "text": "In Craftr 1, there were separate objects depending on what you wanted to\ndo: compile C, C++, link or create a static library. In Craftr 2, there is\none object that can do all of it:  cxc . There have been some changes to\nthe  compile()  and  link()  interface, but the most important one is that compile()  now requires a  language  parameter which can be either one of 'c', 'c++', 'asm' .  The  lang.cxx  module provides the following three new functions that should\nbe used instead:   c_compile()  cpp_compile()  cxx_binary()  cxx_link()   Note that  cxx_link()  has a  link_style  parameter that is  'static'  by\ndefault but can be set to  'shared'  to produce a shared library.",
-            "title": "C/C++"
-        },
-        {
-            "location": "/transition/#cython",
-            "text": "The interface is pretty much the same, only  cythonc.compile_project()  is now\nonly  cythonc.compile() . There are named wrapper available when using starred\nimports, namely   cython_compile()  cython_project()",
-            "title": "Cython"
-        },
-        {
-            "location": "/transition/#java",
-            "text": "java_compile()  java_jar()",
-            "title": "Java"
-        },
-        {
-            "location": "/transition/#c",
-            "text": "csharp_compile()",
-            "title": "C"
-        },
-        {
             "location": "/faq/",
-            "text": "FAQ\n\n\nHow to use an alternative Ninja command?\n\n\nYou can set the \ncraftr.ninja\n option or use the \nNINJA\n environment variable.\n\n\n$ craftr -d craftr.ninja=ninja-1.7.2 build\n\n\n\nIs there a way to create a Python function that is called from Ninja?\n\n\nCurrently not. Craftr 1 used to have this feature called \nRTS\n. Including\nthis feature into Craftr 2 is definitely on the plan.\n\n\nHow can I include a configuration file from another configuration file?\n\n\nYou can use the \n[include \"path/to/config\" if-exists]\n section directive. Note\nthat the \nif-exists\n part is optional.\n\n\nHow can I set a global option in a configuration file?\n\n\nYou can add the options under the \n[__global__]\n section.",
+            "text": "FAQ\n\n\nHow to use an alternative Ninja command?\n\n\nYou can set the \ncraftr.ninja\n option or use the \nNINJA\n environment variable.\n\n\n$ craftr -d craftr.ninja=ninja-1.7.2 build\n\n\n\n\nIs there a way to create a Python function that is called from Ninja?\n\n\nSee the Documentation about \nTasks\n.\n\n\nHow can I include a configuration file from another configuration file?\n\n\nYou can use the \n[include \"path/to/config\" if-exists]\n section directive. Note\nthat the \nif-exists\n part is optional.\n\n\nHow can I set a global option in a configuration file?\n\n\nYou can add the options under the \n[__global__]\n section.",
             "title": "FAQ"
         },
         {
@@ -397,7 +447,7 @@
         },
         {
             "location": "/faq/#is-there-a-way-to-create-a-python-function-that-is-called-from-ninja",
-            "text": "Currently not. Craftr 1 used to have this feature called  RTS . Including\nthis feature into Craftr 2 is definitely on the plan.",
+            "text": "See the Documentation about  Tasks .",
             "title": "Is there a way to create a Python function that is called from Ninja?"
         },
         {

@@ -1,0 +1,1195 @@
+
+<!DOCTYPE html>
+<html class="no-js">
+  <head>
+    
+      <meta charset="utf-8">
+      <meta name="viewport" content="width=device-width,initial-scale=1">
+      
+      
+      
+      
+        <link rel="shortcut icon" href="../../assets/images/favicon.ico">
+      
+      <meta name="generator" content="mkdocs+mkdocs-material#1.0.3">
+    
+    
+      
+        <title>Built-ins - Craftr v2.0.0.dev7 Documentation</title>
+      
+    
+    
+      <script src="../../assets/javascripts/modernizr-facb31f4a3.js"></script>
+    
+    
+      
+        
+        
+        
+        <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Roboto:300,400,400i,700|Roboto+Mono">
+        <style>body,input{font-family:"Roboto","Helvetica Neue",Helvetica,Arial,sans-serif}code,kbd,pre{font-family:"Roboto Mono","Courier New",Courier,monospace}</style>
+      
+      <link rel="stylesheet" href="https://fonts.googleapis.com/icon?family=Material+Icons">
+    
+    
+      <link rel="stylesheet" href="../../assets/stylesheets/application-f3ab63f78a.css">
+      
+      
+    
+    
+  </head>
+  
+  
+  
+  
+    <body>
+  
+    <svg class="md-svg">
+      <defs>
+        
+        
+      </defs>
+    </svg>
+    <input class="md-toggle" data-md-toggle="drawer" type="checkbox" id="drawer">
+    <input class="md-toggle" data-md-toggle="search" type="checkbox" id="search">
+    <label class="md-overlay" data-md-component="overlay" for="drawer"></label>
+    
+      <header class="md-header">
+  <nav class="md-header-nav md-grid">
+    <div class="md-flex">
+      <div class="md-flex__cell md-flex__cell--shrink">
+        <a href="../.." title="Craftr v2.0.0.dev7 Documentation" class=" md-icon md-icon--home  md-header-nav__button">
+          
+        </a>
+      </div>
+      <div class="md-flex__cell md-flex__cell--shrink">
+        <label class="md-icon md-icon--menu md-header-nav__button" for="drawer"></label>
+      </div>
+      <div class="md-flex__cell md-flex__cell--stretch">
+        <span class="md-flex__ellipsis md-header-nav__title">
+          
+            
+              
+                <span class="md-header-nav__parent">
+                  Reference
+                </span>
+              
+            
+            Built-ins
+          
+        </span>
+      </div>
+      <div class="md-flex__cell md-flex__cell--shrink">
+        
+          <label class="md-icon md-icon--search md-header-nav__button" for="search"></label>
+          
+<div class="md-search" data-md-component="search">
+  <div class="md-search__overlay"></div>
+  <div class="md-search__inner">
+    <form class="md-search__form" name="search">
+      <input type="text" class="md-search__input" name="query" placeholder="Search" accesskey="s" autocapitalize="off" autocorrect="off" autocomplete="off" spellcheck="false">
+      <label class="md-icon md-search__icon" for="search"></label>
+    </form>
+    <div class="md-search__output">
+      <div class="md-search__scrollwrap" data-md-scrollfix>
+        <div class="md-search-result" data-md-component="result"></div>
+      </div>
+    </div>
+  </div>
+</div>
+        
+      </div>
+      <div class="md-flex__cell md-flex__cell--shrink">
+          <div class="md-header-nav__source">
+            
+          </div>
+      </div>
+    </div>
+  </nav>
+</header>
+    
+    <div class="md-container">
+      <main class="md-main">
+        <div class="md-main__inner md-grid" data-md-component="container">
+          
+            
+              <div class="md-sidebar md-sidebar--primary" data-md-component="navigation">
+                <div class="md-sidebar__scrollwrap">
+                  <div class="md-sidebar__inner">
+                    <nav class="md-nav md-nav--primary">
+  <label class="md-nav__title md-nav__title--site" for="drawer">
+    <i class=" md-icon md-icon--home  md-nav__button">
+      
+    </i>
+    Craftr v2.0.0.dev7 Documentation
+  </label>
+  
+  <ul class="md-nav__list" data-md-scrollfix>
+    
+      
+      
+  <li class="md-nav__item">
+    
+      <a href="../.." title="Home" class="md-nav__link">
+        Home
+      </a>
+    
+  </li>
+
+    
+      
+      
+  <li class="md-nav__item">
+    
+      <a href="../../getting-started/" title="Getting Started" class="md-nav__link">
+        Getting Started
+      </a>
+    
+  </li>
+
+    
+      
+      
+  <li class="md-nav__item md-nav__item--nested">
+    
+      <input class="md-toggle md-nav__toggle" data-md-toggle="nav-3" type="checkbox" id="nav-3" checked>
+    
+    <label class="md-nav__link" for="nav-3">
+      Reference
+    </label>
+    <nav class="md-nav" data-md-component="collapsible">
+      <label class="md-nav__title" for="nav-3">
+        Reference
+      </label>
+      <ul class="md-nav__list" data-md-scrollfix>
+        
+        
+          
+          
+  <li class="md-nav__item">
+    
+      <a href="../package/" title="Package Description" class="md-nav__link">
+        Package Description
+      </a>
+    
+  </li>
+
+        
+          
+          
+  <li class="md-nav__item">
+    
+      <a href="../targets/" title="Targets" class="md-nav__link">
+        Targets
+      </a>
+    
+  </li>
+
+        
+          
+          
+  <li class="md-nav__item">
+    
+      <a href="../tasks/" title="Tasks" class="md-nav__link">
+        Tasks
+      </a>
+    
+  </li>
+
+        
+          
+          
+  <li class="md-nav__item">
+    
+      <a href="../loaders/" title="Loaders" class="md-nav__link">
+        Loaders
+      </a>
+    
+  </li>
+
+        
+          
+          
+  <li class="md-nav__item">
+    
+    <input class="md-toggle md-nav__toggle" data-md-toggle="toc" type="checkbox" id="toc">
+    
+    
+      <label class="md-nav__link md-nav__link--active" for="toc">
+        Built-ins
+      </label>
+    
+    <a href="./" title="Built-ins" class="md-nav__link md-nav__link--active">
+      Built-ins
+    </a>
+    
+      
+<nav class="md-nav md-nav--secondary">
+  
+  
+  
+    <label class="md-nav__title" for="toc">Table of contents</label>
+    <ul class="md-nav__list" data-md-scrollfix>
+      
+        <li class="md-nav__item">
+  <a href="#package-specific-variables" title="Package-specific variables" class="md-nav__link">
+    Package-specific variables
+  </a>
+  
+    <nav class="md-nav">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#project_dir" title="project_dir" class="md-nav__link">
+    project_dir
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#options" title="options" class="md-nav__link">
+    options
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#variables" title="Variables" class="md-nav__link">
+    Variables
+  </a>
+  
+    <nav class="md-nav">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#logger" title="logger" class="md-nav__link">
+    logger
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#session" title="session" class="md-nav__link">
+    session
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#data" title="Data" class="md-nav__link">
+    Data
+  </a>
+  
+    <nav class="md-nav">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#default" title="Default" class="md-nav__link">
+    Default
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#functions" title="Functions" class="md-nav__link">
+    Functions
+  </a>
+  
+    <nav class="md-nav">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#gtn" title="gtn()" class="md-nav__link">
+    gtn()
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#include_defs" title="include_defs()" class="md-nav__link">
+    include_defs()
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#glob" title="glob()" class="md-nav__link">
+    glob()
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#local" title="local()" class="md-nav__link">
+    local()
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#buildlocal" title="buildlocal()" class="md-nav__link">
+    buildlocal()
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#relocate_files" title="relocate_files()" class="md-nav__link">
+    relocate_files()
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#filter" title="filter()" class="md-nav__link">
+    filter()
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#map" title="map()" class="md-nav__link">
+    map()
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#zip" title="zip()" class="md-nav__link">
+    zip()
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#load" title="load()" class="md-nav__link">
+    load()
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#load_file" title="load_file()" class="md-nav__link">
+    load_file()
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#gentool" title="gentool()" class="md-nav__link">
+    gentool()
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#gentarget" title="gentarget()" class="md-nav__link">
+    gentarget()
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#gentask" title="gentask()" class="md-nav__link">
+    gentask()
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#task" title="task()" class="md-nav__link">
+    task()
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#genalias" title="genalias()" class="md-nav__link">
+    genalias()
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#runtarget" title="runtarget()" class="md-nav__link">
+    runtarget()
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#write_response_file" title="write_response_file()" class="md-nav__link">
+    write_response_file()
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#error" title="error()" class="md-nav__link">
+    error()
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#return_" title="return_()" class="md-nav__link">
+    return_()
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#append_path" title="append_PATH()" class="md-nav__link">
+    append_PATH()
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#external_fileurls-filename-none-directory-none-copy_file_urls-false-name-none" title="external_file(*urls, filename = None, directory = None, copy_file_urls = False, name = None)" class="md-nav__link">
+    external_file(*urls, filename = None, directory = None, copy_file_urls = False, name = None)
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#external_archiveurls-directory-none-name-none" title="external_archive(*urls, directory = None, name = None)" class="md-nav__link">
+    external_archive(*urls, directory = None, name = None)
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#pkg_configpkg_name-static-false" title="pkg_config(pkg_name, static = False)" class="md-nav__link">
+    pkg_config(pkg_name, static = False)
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#classes" title="Classes" class="md-nav__link">
+    Classes
+  </a>
+  
+    <nav class="md-nav">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#namespace" title="Namespace" class="md-nav__link">
+    Namespace
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#targetbuilder" title="TargetBuilder" class="md-nav__link">
+    TargetBuilder
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#framework" title="Framework" class="md-nav__link">
+    Framework
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#exceptions" title="Exceptions" class="md-nav__link">
+    Exceptions
+  </a>
+  
+    <nav class="md-nav">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#moduleerror" title="ModuleError" class="md-nav__link">
+    ModuleError
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#modulereturn" title="ModuleReturn" class="md-nav__link">
+    ModuleReturn
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#modulenotfound" title="ModuleNotFound" class="md-nav__link">
+    ModuleNotFound
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#tooldetectionerror" title="ToolDetectionError" class="md-nav__link">
+    ToolDetectionError
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#modules" title="Modules" class="md-nav__link">
+    Modules
+  </a>
+  
+    <nav class="md-nav">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#path" title="path" class="md-nav__link">
+    path
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#shell" title="shell" class="md-nav__link">
+    shell
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#platform" title="platform" class="md-nav__link">
+    platform
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+    </ul>
+  
+</nav>
+    
+  </li>
+
+        
+          
+          
+  <li class="md-nav__item">
+    
+      <a href="../config/" title="Build Configuration" class="md-nav__link">
+        Build Configuration
+      </a>
+    
+  </li>
+
+        
+      </ul>
+    </nav>
+  </li>
+
+    
+      
+      
+  <li class="md-nav__item">
+    
+      <a href="../../changes/" title="Changelog" class="md-nav__link">
+        Changelog
+      </a>
+    
+  </li>
+
+    
+      
+      
+  <li class="md-nav__item">
+    
+      <a href="../../faq/" title="FAQ" class="md-nav__link">
+        FAQ
+      </a>
+    
+  </li>
+
+    
+  </ul>
+</nav>
+                  </div>
+                </div>
+              </div>
+            
+            
+              <div class="md-sidebar md-sidebar--secondary" data-md-component="toc">
+                <div class="md-sidebar__scrollwrap">
+                  <div class="md-sidebar__inner">
+                    
+<nav class="md-nav md-nav--secondary">
+  
+  
+  
+    <label class="md-nav__title" for="toc">Table of contents</label>
+    <ul class="md-nav__list" data-md-scrollfix>
+      
+        <li class="md-nav__item">
+  <a href="#package-specific-variables" title="Package-specific variables" class="md-nav__link">
+    Package-specific variables
+  </a>
+  
+    <nav class="md-nav">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#project_dir" title="project_dir" class="md-nav__link">
+    project_dir
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#options" title="options" class="md-nav__link">
+    options
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#variables" title="Variables" class="md-nav__link">
+    Variables
+  </a>
+  
+    <nav class="md-nav">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#logger" title="logger" class="md-nav__link">
+    logger
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#session" title="session" class="md-nav__link">
+    session
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#data" title="Data" class="md-nav__link">
+    Data
+  </a>
+  
+    <nav class="md-nav">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#default" title="Default" class="md-nav__link">
+    Default
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#functions" title="Functions" class="md-nav__link">
+    Functions
+  </a>
+  
+    <nav class="md-nav">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#gtn" title="gtn()" class="md-nav__link">
+    gtn()
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#include_defs" title="include_defs()" class="md-nav__link">
+    include_defs()
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#glob" title="glob()" class="md-nav__link">
+    glob()
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#local" title="local()" class="md-nav__link">
+    local()
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#buildlocal" title="buildlocal()" class="md-nav__link">
+    buildlocal()
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#relocate_files" title="relocate_files()" class="md-nav__link">
+    relocate_files()
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#filter" title="filter()" class="md-nav__link">
+    filter()
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#map" title="map()" class="md-nav__link">
+    map()
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#zip" title="zip()" class="md-nav__link">
+    zip()
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#load" title="load()" class="md-nav__link">
+    load()
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#load_file" title="load_file()" class="md-nav__link">
+    load_file()
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#gentool" title="gentool()" class="md-nav__link">
+    gentool()
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#gentarget" title="gentarget()" class="md-nav__link">
+    gentarget()
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#gentask" title="gentask()" class="md-nav__link">
+    gentask()
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#task" title="task()" class="md-nav__link">
+    task()
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#genalias" title="genalias()" class="md-nav__link">
+    genalias()
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#runtarget" title="runtarget()" class="md-nav__link">
+    runtarget()
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#write_response_file" title="write_response_file()" class="md-nav__link">
+    write_response_file()
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#error" title="error()" class="md-nav__link">
+    error()
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#return_" title="return_()" class="md-nav__link">
+    return_()
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#append_path" title="append_PATH()" class="md-nav__link">
+    append_PATH()
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#external_fileurls-filename-none-directory-none-copy_file_urls-false-name-none" title="external_file(*urls, filename = None, directory = None, copy_file_urls = False, name = None)" class="md-nav__link">
+    external_file(*urls, filename = None, directory = None, copy_file_urls = False, name = None)
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#external_archiveurls-directory-none-name-none" title="external_archive(*urls, directory = None, name = None)" class="md-nav__link">
+    external_archive(*urls, directory = None, name = None)
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#pkg_configpkg_name-static-false" title="pkg_config(pkg_name, static = False)" class="md-nav__link">
+    pkg_config(pkg_name, static = False)
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#classes" title="Classes" class="md-nav__link">
+    Classes
+  </a>
+  
+    <nav class="md-nav">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#namespace" title="Namespace" class="md-nav__link">
+    Namespace
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#targetbuilder" title="TargetBuilder" class="md-nav__link">
+    TargetBuilder
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#framework" title="Framework" class="md-nav__link">
+    Framework
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#exceptions" title="Exceptions" class="md-nav__link">
+    Exceptions
+  </a>
+  
+    <nav class="md-nav">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#moduleerror" title="ModuleError" class="md-nav__link">
+    ModuleError
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#modulereturn" title="ModuleReturn" class="md-nav__link">
+    ModuleReturn
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#modulenotfound" title="ModuleNotFound" class="md-nav__link">
+    ModuleNotFound
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#tooldetectionerror" title="ToolDetectionError" class="md-nav__link">
+    ToolDetectionError
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#modules" title="Modules" class="md-nav__link">
+    Modules
+  </a>
+  
+    <nav class="md-nav">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#path" title="path" class="md-nav__link">
+    path
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#shell" title="shell" class="md-nav__link">
+    shell
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#platform" title="platform" class="md-nav__link">
+    platform
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+    </ul>
+  
+</nav>
+                  </div>
+                </div>
+              </div>
+            
+          
+          <div class="md-content">
+            <article class="md-content__inner md-typeset">
+               
+              
+                
+                  <h1>Built-ins</h1>
+                
+                <p>This document describes the available built-in data members and functions in
+a <code>Craftrfile</code> build script. Except for the package-specific variables, all
+built-in functions and classes are defined in the <code>craftr.defaults</code> module.</p>
+<h2 id="package-specific-variables">Package-specific variables</h2>
+<h3 id="project_dir"><code>project_dir</code></h3>
+<p>The project directory. This is usually the same as the directory of the
+Craftr package manifest (<code>manifest.cson</code>), but can be altered with the
+<code>project_dir</code> field in the manifest.</p>
+<p>This variable has direct influence on the behaviour of the <code>local()</code> function.</p>
+<h3 id="options"><code>options</code></h3>
+<p>An object that has as its members all options defined in the package manifest.</p>
+<pre class="codehilite"><code class="language-python">if options.bad_weather:
+  logger.warn('be careful, you are choosing a build environment with bad weather')</code></pre>
+
+
+<h2 id="variables">Variables</h2>
+<h3 id="logger"><code>logger</code></h3>
+<p>A <code>craftr.core.logging.BaseLogger</code> instance. Use its <code>.debug()</code>, <code>.info()</code>,
+<code>.warn()</code> and <code>.error()</code> members to print information during the execution of
+the build script.</p>
+<p>See also: <code>error()</code> built-in function</p>
+<h3 id="session"><code>session</code></h3>
+<p>The current <code>craftr.core.session.Session</code> object that manages the build process
+and Craftr packages. Sometimes you will want to modify its <code>.options</code> member
+or retrieve the currently executed Craftr module from its <code>.module</code> member.</p>
+<h2 id="data">Data</h2>
+<h3 id="default"><code>Default</code></h3>
+<p>A singleton that can be used in places where <code>None</code> can not be used as a
+placeholder because it infers another special meaning. This is often used
+for <code>suffix</code> parameters of target generators.</p>
+<pre class="codehilite"><code class="language-python">if suffix is Default:
+  suffix = derive_suffix_from_context()
+if suffix is not None:
+  output = path.addsuffix(output, suffix)</code></pre>
+
+
+<h2 id="functions">Functions</h2>
+<h3 id="gtn"><code>gtn()</code></h3>
+<h3 id="include_defs"><code>include_defs()</code></h3>
+<h3 id="glob"><code>glob()</code></h3>
+<h3 id="local"><code>local()</code></h3>
+<h3 id="buildlocal"><code>buildlocal()</code></h3>
+<h3 id="relocate_files"><code>relocate_files()</code></h3>
+<h3 id="filter"><code>filter()</code></h3>
+<h3 id="map"><code>map()</code></h3>
+<h3 id="zip"><code>zip()</code></h3>
+<h3 id="load"><code>load()</code></h3>
+<h3 id="load_file"><code>load_file()</code></h3>
+<h3 id="gentool"><code>gentool()</code></h3>
+<h3 id="gentarget"><code>gentarget()</code></h3>
+<h3 id="gentask"><code>gentask()</code></h3>
+<h3 id="task"><code>task()</code></h3>
+<h3 id="genalias"><code>genalias()</code></h3>
+<h3 id="runtarget"><code>runtarget()</code></h3>
+<h3 id="write_response_file"><code>write_response_file()</code></h3>
+<h3 id="error"><code>error()</code></h3>
+<h3 id="return_"><code>return_()</code></h3>
+<h3 id="append_path"><code>append_PATH()</code></h3>
+<h3 id="external_fileurls-filename-none-directory-none-copy_file_urls-false-name-none"><code>external_file(*urls, filename = None, directory = None, copy_file_urls = False, name = None)</code></h3>
+<h3 id="external_archiveurls-directory-none-name-none"><code>external_archive(*urls, directory = None, name = None)</code></h3>
+<h3 id="pkg_configpkg_name-static-false"><code>pkg_config(pkg_name, static = False)</code></h3>
+<p>Uses <code>pkg-config</code> to read the flags for the library specified with <em>pkg_name</em>
+and returns a Framework object. If <code>pkg-config</code> is not available on the platform
+or the library can not be found, <code>pkg_config.Error</code> is raised.</p>
+<pre class="codehilite"><code class="language-python">from craftr.loaders import pkg_config
+try:
+  cURL = pkg_config('libcurl')
+except pkg_config.Error:
+  # compile from source or whatever</code></pre>
+
+
+<h2 id="classes">Classes</h2>
+<h3 id="namespace"><code>Namespace</code></h3>
+<h3 id="targetbuilder"><code>TargetBuilder</code></h3>
+<h3 id="framework"><code>Framework</code></h3>
+<h2 id="exceptions">Exceptions</h2>
+<h3 id="moduleerror"><code>ModuleError</code></h3>
+<h3 id="modulereturn"><code>ModuleReturn</code></h3>
+<h3 id="modulenotfound"><code>ModuleNotFound</code></h3>
+<h3 id="tooldetectionerror"><code>ToolDetectionError</code></h3>
+<h2 id="modules">Modules</h2>
+<h3 id="path"><code>path</code></h3>
+<h3 id="shell"><code>shell</code></h3>
+<h3 id="platform"><code>platform</code></h3>
+              
+            </article>
+          </div>
+        </div>
+      </main>
+      
+        
+<footer class="md-footer">
+  
+    <div class="md-footer-nav">
+      <nav class="md-footer-nav__inner md-grid">
+        
+          <a href="../loaders/" title="Loaders" class="md-flex md-footer-nav__link md-footer-nav__link--prev" rel="prev">
+            <div class="md-flex__cell md-flex__cell--shrink">
+              <i class="md-icon md-icon--arrow-back md-footer-nav__button"></i>
+            </div>
+            <div class="md-flex__cell md-flex__cell--stretch md-footer-nav__title">
+              <span class="md-flex__ellipsis">
+                <span class="md-footer-nav__direction">
+                  Previous
+                </span>
+                Loaders
+              </span>
+            </div>
+          </a>
+        
+        
+          <a href="../config/" title="Build Configuration" class="md-flex md-footer-nav__link md-footer-nav__link--next" rel="next">
+            <div class="md-flex__cell md-flex__cell--stretch md-footer-nav__title">
+              <span class="md-flex__ellipsis">
+                <span class="md-footer-nav__direction">
+                  Next
+                </span>
+                Build Configuration
+              </span>
+            </div>
+            <div class="md-flex__cell md-flex__cell--shrink">
+              <i class="md-icon md-icon--arrow-forward md-footer-nav__button"></i>
+            </div>
+          </a>
+        
+      </nav>
+    </div>
+  
+  <div class="md-footer-meta md-typeset">
+    <div class="md-footer-meta__inner md-grid">
+      <div class="md-footer-copyright">
+        
+        powered by
+        <a href="http://www.mkdocs.org" title="MkDocs">MkDocs</a>
+        and
+        <a href="http://squidfunk.github.io/mkdocs-material/" title="Material for MkDocs">
+          Material for MkDocs</a>
+      </div>
+      
+        
+      
+    </div>
+  </div>
+</footer>
+      
+    </div>
+    
+      <script src="../../assets/javascripts/application-2afe21e0b2.js"></script>
+      <script>var config={url:{base:"../.."}},app=new Application(config);app.initialize()</script>
+      
+    
+    
+      
+    
+  </body>
+</html>

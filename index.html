@@ -1,177 +1,371 @@
+
 <!DOCTYPE html>
-<!--[if IE 8]><html class="no-js lt-ie9" lang="en" > <![endif]-->
-<!--[if gt IE 8]><!--> <html class="no-js" lang="en" > <!--<![endif]-->
-<head>
-  <meta charset="utf-8">
-  <meta http-equiv="X-UA-Compatible" content="IE=edge">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <meta name="description" content="None">
-  
-  <link rel="shortcut icon" href="./img/favicon.ico">
-  <title>Home - Welcome to the Craftr Documentation!</title>
-  <link href='https://fonts.googleapis.com/css?family=Lato:400,700|Roboto+Slab:400,700|Inconsolata:400,700' rel='stylesheet' type='text/css'>
-
-  <link rel="stylesheet" href="./css/theme.css" type="text/css" />
-  <link rel="stylesheet" href="./css/theme_extra.css" type="text/css" />
-  <link rel="stylesheet" href="./css/highlight.css">
-  
-  <script>
-    // Current page data
-    var mkdocs_page_name = "Home";
-    var mkdocs_page_input_path = "index.md";
-    var mkdocs_page_url = "/";
-  </script>
-  
-  <script src="./js/jquery-2.1.1.min.js"></script>
-  <script src="./js/modernizr-2.8.3.min.js"></script>
-  <script type="text/javascript" src="./js/highlight.pack.js"></script> 
-  
-</head>
-
-<body class="wy-body-for-nav" role="document">
-
-  <div class="wy-grid-for-nav">
-
+<html class="no-js">
+  <head>
     
-    <nav data-toggle="wy-nav-shift" class="wy-nav-side stickynav">
-      <div class="wy-side-nav-search">
-        <a href="." class="icon icon-home"> Welcome to the Craftr Documentation!</a>
-        <div role="search">
-  <form id ="rtd-search-form" class="wy-form" action="./search.html" method="get">
-    <input type="text" name="q" placeholder="Search docs" />
-  </form>
-</div>
+      <meta charset="utf-8">
+      <meta name="viewport" content="width=device-width,initial-scale=1">
+      
+      
+      
+      
+        <link rel="shortcut icon" href="./assets/images/favicon.ico">
+      
+      <meta name="generator" content="mkdocs+mkdocs-material#1.0.3">
+    
+    
+      
+        <title>Home - Craftr v2.0.0.dev7 Documentation</title>
+      
+    
+    
+      <script src="./assets/javascripts/modernizr-facb31f4a3.js"></script>
+    
+    
+      
+        
+        
+        
+        <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Roboto:300,400,400i,700|Roboto+Mono">
+        <style>body,input{font-family:"Roboto","Helvetica Neue",Helvetica,Arial,sans-serif}code,kbd,pre{font-family:"Roboto Mono","Courier New",Courier,monospace}</style>
+      
+      <link rel="stylesheet" href="https://fonts.googleapis.com/icon?family=Material+Icons">
+    
+    
+      <link rel="stylesheet" href="./assets/stylesheets/application-f3ab63f78a.css">
+      
+      
+    
+    
+  </head>
+  
+  
+  
+  
+    <body>
+  
+    <svg class="md-svg">
+      <defs>
+        
+        
+      </defs>
+    </svg>
+    <input class="md-toggle" data-md-toggle="drawer" type="checkbox" id="drawer">
+    <input class="md-toggle" data-md-toggle="search" type="checkbox" id="search">
+    <label class="md-overlay" data-md-component="overlay" for="drawer"></label>
+    
+      <header class="md-header">
+  <nav class="md-header-nav md-grid">
+    <div class="md-flex">
+      <div class="md-flex__cell md-flex__cell--shrink">
+        <a href="." title="Craftr v2.0.0.dev7 Documentation" class=" md-icon md-icon--home  md-header-nav__button">
+          
+        </a>
       </div>
-
-      <div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="main navigation">
-	<ul class="current">
-          
-            <li>
-    <li class="toctree-l1 current">
-        <a class="current" href=".">Home</a>
-        
-            <ul>
-            
-                <li class="toctree-l3"><a href="#craftr-2">Craftr 2</a></li>
-                
-                    <li><a class="toctree-l4" href="#how-to-contribute">How to Contribute</a></li>
-                
-                    <li><a class="toctree-l4" href="#installation">Installation</a></li>
-                
-                    <li><a class="toctree-l4" href="#requirements">Requirements</a></li>
-                
-                    <li><a class="toctree-l4" href="#license">License</a></li>
-                
-            
-            </ul>
-        
-    </li>
-<li>
-          
-            <li>
-    <li class="toctree-l1 ">
-        <a class="" href="changes/">Changelog</a>
-        
-    </li>
-<li>
-          
-            <li>
-    <ul class="subnav">
-    <li><span>Reference</span></li>
-
-        
-            
-    <li class="toctree-l1 ">
-        <a class="" href="getting-started/">Getting Started</a>
-        
-    </li>
-
-        
-            
-    <li class="toctree-l1 ">
-        <a class="" href="config/">Build Configuration</a>
-        
-    </li>
-
-        
-            
-    <li class="toctree-l1 ">
-        <a class="" href="builtins/">Built-ins</a>
-        
-    </li>
-
-        
-            
-    <li class="toctree-l1 ">
-        <a class="" href="loaders/">Loaders</a>
-        
-    </li>
-
-        
-            
-    <li class="toctree-l1 ">
-        <a class="" href="tasks/">Tasks</a>
-        
-    </li>
-
-        
-            
-    <li class="toctree-l1 ">
-        <a class="" href="generators/">Generators</a>
-        
-    </li>
-
-        
-            
-    <li class="toctree-l1 ">
-        <a class="" href="transition/">Transition from Craftr 1</a>
-        
-    </li>
-
-        
-            
-    <li class="toctree-l1 ">
-        <a class="" href="faq/">FAQ</a>
-        
-    </li>
-
-        
-    </ul>
-<li>
-          
-        </ul>
+      <div class="md-flex__cell md-flex__cell--shrink">
+        <label class="md-icon md-icon--menu md-header-nav__button" for="drawer"></label>
       </div>
-      &nbsp;
-    </nav>
-
-    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap">
-
-      
-      <nav class="wy-nav-top" role="navigation" aria-label="top navigation">
-        <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
-        <a href=".">Welcome to the Craftr Documentation!</a>
-      </nav>
-
-      
-      <div class="wy-nav-content">
-        <div class="rst-content">
-          <div role="navigation" aria-label="breadcrumbs navigation">
-  <ul class="wy-breadcrumbs">
-    <li><a href=".">Docs</a> &raquo;</li>
-    
-      
-    
-    <li>Home</li>
-    <li class="wy-breadcrumbs-aside">
-      
-    </li>
-  </ul>
-  <hr/>
-</div>
-          <div role="main">
-            <div class="section">
+      <div class="md-flex__cell md-flex__cell--stretch">
+        <span class="md-flex__ellipsis md-header-nav__title">
+          
+            
               
-                <h1 id="craftr-2">Craftr 2</h1>
+            
+            Home
+          
+        </span>
+      </div>
+      <div class="md-flex__cell md-flex__cell--shrink">
+        
+          <label class="md-icon md-icon--search md-header-nav__button" for="search"></label>
+          
+<div class="md-search" data-md-component="search">
+  <div class="md-search__overlay"></div>
+  <div class="md-search__inner">
+    <form class="md-search__form" name="search">
+      <input type="text" class="md-search__input" name="query" placeholder="Search" accesskey="s" autocapitalize="off" autocorrect="off" autocomplete="off" spellcheck="false">
+      <label class="md-icon md-search__icon" for="search"></label>
+    </form>
+    <div class="md-search__output">
+      <div class="md-search__scrollwrap" data-md-scrollfix>
+        <div class="md-search-result" data-md-component="result"></div>
+      </div>
+    </div>
+  </div>
+</div>
+        
+      </div>
+      <div class="md-flex__cell md-flex__cell--shrink">
+          <div class="md-header-nav__source">
+            
+          </div>
+      </div>
+    </div>
+  </nav>
+</header>
+    
+    <div class="md-container">
+      <main class="md-main">
+        <div class="md-main__inner md-grid" data-md-component="container">
+          
+            
+              <div class="md-sidebar md-sidebar--primary" data-md-component="navigation">
+                <div class="md-sidebar__scrollwrap">
+                  <div class="md-sidebar__inner">
+                    <nav class="md-nav md-nav--primary">
+  <label class="md-nav__title md-nav__title--site" for="drawer">
+    <i class=" md-icon md-icon--home  md-nav__button">
+      
+    </i>
+    Craftr v2.0.0.dev7 Documentation
+  </label>
+  
+  <ul class="md-nav__list" data-md-scrollfix>
+    
+      
+      
+  <li class="md-nav__item">
+    
+    <input class="md-toggle md-nav__toggle" data-md-toggle="toc" type="checkbox" id="toc">
+    
+      
+    
+    
+      <label class="md-nav__link md-nav__link--active" for="toc">
+        Home
+      </label>
+    
+    <a href="." title="Home" class="md-nav__link md-nav__link--active">
+      Home
+    </a>
+    
+      
+<nav class="md-nav md-nav--secondary">
+  
+  
+    
+  
+  
+    <label class="md-nav__title" for="toc">Table of contents</label>
+    <ul class="md-nav__list" data-md-scrollfix>
+      
+        <li class="md-nav__item">
+  <a href="#how-to-contribute" title="How to Contribute" class="md-nav__link">
+    How to Contribute
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#installation" title="Installation" class="md-nav__link">
+    Installation
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#requirements" title="Requirements" class="md-nav__link">
+    Requirements
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#license" title="License" class="md-nav__link">
+    License
+  </a>
+  
+</li>
+      
+    </ul>
+  
+</nav>
+    
+  </li>
+
+    
+      
+      
+  <li class="md-nav__item">
+    
+      <a href="getting-started/" title="Getting Started" class="md-nav__link">
+        Getting Started
+      </a>
+    
+  </li>
+
+    
+      
+      
+  <li class="md-nav__item md-nav__item--nested">
+    
+      <input class="md-toggle md-nav__toggle" data-md-toggle="nav-3" type="checkbox" id="nav-3">
+    
+    <label class="md-nav__link" for="nav-3">
+      Reference
+    </label>
+    <nav class="md-nav" data-md-component="collapsible">
+      <label class="md-nav__title" for="nav-3">
+        Reference
+      </label>
+      <ul class="md-nav__list" data-md-scrollfix>
+        
+        
+          
+          
+  <li class="md-nav__item">
+    
+      <a href="ref/package/" title="Package Description" class="md-nav__link">
+        Package Description
+      </a>
+    
+  </li>
+
+        
+          
+          
+  <li class="md-nav__item">
+    
+      <a href="ref/targets/" title="Targets" class="md-nav__link">
+        Targets
+      </a>
+    
+  </li>
+
+        
+          
+          
+  <li class="md-nav__item">
+    
+      <a href="ref/tasks/" title="Tasks" class="md-nav__link">
+        Tasks
+      </a>
+    
+  </li>
+
+        
+          
+          
+  <li class="md-nav__item">
+    
+      <a href="ref/loaders/" title="Loaders" class="md-nav__link">
+        Loaders
+      </a>
+    
+  </li>
+
+        
+          
+          
+  <li class="md-nav__item">
+    
+      <a href="ref/builtins/" title="Built-ins" class="md-nav__link">
+        Built-ins
+      </a>
+    
+  </li>
+
+        
+          
+          
+  <li class="md-nav__item">
+    
+      <a href="ref/config/" title="Build Configuration" class="md-nav__link">
+        Build Configuration
+      </a>
+    
+  </li>
+
+        
+      </ul>
+    </nav>
+  </li>
+
+    
+      
+      
+  <li class="md-nav__item">
+    
+      <a href="changes/" title="Changelog" class="md-nav__link">
+        Changelog
+      </a>
+    
+  </li>
+
+    
+      
+      
+  <li class="md-nav__item">
+    
+      <a href="faq/" title="FAQ" class="md-nav__link">
+        FAQ
+      </a>
+    
+  </li>
+
+    
+  </ul>
+</nav>
+                  </div>
+                </div>
+              </div>
+            
+            
+              <div class="md-sidebar md-sidebar--secondary" data-md-component="toc">
+                <div class="md-sidebar__scrollwrap">
+                  <div class="md-sidebar__inner">
+                    
+<nav class="md-nav md-nav--secondary">
+  
+  
+    
+  
+  
+    <label class="md-nav__title" for="toc">Table of contents</label>
+    <ul class="md-nav__list" data-md-scrollfix>
+      
+        <li class="md-nav__item">
+  <a href="#how-to-contribute" title="How to Contribute" class="md-nav__link">
+    How to Contribute
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#installation" title="Installation" class="md-nav__link">
+    Installation
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#requirements" title="Requirements" class="md-nav__link">
+    Requirements
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#license" title="License" class="md-nav__link">
+    License
+  </a>
+  
+</li>
+      
+    </ul>
+  
+</nav>
+                  </div>
+                </div>
+              </div>
+            
+          
+          <div class="md-content">
+            <article class="md-content__inner md-typeset">
+               
+              
+                
+                <h1 id="the-craftr-build-system">The Craftr build system</h1>
 <p><a href="https://pypi.python.org/pypi/craftr-build"><img alt="PyPI Version" src="https://img.shields.io/pypi/v/craftr-build.svg" /></a>
 <a href="https://bestpractices.coreinfrastructure.org/projects/530"><img alt="CII Best Practices" src="https://bestpractices.coreinfrastructure.org/projects/530/badge" /></a></p>
 <p>Craftr is a meta build system based on <a href="https://www.python.org/">Python 3</a> scripts which produces
@@ -179,8 +373,8 @@
 that can be re-used easily and ships with a standard library supporting
 various programming languages and common libraries.</p>
 <ul>
-<li><a href="https://github.com/craftr-build/craftr/tree/master/doc">Documentation</a></li>
-<li><a href="https://github.com/craftr-build/craftr/tree/master/doc/getting-started.md">Getting Started</a></li>
+<li><a href="https://craftr-build.github.io/craftr/">Documentation</a></li>
+<li><a href="https://craftr-build.github.io/craftr/getting-started">Getting Started</a></li>
 <li><a href="https://github.com/craftr-build/craftr/wiki">Craftr 2.x Wiki</a></li>
 </ul>
 <p><strong>Features</strong></p>
@@ -192,47 +386,48 @@ various programming languages and common libraries.</p>
 <li>[ ] Package manager (hosted on <a href="https://craftr.net">Craftr.net</a>)</li>
 </ul>
 <p><strong>Basic Usage</strong></p>
-<pre><code>$ craftr version                            # Print Craftr version and exit
+<pre class="codehilite"><code>$ craftr version                            # Print Craftr version and exit
 $ craftr export                             # Generate Ninja manifest
 $ craftr build [target [target [...]]]      # Build all or the specified target(s)
 $ craftr clean [-r] [target [target [...]]] # Clean all or the specified target(s)
 $ craftr startpackage &lt;name&gt; [directory]    # Start a new Craftr project (manifest, Craftrfile)
-$ craftr lock                               # Generate a .dependency-lock file (after craftr export)
-</code></pre>
+$ craftr lock                               # Generate a .dependency-lock file (after craftr export)</code></pre>
+
+
 <p><strong>C++ Example</strong></p>
-<pre><code class="python">cxx = load('craftr.lang.cxx')
+<pre class="codehilite"><code class="language-python">cxx = load('craftr.lang.cxx')
 program = cxx.executable(
   inputs = cxx.compile_cpp(sources = glob('src/**/*.cpp')),
   output = 'main'
-)
-</code></pre>
+)</code></pre>
+
 
 <p><strong>Java Example</strong></p>
-<pre><code class="python">java = load('craftr.lang.java')
+<pre class="codehilite"><code class="language-python">java = load('craftr.lang.java')
 jar = java.jar(
   inputs = java.compile(src_dir = local('src')),
   output = 'myapp',
   entry_point = 'Main'
-)
-</code></pre>
+)</code></pre>
+
 
 <p><strong>C# Example</strong></p>
-<pre><code class="python">cs = load('craftr.lang.csharp')
+<pre class="codehilite"><code class="language-python">cs = load('craftr.lang.csharp')
 app = cs.compile(
   sources = glob('src/**/*.cs'),
   output = 'Main',
   target = 'exe'
-)
-</code></pre>
+)</code></pre>
+
 
 <p><strong>Cython Exmple</strong></p>
-<pre><code class="python">cython = load('craftr.lang.cython')
+<pre class="codehilite"><code class="language-python">cython = load('craftr.lang.cython')
 primes = cython.project(
   sources = [local('Primes.pyx')],
   main = local('Main.pyx')
 )
-run = runtarget(primes.main)
-</code></pre>
+run = runtarget(primes.main)</code></pre>
+
 
 <h2 id="how-to-contribute">How to Contribute</h2>
 <p>Please <a href="https://github.com/craftr-build/craftr/issues/new">create an Issue</a> if
@@ -242,15 +437,17 @@ you have any questions, problems or feature requests.</p>
 no untagged version of Craftr 2.x available on PyPI yet and otherwise Pip will
 install Craftr 1.x (which is quite different). To get the newest stable version
 of Craftr 2, use</p>
-<pre><code>$ pip install craftr-build==2.0.0.dev7
-</code></pre>
+<pre class="codehilite"><code>$ pip install craftr-build==2.0.0.dev7</code></pre>
+
+
 <p>To get the cutting edge development version, I suggest installing Craftr
 from the Git repository into a virtualenv.</p>
-<pre><code>$ virtualenv -p python3 env &amp;&amp; source env/bin/activate
+<pre class="codehilite"><code>$ virtualenv -p python3 env &amp;&amp; source env/bin/activate
 $ git clone https://github.com/craftr-build/craftr.git -b development
 $ cd craftr
-$ pip install -e .
-</code></pre>
+$ pip install -e .</code></pre>
+
+
 <h2 id="requirements">Requirements</h2>
 <ul>
 <li><a href="https://github.com/ninja-build/ninja">Ninja</a> 1.7.1 or newer</li>
@@ -268,7 +465,7 @@ $ pip install -e .
 <li><a href="https://pypi.python.org/pypi/werkzeug">werkzeug</a></li>
 </ul>
 <h2 id="license">License</h2>
-<pre><code>The Craftr build system
+<pre class="codehilite"><code>The Craftr build system
 Copyright (C) 2016  Niklas Rosenstein
 
 This program is free software: you can redistribute it and/or modify
@@ -282,54 +479,65 @@ MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
 GNU General Public License for more details.
 
 You should have received a copy of the GNU General Public License
-along with this program.  If not, see &lt;http://www.gnu.org/licenses/&gt;.
-</code></pre>
+along with this program.  If not, see &lt;http://www.gnu.org/licenses/&gt;.</code></pre>
+
+
 <p>For more information, see the <code>LICENSE.txt</code> file.</p>
               
-            </div>
+            </article>
           </div>
-          <footer>
+        </div>
+      </main>
+      
+        
+<footer class="md-footer">
   
-    <div class="rst-footer-buttons" role="navigation" aria-label="footer navigation">
-      
-        <a href="changes/" class="btn btn-neutral float-right" title="Changelog">Next <span class="icon icon-circle-arrow-right"></span></a>
-      
-      
+    <div class="md-footer-nav">
+      <nav class="md-footer-nav__inner md-grid">
+        
+        
+          <a href="getting-started/" title="Getting Started" class="md-flex md-footer-nav__link md-footer-nav__link--next" rel="next">
+            <div class="md-flex__cell md-flex__cell--stretch md-footer-nav__title">
+              <span class="md-flex__ellipsis">
+                <span class="md-footer-nav__direction">
+                  Next
+                </span>
+                Getting Started
+              </span>
+            </div>
+            <div class="md-flex__cell md-flex__cell--shrink">
+              <i class="md-icon md-icon--arrow-forward md-footer-nav__button"></i>
+            </div>
+          </a>
+        
+      </nav>
     </div>
   
-
-  <hr/>
-
-  <div role="contentinfo">
-    <!-- Copyright etc -->
-    
-  </div>
-
-  Built with <a href="http://www.mkdocs.org">MkDocs</a> using a <a href="https://github.com/snide/sphinx_rtd_theme">theme</a> provided by <a href="https://readthedocs.org">Read the Docs</a>.
-</footer>
-	  
-        </div>
+  <div class="md-footer-meta md-typeset">
+    <div class="md-footer-meta__inner md-grid">
+      <div class="md-footer-copyright">
+        
+        powered by
+        <a href="http://www.mkdocs.org" title="MkDocs">MkDocs</a>
+        and
+        <a href="http://squidfunk.github.io/mkdocs-material/" title="Material for MkDocs">
+          Material for MkDocs</a>
       </div>
-
-    </section>
-    
+      
+        
+      
+    </div>
   </div>
-
-  <div class="rst-versions" role="note" style="cursor: pointer">
-    <span class="rst-current-version" data-toggle="rst-current-version">
+</footer>
       
+    </div>
+    
+      <script src="./assets/javascripts/application-2afe21e0b2.js"></script>
+      <script>var config={url:{base:"."}},app=new Application(config);app.initialize()</script>
       
+    
+    
       
-        <span style="margin-left: 15px"><a href="changes/" style="color: #fcfcfc">Next &raquo;</a></span>
-      
-    </span>
-</div>
-    <script src="./js/theme.js"></script>
-
-</body>
+    
+  </body>
 </html>
-
-<!--
-MkDocs version : 0.16.1
-Build Date UTC : 2017-01-24 08:20:22
--->

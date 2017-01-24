@@ -9,17 +9,17 @@
       
       
       
-        <link rel="shortcut icon" href="../assets/images/favicon.ico">
+        <link rel="shortcut icon" href="../../assets/images/favicon.ico">
       
       <meta name="generator" content="mkdocs+mkdocs-material#1.0.3">
     
     
       
-        <title>Getting Started - Craftr v2.0.0.dev7 Documentation</title>
+        <title>Loaders - Craftr v2.0.0.dev7 Documentation</title>
       
     
     
-      <script src="../assets/javascripts/modernizr-facb31f4a3.js"></script>
+      <script src="../../assets/javascripts/modernizr-facb31f4a3.js"></script>
     
     
       
@@ -32,7 +32,7 @@
       <link rel="stylesheet" href="https://fonts.googleapis.com/icon?family=Material+Icons">
     
     
-      <link rel="stylesheet" href="../assets/stylesheets/application-f3ab63f78a.css">
+      <link rel="stylesheet" href="../../assets/stylesheets/application-f3ab63f78a.css">
       
       
     
@@ -58,7 +58,7 @@
   <nav class="md-header-nav md-grid">
     <div class="md-flex">
       <div class="md-flex__cell md-flex__cell--shrink">
-        <a href=".." title="Craftr v2.0.0.dev7 Documentation" class=" md-icon md-icon--home  md-header-nav__button">
+        <a href="../.." title="Craftr v2.0.0.dev7 Documentation" class=" md-icon md-icon--home  md-header-nav__button">
           
         </a>
       </div>
@@ -70,8 +70,12 @@
           
             
               
+                <span class="md-header-nav__parent">
+                  Reference
+                </span>
+              
             
-            Getting Started
+            Loaders
           
         </span>
       </div>
@@ -126,7 +130,7 @@
       
   <li class="md-nav__item">
     
-      <a href=".." title="Home" class="md-nav__link">
+      <a href="../.." title="Home" class="md-nav__link">
         Home
       </a>
     
@@ -137,19 +141,9 @@
       
   <li class="md-nav__item">
     
-    <input class="md-toggle md-nav__toggle" data-md-toggle="toc" type="checkbox" id="toc">
-    
-    
-    <a href="./" title="Getting Started" class="md-nav__link md-nav__link--active">
-      Getting Started
-    </a>
-    
-      
-<nav class="md-nav md-nav--secondary">
-  
-  
-  
-</nav>
+      <a href="../../getting-started/" title="Getting Started" class="md-nav__link">
+        Getting Started
+      </a>
     
   </li>
 
@@ -158,7 +152,7 @@
       
   <li class="md-nav__item md-nav__item--nested">
     
-      <input class="md-toggle md-nav__toggle" data-md-toggle="nav-3" type="checkbox" id="nav-3">
+      <input class="md-toggle md-nav__toggle" data-md-toggle="nav-3" type="checkbox" id="nav-3" checked>
     
     <label class="md-nav__link" for="nav-3">
       Reference
@@ -174,7 +168,7 @@
           
   <li class="md-nav__item">
     
-      <a href="../ref/package/" title="Package Description" class="md-nav__link">
+      <a href="../package/" title="Package Description" class="md-nav__link">
         Package Description
       </a>
     
@@ -185,7 +179,7 @@
           
   <li class="md-nav__item">
     
-      <a href="../ref/targets/" title="Targets" class="md-nav__link">
+      <a href="../targets/" title="Targets" class="md-nav__link">
         Targets
       </a>
     
@@ -196,7 +190,7 @@
           
   <li class="md-nav__item">
     
-      <a href="../ref/tasks/" title="Tasks" class="md-nav__link">
+      <a href="../tasks/" title="Tasks" class="md-nav__link">
         Tasks
       </a>
     
@@ -207,9 +201,19 @@
           
   <li class="md-nav__item">
     
-      <a href="../ref/loaders/" title="Loaders" class="md-nav__link">
-        Loaders
-      </a>
+    <input class="md-toggle md-nav__toggle" data-md-toggle="toc" type="checkbox" id="toc">
+    
+    
+    <a href="./" title="Loaders" class="md-nav__link md-nav__link--active">
+      Loaders
+    </a>
+    
+      
+<nav class="md-nav md-nav--secondary">
+  
+  
+  
+</nav>
     
   </li>
 
@@ -218,7 +222,7 @@
           
   <li class="md-nav__item">
     
-      <a href="../ref/builtins/" title="Built-ins" class="md-nav__link">
+      <a href="../builtins/" title="Built-ins" class="md-nav__link">
         Built-ins
       </a>
     
@@ -229,7 +233,7 @@
           
   <li class="md-nav__item">
     
-      <a href="../ref/config/" title="Build Configuration" class="md-nav__link">
+      <a href="../config/" title="Build Configuration" class="md-nav__link">
         Build Configuration
       </a>
     
@@ -245,7 +249,7 @@
       
   <li class="md-nav__item">
     
-      <a href="../changes/" title="Changelog" class="md-nav__link">
+      <a href="../../changes/" title="Changelog" class="md-nav__link">
         Changelog
       </a>
     
@@ -256,7 +260,7 @@
       
   <li class="md-nav__item">
     
-      <a href="../faq/" title="FAQ" class="md-nav__link">
+      <a href="../../faq/" title="FAQ" class="md-nav__link">
         FAQ
       </a>
     
@@ -289,85 +293,26 @@
                
               
                 
-                  <h1>Getting Started</h1>
+                  <h1>Loaders</h1>
                 
-                <blockquote>
-<p><strong>Note</strong>: The example we create in this tutorial can also be found in the
-<a href="../examples/examples.c">examples/examples.c</a> folder.</p>
-</blockquote>
-<p>Every project that is compiled with Craftr needs at least a manifest and a
-build script. Craftr provides a convenient way to generate a template for you.
-Choose your project directory and run the following command</p>
-<pre class="codehilite"><code>$ craftr startpackage examples.c .</code></pre>
+                <p>If you're project provides some examples that depend on huge binary data,
+you can download these files when necessary:</p>
+<pre class="codehilite"><code class="language-python">if options.build_examples:
+  example_data = external_file(&quot;http://url.to/example/data.bin&quot;)
+  # ... build examples here</code></pre>
 
 
-<p>Then open the <code>manifest.cson</code> file that was created and add the generic C/C++
-module as a dependency. With <code>"*"</code> we specify that the newest version of the
-module that is available should be used.</p>
-<pre class="codehilite"><code class="language-cson">name: &quot;examples.c&quot;
-version: &quot;1.0.0&quot;
-dependencies:
-  &quot;craftr.lang.cxx&quot;: &quot;*&quot;
-options:</code></pre>
-
-
-<p>Now let's assume we have the following two C source files in our project
-directory as well.</p>
-<pre class="codehilite"><code class="language-c">$ cat src/main.c
-
-extern void say_hello(char const* name, char const* weather);
-
-int main(int argc, char** argv) {
-  if (argc != 3) {
-    printf(&quot;error: usage: %s name weather\n&quot;);
-    return 0;
-  }
-  say_hello(argv[1], argv[2]);
-  return 0;
-}
-
-$ cat src/hello.c
-
-#include &lt;stdio.h&gt;
-
-void say_hello(char const* name, char const* weather) {
-  printf(&quot;Hello, %s. You are facing a %s day\n&quot;, name, weather);
-}</code></pre>
-
-
-<p>We want our build script to compile these two files into object files and then
-link them together into an executable. Additionally, the build script should
-allow us to make a test run of the program.</p>
-<pre class="codehilite"><code class="language-python">$ cat Craftrfile
-# examples.c
-
-cxx = load('craftr.lang.cxx')
-
-program = cxx.binary(
-  inputs = cxx.c_compile(sources = glob(['src/*.c'])),
-  output = 'main'
+<p>Many build scripts for projects that are not usually built with Craftr
+use the <code>external_archive()</code> function to download a source archive and
+build from that.</p>
+<pre class="codehilite"><code class="language-python">source_directory = external_archive(
+  &quot;https://curl.haxx.se/download/curl-{}.tar.gz&quot;.format(options.version)
 )
 
-from os import environ
-run = runtarget(program, environ.get('USERNAME', 'John'), &quot;sunny&quot;)</code></pre>
+# ...</code></pre>
 
 
-<p>And that's it. To compile our program, we first need to export a Ninja build
-manifest, then we can build it. Our <code>run</code> target is explicit by default, meaning
-that Ninja will not run it unless it is specified as an input or specified as
-a target to build on the command-line.</p>
-<pre class="codehilite"><code>$ craftr export
-craftr.lang.cxx: loading &quot;craftr.lang.cxx.msvc&quot; (with craftr.lang.cxx.msvc.toolkit=&quot;&quot;)
-craftr.lang.cxx:   cxc.name=&quot;msvc&quot;
-craftr.lang.cxx:   cxc.target_arch=&quot;x64&quot;
-craftr.lang.cxx:   cxc.version=&quot;19.00.23918&quot;
-$ craftr build
-[1/3] msvc compile (C:\Users\niklas\Desktop\test\build\examples.c-1.0.0\obj\src\main.obj)
-[2/3] msvc compile (C:\Users\niklas\Desktop\test\build\examples.c-1.0.0\obj\src\hello.obj)
-[3/3] msvc link (C:\Users\niklas\Desktop\test\build\examples.c-1.0.0\main.exe)
-$ craftr build run
-[0/1] C:\Users\niklas\Desktop\test\build\examples.c-1.0.0\main.exe niklas sunny
-Hello, niklas. You are facing a sunny day</code></pre>
+<p>For details on these functions, check the <a href="../builtins/">Built-ins Documentation</a></p>
               
             </article>
           </div>
@@ -380,7 +325,7 @@ Hello, niklas. You are facing a sunny day</code></pre>
     <div class="md-footer-nav">
       <nav class="md-footer-nav__inner md-grid">
         
-          <a href=".." title="Home" class="md-flex md-footer-nav__link md-footer-nav__link--prev" rel="prev">
+          <a href="../tasks/" title="Tasks" class="md-flex md-footer-nav__link md-footer-nav__link--prev" rel="prev">
             <div class="md-flex__cell md-flex__cell--shrink">
               <i class="md-icon md-icon--arrow-back md-footer-nav__button"></i>
             </div>
@@ -389,19 +334,19 @@ Hello, niklas. You are facing a sunny day</code></pre>
                 <span class="md-footer-nav__direction">
                   Previous
                 </span>
-                Home
+                Tasks
               </span>
             </div>
           </a>
         
         
-          <a href="../ref/package/" title="Package Description" class="md-flex md-footer-nav__link md-footer-nav__link--next" rel="next">
+          <a href="../builtins/" title="Built-ins" class="md-flex md-footer-nav__link md-footer-nav__link--next" rel="next">
             <div class="md-flex__cell md-flex__cell--stretch md-footer-nav__title">
               <span class="md-flex__ellipsis">
                 <span class="md-footer-nav__direction">
                   Next
                 </span>
-                Package Description
+                Built-ins
               </span>
             </div>
             <div class="md-flex__cell md-flex__cell--shrink">
@@ -431,8 +376,8 @@ Hello, niklas. You are facing a sunny day</code></pre>
       
     </div>
     
-      <script src="../assets/javascripts/application-2afe21e0b2.js"></script>
-      <script>var config={url:{base:".."}},app=new Application(config);app.initialize()</script>
+      <script src="../../assets/javascripts/application-2afe21e0b2.js"></script>
+      <script>var config={url:{base:"../.."}},app=new Application(config);app.initialize()</script>
       
     
     
