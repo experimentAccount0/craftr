@@ -59,6 +59,9 @@
         
             <ul>
             
+                <li class="toctree-l3"><a href="#v200dev7">v2.0.0.dev7</a></li>
+                
+            
                 <li class="toctree-l3"><a href="#v200dev6">v2.0.0.dev6</a></li>
                 
             
@@ -163,7 +166,28 @@
           <div role="main">
             <div class="section">
               
-                <h1 id="v200dev6">v2.0.0.dev6</h1>
+                <h1 id="v200dev7">v2.0.0.dev7</h1>
+<p>Bugfixes</p>
+<ul>
+<li>Fix function <code>cxx_extend_framework()</code> that is kept for backwards compatibility,
+  which was missing to call the new <code>cxx.extend_framework()</code>.</li>
+<li>Fix <code>NameError</code> in <code>'craftr build'</code> command</li>
+<li>fix <code>errno.ENOTTY</code> raised on Linux CI runners (eg. GitLab)</li>
+</ul>
+<p>Changes</p>
+<ul>
+<li>If terminal size can not be determined, assume 120 characters wide
+  instead of 80</li>
+</ul>
+<h1 id="v200dev6">v2.0.0.dev6</h1>
+<p>General Changes</p>
+<ul>
+<li>Default manifest configuration format is now CSON (<code>manifest.cson</code>),
+  JSON being kept for backwards compatibility (see #168)</li>
+<li>Fix crash on Travis CI with <code>tty.terminal_size()</code> (see #169)</li>
+<li>Add <code>craftr lock</code> command which generates <code>.dependency-lock</code> file in the
+  same directory as the project's Manifest (see #155)</li>
+</ul>
 <p>API Changes</p>
 <ul>
 <li>add <code>pkg_config(static = False)</code> parameter</li>
@@ -174,14 +198,19 @@
 <li>add <code>write_response_file(suffix='')</code> parameter</li>
 <li>add <code>Default</code> singleton to built-in namespace</li>
 <li>add <code>gentask()</code> and <code>task()</code> built-in functions (see #163)</li>
+<li>add <code>Target.runprefix</code> parameter and attribute</li>
+<li>add <code>Session.main_module</code> member</li>
+<li>add <code>Module.dependencies</code> member</li>
 <li>change <code>Target</code> objects can now be passed to the <code>frameworks = [...]</code> argument
   of target generators that use the <code>TargetBuilder</code> class. These input targets
   will automatically added to the implicit dependencies and their frameworks
   be added</li>
 <li>change <code>Tool</code> objects can now be passed into the <code>commands = [[...]]</code> argument
   of targets generators</li>
+<li>change <code>runtarget()</code> to take <code>Target.runprefix</code> into account</li>
 <li>change <code>path.norm()</code> now makes sure that path is lowercased on Windows</li>
 <li>change <code>load_file()</code> now adds the loaded file to <code>Module.dependent_files</code></li>
+<li>change <code>glob(patterns)</code> now accepts a string additionally to a list of strings</li>
 <li>rename <code>load_module()</code> to <code>load()</code>, using the old name displays a warning</li>
 </ul>
 <p>Library Changes</p>
@@ -193,9 +222,15 @@
   (actually implemented in <code>craftr.lang.cxx.common</code> and <code>craftr.lang.cxx.msvc</code>), see #154</li>
 <li>add <code>craftr.lang.csharp:compile()</code> to be used for unstarred import, and add docstrings</li>
 <li>add <code>exflags</code> option to <code>craftr.lang.cxx.common</code> module (see #152)</li>
+<li>add <code>ccprefix</code> option to <code>craftr.lang.cxx.common</code> module (related to #149)</li>
+<li>add to <code>craftr.lang.cxx</code> functions <code>static_library()</code> and <code>shared_library()</code></li>
+<li>change <code>craftr.lang.cxx</code> member names, old names are still available with a
+  deprecation notice. <code>binary() -&gt; executable()</code>, <code>c_compile() -&gt; compile_c()</code>,
+  <code>cpp_compile() -&gt; compile_cpp()</code></li>
 <li>change <code>craftr.lib.cURLpp</code> always requires RTTI enabled</li>
 <li>change <code>craftr.lang.cxx.msvc</code> now adds the static input library generated for DLLs to the outputs</li>
 <li>change MSVC <code>compile()</code> now supports response-files for long list of includes</li>
+<li>update default download version of <code>craftr.lib.zlib</code> to <code>1.2.10</code></li>
 </ul>
 <p>Behaviour Changes</p>
 <ul>
@@ -223,6 +258,7 @@
 <li>add <code>Manifest.filename</code> attribute</li>
 <li>add <code>craftr.core.build.Graph.add_task()</code> and <code>.tasks</code> members</li>
 <li>add <code>craftr.core.build.Task</code> class</li>
+<li>add <code>tty.terminal_size(default)</code> parameter</li>
 <li>change <code>Manifest.parse()</code> no longer accepts a file-like object</li>
 </ul>
 <p>Command-line Changes</p>

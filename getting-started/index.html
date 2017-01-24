@@ -170,45 +170,19 @@
 </blockquote>
 <p>Every project that is compiled with Craftr needs at least a manifest and a
 build script. Craftr provides a convenient way to generate a template for you.
-Choose your project directory and run the following command:</p>
+Choose your project directory and run the following command</p>
 <pre><code>$ craftr startpackage examples.c .
-$ ls
-Craftrfile  manifest.json
-$ cat Craftrfile
-# examples.c
-$ cat manifest.json
-{
-  "name": "examples.c",
-  "version": "1.0.0",
-  "author": "",
-  "url": "",
-  "dependencies": {},
-  "options": {}
-}
 </code></pre>
-<p>We're going to compile some C source files into an executable program. For
-that we need the <code>craftr.lang.cxx</code> package that provides us with a
-cross-platform interface to compile C and C++ source code. Open the
-<code>manifest.json</code> and add <code>craftr.lang.cxx</code> to the dependencies.</p>
-<pre><code class="json">$ cat manifest.json
-{
-  &quot;name&quot;: &quot;examples.c&quot;,
-  &quot;version&quot;: &quot;1.0.0&quot;,
-  &quot;author&quot;: &quot;&quot;,
-  &quot;url&quot;: &quot;&quot;,
-  &quot;dependencies&quot;: {
-    &quot;craftr.lang.cxx&quot;: &quot;1.x&quot;
-  },
-  &quot;options&quot;: {}
-}
+<p>Then open the <code>manifest.cson</code> file that was created and add the generic C/C++
+module as a dependency. With <code>"*"</code> we specify that the newest version of the
+module that is available should be used.</p>
+<pre><code class="cson">name: &quot;examples.c&quot;
+version: &quot;1.0.0&quot;
+dependencies:
+  &quot;craftr.lang.cxx&quot;: &quot;*&quot;
+options:
 </code></pre>
 
-<blockquote>
-<p>The <code>"1.x"</code> part is a version selector that specifies the version of the
-package that we depend on. We use <code>1.x</code> to denote that we accept any version
-which a major version number of <code>1</code>. For more information on version
-selectors, check out the <a href="https://github.com/NiklasRosenstein/py-nr/blob/b26ceffbd8722e535c49fc6f74715d5a0641a35e/nr/types/version.py#L268-L283"><code>VersionSelector</code> documentation</a>.</p>
-</blockquote>
 <p>Now let's assume we have the following two C source files in our project
 directory as well.</p>
 <pre><code class="c">$ cat src/main.c
@@ -239,14 +213,14 @@ allow us to make a test run of the program.</p>
 <pre><code class="python">$ cat Craftrfile
 # examples.c
 
-from os import environ
-load_module('craftr.lang.cxx.*')
+cxx = load('craftr.lang.cxx')
 
-program = cxx_binary(
-  inputs = c_compile(sources = glob(['src/*.c'])),
+program = cxx.binary(
+  inputs = cxx.c_compile(sources = glob(['src/*.c'])),
   output = 'main'
 )
 
+from os import environ
 run = runtarget(program, environ.get('USERNAME', 'John'), &quot;sunny&quot;)
 </code></pre>
 

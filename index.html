@@ -52,11 +52,9 @@
         
             <ul>
             
-                <li class="toctree-l3"><a href="#craftr-2x">Craftr 2.x</a></li>
+                <li class="toctree-l3"><a href="#craftr-2">Craftr 2</a></li>
                 
-                    <li><a class="toctree-l4" href="#features">Features</a></li>
-                
-                    <li><a class="toctree-l4" href="#contributions">Contributions</a></li>
+                    <li><a class="toctree-l4" href="#how-to-contribute">How to Contribute</a></li>
                 
                     <li><a class="toctree-l4" href="#installation">Installation</a></li>
                 
@@ -173,54 +171,78 @@
           <div role="main">
             <div class="section">
               
-                <h1 id="craftr-2x">Craftr 2.x</h1>
+                <h1 id="craftr-2">Craftr 2</h1>
 <p><a href="https://pypi.python.org/pypi/craftr-build"><img alt="PyPI Version" src="https://img.shields.io/pypi/v/craftr-build.svg" /></a>
 <a href="https://bestpractices.coreinfrastructure.org/projects/530"><img alt="CII Best Practices" src="https://bestpractices.coreinfrastructure.org/projects/530/badge" /></a></p>
-<blockquote>
-<p>Note: Craftr 2.x is different from the initial Craftr version in many ways
-and can not be used interchangibly. The latest version of Craftr 1.x can be
-found under the <a href="https://github.com/craftr-build/craftr/tree/v1.1.4-unreleased">v1.1.4-unreleased</a>
-tag.</p>
-</blockquote>
 <p>Craftr is a meta build system based on <a href="https://www.python.org/">Python 3</a> scripts which produces
 <a href="https://github.com/ninja-build/ninja">Ninja</a> build manifests. It enforces the use of modular build definitions
-that can be re-used easily. Craftr provides a standard library to support
-various programming languages and common libraries out of the box:</p>
-<ul>
-<li>C/C++ (cURL, DLib, GoogleTest, GoogleBenchmark, tiny-dnn, Qt5, SDL2, Boost, getopt)</li>
-<li>Cython</li>
-<li>C#</li>
-<li>Java</li>
-<li>Vala</li>
-</ul>
-<p>Additional links:</p>
+that can be re-used easily and ships with a standard library supporting
+various programming languages and common libraries.</p>
 <ul>
 <li><a href="https://github.com/craftr-build/craftr/tree/master/doc">Documentation</a></li>
 <li><a href="https://github.com/craftr-build/craftr/tree/master/doc/getting-started.md">Getting Started</a></li>
 <li><a href="https://github.com/craftr-build/craftr/wiki">Craftr 2.x Wiki</a></li>
 </ul>
-<h2 id="features">Features</h2>
+<p><strong>Features</strong></p>
 <ul>
-<li>[x] Moduler build scripts (Craftr packages) with dependency management</li>
-<li>[x] Uses <code>pkg-config</code> where available, otherwise (eg. on Windows) the source
-      code will be downloaded and compiled</li>
-<li>[x] Tasks allow to embed actual Python functions into the build graph</li>
+<li>[x] Aims to be cross-platform compatible (regularly tested on Windows, Mac OS and Linux)</li>
+<li>[x] Build definitions divided into versioned modules</li>
+<li>[x] Embedd actual Python functions into the build process (keyword Tasks)</li>
+<li>[x] Dependency-lock files for fully reproducible builds</li>
 <li>[ ] Package manager (hosted on <a href="https://craftr.net">Craftr.net</a>)</li>
-<li>[ ] Dependency-version lockfiles</li>
 </ul>
-<h2 id="contributions">Contributions</h2>
-<p>Craftr is a one-man-show and an immature piece of software. I am happy about
-every contribution and feedback, be it questions, criticism, feature requests,
-bug reports or pull requests!</p>
-<p>I would love to see Craftr used by more people. If you think it's worth to
-give it a shot, don't hesitate to ask if you're getting stuck!</p>
-<p>Issue Tracker: https://github.com/craftr-build/craftr/issues
-Twitter: <a href="./twitter.com/rosensteinn">@rosensteinn</a> <a href="https://twitter.com/craftr_build">@craftr_build</a></p>
+<p><strong>Basic Usage</strong></p>
+<pre><code>$ craftr version                            # Print Craftr version and exit
+$ craftr export                             # Generate Ninja manifest
+$ craftr build [target [target [...]]]      # Build all or the specified target(s)
+$ craftr clean [-r] [target [target [...]]] # Clean all or the specified target(s)
+$ craftr startpackage &lt;name&gt; [directory]    # Start a new Craftr project (manifest, Craftrfile)
+$ craftr lock                               # Generate a .dependency-lock file (after craftr export)
+</code></pre>
+<p><strong>C++ Example</strong></p>
+<pre><code class="python">cxx = load('craftr.lang.cxx')
+program = cxx.executable(
+  inputs = cxx.compile_cpp(sources = glob('src/**/*.cpp')),
+  output = 'main'
+)
+</code></pre>
+
+<p><strong>Java Example</strong></p>
+<pre><code class="python">java = load('craftr.lang.java')
+jar = java.jar(
+  inputs = java.compile(src_dir = local('src')),
+  output = 'myapp',
+  entry_point = 'Main'
+)
+</code></pre>
+
+<p><strong>C# Example</strong></p>
+<pre><code class="python">cs = load('craftr.lang.csharp')
+app = cs.compile(
+  sources = glob('src/**/*.cs'),
+  output = 'Main',
+  target = 'exe'
+)
+</code></pre>
+
+<p><strong>Cython Exmple</strong></p>
+<pre><code class="python">cython = load('craftr.lang.cython')
+primes = cython.project(
+  sources = [local('Primes.pyx')],
+  main = local('Main.pyx')
+)
+run = runtarget(primes.main)
+</code></pre>
+
+<h2 id="how-to-contribute">How to Contribute</h2>
+<p>Please <a href="https://github.com/craftr-build/craftr/issues/new">create an Issue</a> if
+you have any questions, problems or feature requests.</p>
 <h2 id="installation">Installation</h2>
-<p>Craftr 2.x does not have a stable release yet, though the <code>2.0.0.devx</code> tags
-are already available on PyPI. If you do not explicitly specify the version
-number, Pip will install Craftr 1.x.</p>
-<pre><code>$ pip install craftr-build==2.0.0.dev5
+<p>Make sure you specify the specific version you want to install since there is
+no untagged version of Craftr 2.x available on PyPI yet and otherwise Pip will
+install Craftr 1.x (which is quite different). To get the newest stable version
+of Craftr 2, use</p>
+<pre><code>$ pip install craftr-build==2.0.0.dev7
 </code></pre>
 <p>To get the cutting edge development version, I suggest installing Craftr
 from the Git repository into a virtualenv.</p>
@@ -232,9 +254,9 @@ $ pip install -e .
 <h2 id="requirements">Requirements</h2>
 <ul>
 <li><a href="https://github.com/ninja-build/ninja">Ninja</a> 1.7.1 or newer</li>
-<li><a href="https://www.python.org/">Python</a> 3.4, 3.5</li>
+<li><a href="https://www.python.org/">CPython</a> 3.4 or 3.5</li>
 </ul>
-<h3 id="python">Python</h3>
+<p><strong>Python Dependencies (automatically installed)</strong></p>
 <ul>
 <li><a href="https://pypi.python.org/pypi/colorama">colorama</a> (optional, Windows)</li>
 <li><a href="https://pypi.python.org/pypi/glob2">glob2</a></li>
@@ -309,5 +331,5 @@ along with this program.  If not, see &lt;http://www.gnu.org/licenses/&gt;.
 
 <!--
 MkDocs version : 0.16.1
-Build Date UTC : 2017-01-05 19:32:52
+Build Date UTC : 2017-01-24 08:20:22
 -->
