@@ -459,6 +459,26 @@
             "location": "/faq/#how-can-i-set-a-global-option-in-a-configuration-file",
             "text": "You can add the options under the  [__global__]  section.",
             "title": "How can I set a global option in a configuration file?"
+        },
+        {
+            "location": "/projects/",
+            "text": "Projects using Craftr\n\n\nNiklasRosenstein.cpp-nr\n\n\nA simple C++ library with various components, complete with tests, benchmarks,\nexamples and continous integration. Demonstrates how to use Google Test and\nGoogle Benchmark and how to implement a re-usable Craftr package. The library\ncan easily be used by using its Craftr Framework.\n\n\ncxx = load('craftr.lang.cxx')\ncpp_nr = load('NiklasRosenstein.cpp-nr').nr\n\nmain = cxx.executable(\n  output = 'main',\n  inputs = cxx.compile_cpp(\n    sources = glob('src/*.cpp'),\n    frameworks = [cpp_nr]\n  )\n)\n\n\n\n\nNiklasRosenstein.maxon.c4d\n\n\nA Craftr package that allows you to build C++ plugins for \nMAXON Cinema 4D\n on\nWindows, macOS and Linux.",
+            "title": "Projects using Craftr"
+        },
+        {
+            "location": "/projects/#projects-using-craftr",
+            "text": "",
+            "title": "Projects using Craftr"
+        },
+        {
+            "location": "/projects/#niklasrosensteincpp-nr",
+            "text": "A simple C++ library with various components, complete with tests, benchmarks,\nexamples and continous integration. Demonstrates how to use Google Test and\nGoogle Benchmark and how to implement a re-usable Craftr package. The library\ncan easily be used by using its Craftr Framework.  cxx = load('craftr.lang.cxx')\ncpp_nr = load('NiklasRosenstein.cpp-nr').nr\n\nmain = cxx.executable(\n  output = 'main',\n  inputs = cxx.compile_cpp(\n    sources = glob('src/*.cpp'),\n    frameworks = [cpp_nr]\n  )\n)",
+            "title": "NiklasRosenstein.cpp-nr"
+        },
+        {
+            "location": "/projects/#niklasrosensteinmaxonc4d",
+            "text": "A Craftr package that allows you to build C++ plugins for  MAXON Cinema 4D  on\nWindows, macOS and Linux.",
+            "title": "NiklasRosenstein.maxon.c4d"
         }
     ]
 }
