@@ -306,7 +306,42 @@
                
               
                 
-                <h1 id="v200dev7">v2.0.0.dev7</h1>
+                <h1 id="development">development</h1>
+<p>Bugfixes</p>
+<ul>
+<li>An empty value for an option of type <code>path</code> will no longer end up have the
+  value of the project directory but instead be an empty string</li>
+<li>Fix <code>msvc_runtime_library</code> parameter in compile procedure of the
+  <code>craftr.lang.cxx.msvc</code> module (invert behaviour of <code>'static'</code> and <code>'dynamic'</code>)</li>
+<li>Fix issue with curl and curlpp modules where the object files are not built
+  in the build directory but instead in the source directory, or raise an
+  exception on Windows if the module directory and the build directory are on
+  different drives</li>
+</ul>
+<p>Behaviour Changes</p>
+<ul>
+<li>Explicit targets now also export a phony target rule in Ninja.</li>
+</ul>
+<p>API Changes</p>
+<ul>
+<li>change <code>load()</code> now accepts a <code>mode</code> parameter instead of <code>get_namespace</code>,
+  can be one of <code>'exports'</code> (defualt), <code>'namespace'</code> and <code>'mmodule'</code></li>
+<li>add <code>gentask(explicit)</code> parameter</li>
+<li>add <code>env</code> parameter to <code>shell.run()</code> and <code>shell.pipe()</code></li>
+<li>add <code>craftr.foreignbuild</code> module</li>
+</ul>
+<p>Standard Library</p>
+<ul>
+<li>add <code>craftr.utils.archive</code> module</li>
+<li><code>craftr.lang.cxx.msvc</code> can now compile ASM code to some extend</li>
+<li>add <code>compile_asm()</code> to <code>craftr.lang.cxx</code></li>
+</ul>
+<p>Command-line Changes</p>
+<ul>
+<li>add <code>--pm</code> option to enable the post-mortem debugger when an exception
+  occurs and is uncaught by the Craftr runtime</li>
+</ul>
+<h1 id="v200dev7">v2.0.0.dev7</h1>
 <p>Bugfixes</p>
 <ul>
 <li>Fix function <code>cxx_extend_framework()</code> that is kept for backwards compatibility,
