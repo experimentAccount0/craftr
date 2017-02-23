@@ -581,66 +581,46 @@
 
 <h1 id="modcraftrcorebuild">:mod:<code>craftr.core.build</code></h1>
 <p>This module provides all the API to generate a Ninja build manifest.</p>
-<h2 id="craftr.core.build.Graph">Graph</h2>
+<h2 id="craftr.core.build.Task">Task</h2>
 
-<pre class="codehilite"><code class="language-python">Graph()</code></pre>
-
-
-<p>This class represents the whole build graph which is generated from
-targets reference input and output files. After a :class:<code>Target</code> is
-created, it must be added to a Graph with the :meth:<code>add_target</code> method.</p>
-<p>Note that all filenames in the Graph are absolute and normalized with
-the :func:<code>path.norm</code> function.</p>
-<p>.. attribute:: tasks</p>
-<p>Read-only. A dictionary of all :class:<code>Tasks&lt;Task&gt;</code> that have been
-  added to the Graph.</p>
-<p>.. attribute:: target</p>
-<p>Read-only. A dictionary of all the :class:<code>Targets&lt;Target&gt;</code> that have
-  been added to the Graph.</p>
-<p>.. attribute:: infiles</p>
-<p>Read-only. A dictionary that maps normalized filenames of input files
-  to a list of :class:<code>Targets&lt;Target&gt;</code>.</p>
-<p>.. attribute:: outfiles</p>
-<p>Read-only. A dictionary that maps normalized filenames of output files
-  to the :class:<code>Target</code> that creates it.</p>
-<p>.. attributes:: vars</p>
-<p>A dictionary of variables that will be exported to the Ninja manifest.</p>
-<h3 id="craftr.core.build.Graph.export">export</h3>
-
-<pre class="codehilite"><code class="language-python">Graph.export(writer, context, platform)</code></pre>
+<pre class="codehilite"><code class="language-python">Task(name, func, args)</code></pre>
 
 
-<p>Export the build graph to a Ninja manifest.</p>
-<p>:param writer: A :class:<code>ninja_syntax.Writer</code> object.
-:param context: A :class:<code>ExportContext</code> object.
-:param platform: A :class:<code>PlatformHelper</code> instance.</p>
-<h3 id="craftr.core.build.Graph.add_tool">add_tool</h3>
+<p>Represents a task that can be executed via <code>craftr run &lt;task&gt; &lt;args...&gt;</code>.
+A task is a Python function that accepts arguments from the command-line.</p>
+<h3 id="craftr.core.build.Task.pickle_args">pickle_args</h3>
 
-<pre class="codehilite"><code class="language-python">Graph.add_tool(tool)</code></pre>
+<pre class="codehilite"><code class="language-python">Task.pickle_args(args)</code></pre>
 
 
-<p>Add a :class:<code>Tool</code> to the Graph.</p>
-<p>:raise ValueError: If the :attr:<code>Tool.name</code> is already used.</p>
-<h3 id="craftr.core.build.Graph.add_target">add_target</h3>
+<p>Converts a list of arguments that may contain Python objects to a list of
+plain strings containing only printable characters. Python objects are
+pickled, compressed and then encoded in base64.</p>
+<h3 id="craftr.core.build.Task.unpickle_args">unpickle_args</h3>
 
-<pre class="codehilite"><code class="language-python">Graph.add_target(target)</code></pre>
-
-
-<p>Add a :class:<code>Target</code> to the Graph.</p>
-<p>.. note:: For performance reasons, this method assumes that all paths
-          in the <em>target</em> are already normalized with :meth:<code>path.norm</code>.</p>
-<p>:raise ValueError: If the :attr:<code>Target.name</code> is already used.
-:raise DuplicateOutputError: If the <em>target</em> lists an output file that
-  is already created by another target.</p>
-<h3 id="craftr.core.build.Graph.add_task">add_task</h3>
-
-<pre class="codehilite"><code class="language-python">Graph.add_task(task, **kwargs)</code></pre>
+<pre class="codehilite"><code class="language-python">Task.unpickle_args(args)</code></pre>
 
 
-<p>Add a :class:<code>Task</code> to the Graph. Creates a :class:<code>Target</code> for the task
-and returns it.</p>
-<p>:param task: The :class:<code>Task</code> to add to the Graph.
-:param kwargs: Additional parameters for the :class:<code>Target</code> constructor.</p>
+<p>Reverts :meth:<code>pickle_args</code>.</p>
+<h2 id="craftr.core.build.Target">Target</h2>
+
+<pre class="codehilite"><code class="language-python">Target(name, commands, inputs, outputs, implicit_deps=(), order_only_deps=(), pool=None, deps=None, depfile=None, msvc_deps_prefix=None, explicit=False, foreach=False, description=None, metadata=None, cwd=None, environ=None, frameworks=(), task=None, runprefix=None)</code></pre>
+
+
+<p>A higher level abstraction of a Target that can be added to a :class:<code>Graph</code>
+and then exported into a Ninja build manifest. A target should be treated
+as read-only always.</p>
+<h3 id="craftr.core.build.Target.generates_build_instruction">generates_build_instruction</h3>
+
+<p>Reading this property tells you whether the target produces at least one
+build in the Ninja manifest. This is used to determine whether a target is
+included in the list of default targets or not.</p>
+<h3 id="craftr.core.build.Target.export">export</h3>
+
+<pre class="codehilite"><code class="language-python">Target.export(writer, context, platform)</code></pre>
+
+
+<p>Export the target to a Ninja manifest.</p>
 <h2 id="craftr.core.build.PlatformHelper">PlatformHelper</h2>
 
 <pre class="codehilite"><code class="language-python">PlatformHelper(*args, **kwargs)</code></pre>
@@ -648,27 +628,14 @@ and returns it.</p>
 
 <p>Interface to abstract platfrom dependent operations during the export
 process.</p>
-<h3 id="craftr.core.build.PlatformHelper.replace_commands_inout_vars">replace_commands_inout_vars</h3>
+<h3 id="craftr.core.build.PlatformHelper.format_env_ref">format_env_ref</h3>
 
-<pre class="codehilite"><code class="language-python">PlatformHelper.replace_commands_inout_vars(commands, inputs, outputs)</code></pre>
-
-
-<p>Applies :meth:<code>replace_argument_inout_vars</code> to all <em>commands</em>.</p>
-<h3 id="craftr.core.build.PlatformHelper.prepare_commands">prepare_commands</h3>
-
-<pre class="codehilite"><code class="language-python">PlatformHelper.prepare_commands(commands)</code></pre>
+<pre class="codehilite"><code class="language-python">PlatformHelper.format_env_ref(envvar)</code></pre>
 
 
-<p>Passed a list of list of strings that represents the commands for
-a target. Return the same value or a modified value.</p>
-<h3 id="craftr.core.build.PlatformHelper.prepare_single_command">prepare_single_command</h3>
-
-<pre class="codehilite"><code class="language-python">PlatformHelper.prepare_single_command(command, cwd)</code></pre>
-
-
-<p>Given a single command as a list of strings and an optional working
-directory path, return an updated list of strings that serves as the
-new command including the current working directory switch.</p>
+<p>Given the name of an environment variable, return a new string that
+references that environment variable in the syntax of this platform's
+shell.</p>
 <h3 id="craftr.core.build.PlatformHelper.replace_argument_inout_vars">replace_argument_inout_vars</h3>
 
 <pre class="codehilite"><code class="language-python">PlatformHelper.replace_argument_inout_vars(arg, inputs, outputs)</code></pre>
@@ -677,6 +644,20 @@ new command including the current working directory switch.</p>
 <p>Helper function for :meth:<code>write_command_file</code> to replace the <code>$in</code>
 and <code>$out</code> variables in a command argument <em>arg</em> with the specified
 <em>inputs</em> and <em>outputs</em>.</p>
+<h3 id="craftr.core.build.PlatformHelper.replace_commands_inout_vars">replace_commands_inout_vars</h3>
+
+<pre class="codehilite"><code class="language-python">PlatformHelper.replace_commands_inout_vars(commands, inputs, outputs)</code></pre>
+
+
+<p>Applies :meth:<code>replace_argument_inout_vars</code> to all <em>commands</em>.</p>
+<h3 id="craftr.core.build.PlatformHelper.prepare_single_command">prepare_single_command</h3>
+
+<pre class="codehilite"><code class="language-python">PlatformHelper.prepare_single_command(command, cwd)</code></pre>
+
+
+<p>Given a single command as a list of strings and an optional working
+directory path, return an updated list of strings that serves as the
+new command including the current working directory switch.</p>
 <h3 id="craftr.core.build.PlatformHelper.write_command_file">write_command_file</h3>
 
 <pre class="codehilite"><code class="language-python">PlatformHelper.write_command_file(filename, commands, inputs=None, outputs=None, cwd=None, environ=None, foreach=False, suffix=Default, dry=False, accept_additional_args=False)</code></pre>
@@ -699,6 +680,13 @@ accept forward arguments passed to the shell script.</p>
 <p>Returns 1) a list of strings that represents the command to execute the
 script. If <em>foreach</em> is specified, the two last items of the returned list
 will be <code>['$in', '$out']</code>. 2) The actual filename that has been created.</p>
+<h3 id="craftr.core.build.PlatformHelper.prepare_commands">prepare_commands</h3>
+
+<pre class="codehilite"><code class="language-python">PlatformHelper.prepare_commands(commands)</code></pre>
+
+
+<p>Passed a list of list of strings that represents the commands for
+a target. Return the same value or a modified value.</p>
 <h2 id="craftr.core.build.Tool">Tool</h2>
 
 <pre class="codehilite"><code class="language-python">Tool(name, command, preamble=None, environ=None)</code></pre>
@@ -725,6 +713,73 @@ can then be retrieved by converting the :class:<code>Tool</code> object to a str
 <p>.. attribute:: exported_command</p>
 <p>After :meth:<code>exported_command</code> has been called, this member contains the
   command that was exported for the Tool. This is a single string.</p>
+<h2 id="craftr.core.build.DuplicateOutputError">DuplicateOutputError</h2>
+
+<pre class="codehilite"><code class="language-python">DuplicateOutputError(filename, new_target, target)</code></pre>
+
+
+<p>This exception is raised if the same output file would be built by
+multiple targets.</p>
+<h2 id="craftr.core.build.Graph">Graph</h2>
+
+<pre class="codehilite"><code class="language-python">Graph()</code></pre>
+
+
+<p>This class represents the whole build graph which is generated from
+targets reference input and output files. After a :class:<code>Target</code> is
+created, it must be added to a Graph with the :meth:<code>add_target</code> method.</p>
+<p>Note that all filenames in the Graph are absolute and normalized with
+the :func:<code>path.norm</code> function.</p>
+<p>.. attribute:: tasks</p>
+<p>Read-only. A dictionary of all :class:<code>Tasks&lt;Task&gt;</code> that have been
+  added to the Graph.</p>
+<p>.. attribute:: target</p>
+<p>Read-only. A dictionary of all the :class:<code>Targets&lt;Target&gt;</code> that have
+  been added to the Graph.</p>
+<p>.. attribute:: infiles</p>
+<p>Read-only. A dictionary that maps normalized filenames of input files
+  to a list of :class:<code>Targets&lt;Target&gt;</code>.</p>
+<p>.. attribute:: outfiles</p>
+<p>Read-only. A dictionary that maps normalized filenames of output files
+  to the :class:<code>Target</code> that creates it.</p>
+<p>.. attributes:: vars</p>
+<p>A dictionary of variables that will be exported to the Ninja manifest.</p>
+<h3 id="craftr.core.build.Graph.add_task">add_task</h3>
+
+<pre class="codehilite"><code class="language-python">Graph.add_task(task, **kwargs)</code></pre>
+
+
+<p>Add a :class:<code>Task</code> to the Graph. Creates a :class:<code>Target</code> for the task
+and returns it.</p>
+<p>:param task: The :class:<code>Task</code> to add to the Graph.
+:param kwargs: Additional parameters for the :class:<code>Target</code> constructor.</p>
+<h3 id="craftr.core.build.Graph.add_tool">add_tool</h3>
+
+<pre class="codehilite"><code class="language-python">Graph.add_tool(tool)</code></pre>
+
+
+<p>Add a :class:<code>Tool</code> to the Graph.</p>
+<p>:raise ValueError: If the :attr:<code>Tool.name</code> is already used.</p>
+<h3 id="craftr.core.build.Graph.add_target">add_target</h3>
+
+<pre class="codehilite"><code class="language-python">Graph.add_target(target)</code></pre>
+
+
+<p>Add a :class:<code>Target</code> to the Graph.</p>
+<p>.. note:: For performance reasons, this method assumes that all paths
+          in the <em>target</em> are already normalized with :meth:<code>path.norm</code>.</p>
+<p>:raise ValueError: If the :attr:<code>Target.name</code> is already used.
+:raise DuplicateOutputError: If the <em>target</em> lists an output file that
+  is already created by another target.</p>
+<h3 id="craftr.core.build.Graph.export">export</h3>
+
+<pre class="codehilite"><code class="language-python">Graph.export(writer, context, platform)</code></pre>
+
+
+<p>Export the build graph to a Ninja manifest.</p>
+<p>:param writer: A :class:<code>ninja_syntax.Writer</code> object.
+:param context: A :class:<code>ExportContext</code> object.
+:param platform: A :class:<code>PlatformHelper</code> instance.</p>
 <h2 id="craftr.core.build.ExportContext">ExportContext</h2>
 
 <pre class="codehilite"><code class="language-python">ExportContext(ninja_version)</code></pre>
@@ -734,53 +789,6 @@ can then be retrieved by converting the :class:<code>Tool</code> object to a str
 :meth:<code>Target.export</code>. It provides additional information that can influence
 the exported manifest.</p>
 <p>.. attribute:: ninja_version</p>
-<h2 id="craftr.core.build.Task">Task</h2>
-
-<pre class="codehilite"><code class="language-python">Task(name, func, args)</code></pre>
-
-
-<p>Represents a task that can be executed via <code>craftr run &lt;task&gt; &lt;args...&gt;</code>.
-A task is a Python function that accepts arguments from the command-line.</p>
-<h3 id="craftr.core.build.Task.unpickle_args">unpickle_args</h3>
-
-<pre class="codehilite"><code class="language-python">Task.unpickle_args(args)</code></pre>
-
-
-<p>Reverts :meth:<code>pickle_args</code>.</p>
-<h3 id="craftr.core.build.Task.pickle_args">pickle_args</h3>
-
-<pre class="codehilite"><code class="language-python">Task.pickle_args(args)</code></pre>
-
-
-<p>Converts a list of arguments that may contain Python objects to a list of
-plain strings containing only printable characters. Python objects are
-pickled, compressed and then encoded in base64.</p>
-<h2 id="craftr.core.build.Target">Target</h2>
-
-<pre class="codehilite"><code class="language-python">Target(name, commands, inputs, outputs, implicit_deps=(), order_only_deps=(), pool=None, deps=None, depfile=None, msvc_deps_prefix=None, explicit=False, foreach=False, description=None, metadata=None, cwd=None, environ=None, frameworks=(), task=None, runprefix=None)</code></pre>
-
-
-<p>A higher level abstraction of a Target that can be added to a :class:<code>Graph</code>
-and then exported into a Ninja build manifest. A target should be treated
-as read-only always.</p>
-<h3 id="craftr.core.build.Target.export">export</h3>
-
-<pre class="codehilite"><code class="language-python">Target.export(writer, context, platform)</code></pre>
-
-
-<p>Export the target to a Ninja manifest.</p>
-<h3 id="craftr.core.build.Target.generates_build_instruction">generates_build_instruction</h3>
-
-<p>Reading this property tells you whether the target produces at least one
-build in the Ninja manifest. This is used to determine whether a target is
-included in the list of default targets or not.</p>
-<h2 id="craftr.core.build.DuplicateOutputError">DuplicateOutputError</h2>
-
-<pre class="codehilite"><code class="language-python">DuplicateOutputError(filename, new_target, target)</code></pre>
-
-
-<p>This exception is raised if the same output file would be built by
-multiple targets.</p>
               
             </article>
           </div>

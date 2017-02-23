@@ -617,51 +617,7 @@ Otherwise, returns the result of object.<strong>str</strong>() (if defined)
 or repr(object).
 encoding defaults to sys.getdefaultencoding().
 errors defaults to 'strict'.
-<h2 id="craftr.core.manifest.BaseOption">BaseOption</h2></p>
-<pre class="codehilite"><code class="language-python">BaseOption(name, inherit=True, help=None, default=None)</code></pre>
-
-
-<p>Base class for option value processors that convert and validate options
-from string values (usually provided via the command-line or environment
-variables).</p>
-<p>.. attribute:: name</p>
-<p>.. attribute:: inherit</p>
-<p>.. attribute:: help</p>
-<p>.. attribute:: default</p>
-<h2 id="craftr.core.manifest.InvalidManifest">InvalidManifest</h2>
-
-<pre class="codehilite"><code class="language-python">InvalidManifest(*args, **kwargs)</code></pre>
-
-
-<p>This exception can be raised by :meth:<code>Manifest.parse</code></p>
-<h2 id="craftr.core.manifest.TripletOption">TripletOption</h2>
-
-<pre class="codehilite"><code class="language-python">TripletOption(name, default=False, **kwargs)</code></pre>
-
-
-<p>Just like the :class:<code>BoolOption</code> but with a third option, accepting
-"null" and "none" (which maps to :const:<code>None</code>).</p>
-<h3 id="craftr.core.manifest.TripletOption.alias">alias</h3>
-
-<p>str(object='') -&gt; str
-str(bytes_or_buffer[, encoding[, errors]]) -&gt; str</p>
-<p>Create a new string object from the given object. If encoding or
-errors is specified, then the object must expose a data buffer
-that will be decoded using the given encoding and error handler.
-Otherwise, returns the result of object.<strong>str</strong>() (if defined)
-or repr(object).
-encoding defaults to sys.getdefaultencoding().
-errors defaults to 'strict'.
-<h2 id="craftr.core.manifest.validate_package_name">validate_package_name</h2></p>
-<pre class="codehilite"><code class="language-python">validate_package_name(name)</code></pre>
-
-
-<p>Validates the package <em>name</em>. A valid package name must consist only
-of letters, digits, hyphes, underscores and periods. The first character
-of a package must be a letter or digit.</p>
-<p>:raise ValueError: If <em>name</em> is not a valid package name.</p>
-<h2 id="craftr.core.manifest.StringOption">StringOption</h2>
-
+<h2 id="craftr.core.manifest.StringOption">StringOption</h2></p>
 <pre class="codehilite"><code class="language-python">StringOption(name, default='', **kwargs)</code></pre>
 
 
@@ -677,25 +633,19 @@ Otherwise, returns the result of object.<strong>str</strong>() (if defined)
 or repr(object).
 encoding defaults to sys.getdefaultencoding().
 errors defaults to 'strict'.
-<h2 id="craftr.core.manifest.PathOption">PathOption</h2></p>
-<pre class="codehilite"><code class="language-python">PathOption(name, default='', **kwargs)</code></pre>
+<h2 id="craftr.core.manifest.BaseOption">BaseOption</h2></p>
+<pre class="codehilite"><code class="language-python">BaseOption(name, inherit=True, help=None, default=None)</code></pre>
 
 
-<p>Option for paths. Relative paths are automatically converted to absolute
-paths. It is assumed that relative paths are specified relative to
-:attr:<code>Session.maindir</code>.</p>
-<h3 id="craftr.core.manifest.PathOption.alias">alias</h3>
+<p>Base class for option value processors that convert and validate options
+from string values (usually provided via the command-line or environment
+variables).</p>
+<p>.. attribute:: name</p>
+<p>.. attribute:: inherit</p>
+<p>.. attribute:: help</p>
+<p>.. attribute:: default</p>
+<h2 id="craftr.core.manifest.Manifest">Manifest</h2>
 
-<p>str(object='') -&gt; str
-str(bytes_or_buffer[, encoding[, errors]]) -&gt; str</p>
-<p>Create a new string object from the given object. If encoding or
-errors is specified, then the object must expose a data buffer
-that will be decoded using the given encoding and error handler.
-Otherwise, returns the result of object.<strong>str</strong>() (if defined)
-or repr(object).
-encoding defaults to sys.getdefaultencoding().
-errors defaults to 'strict'.
-<h2 id="craftr.core.manifest.Manifest">Manifest</h2></p>
 <pre class="codehilite"><code class="language-python">Manifest(filename, name, version, main='Craftrfile', project_dir='.', description=None, author=None, url=None, dependencies=None, options=None)</code></pre>
 
 
@@ -728,27 +678,6 @@ its author and homepage URL.</p>
   instance.</p>
 <p>.. attribute:: filename</p>
 <p>Not a field in the JSON manifest. The filename of the loaded manifest.</p>
-<h3 id="craftr.core.manifest.Manifest.Schema">Schema</h3>
-
-<p>dict() -&gt; new empty dictionary
-dict(mapping) -&gt; new dictionary initialized from a mapping object's
-    (key, value) pairs
-dict(iterable) -&gt; new dictionary initialized as if via:
-    d = {}
-    for k, v in iterable:
-        d[k] = v
-dict(**kwargs) -&gt; new dictionary initialized with the name=value pairs
-    in the keyword argument list.  For example:  dict(one=1, two=2)
-<h3 id="craftr.core.manifest.Manifest.get_options_namespace">get_options_namespace</h3></p>
-<pre class="codehilite"><code class="language-python">Manifest.get_options_namespace(provider, errors=None)</code></pre>
-
-
-<p>Create a :class:<code>Namespace</code> object filled with the option values specified
-in the manifest where the option values are read from <em>provider</em>.</p>
-<p>:param provider: A dictionary that provides option values.
-:param errors: A list to which tuples of error information will be
-  appended. The tuples are in the format (option, value, exc).
-:return Namespace</p>
 <h3 id="craftr.core.manifest.Manifest.parse">parse</h3>
 
 <pre class="codehilite"><code class="language-python">Manifest.parse(filename, format=None)</code></pre>
@@ -771,12 +700,59 @@ in the manifest where the option values are read from <em>provider</em>.</p>
 </ul>
 <p><strong>Returns</strong></p>
 <p><code>Manifest</code>: The resulting manifest data.</p>
+<h3 id="craftr.core.manifest.Manifest.Schema">Schema</h3>
+
+<p>dict() -&gt; new empty dictionary
+dict(mapping) -&gt; new dictionary initialized from a mapping object's
+    (key, value) pairs
+dict(iterable) -&gt; new dictionary initialized as if via:
+    d = {}
+    for k, v in iterable:
+        d[k] = v
+dict(**kwargs) -&gt; new dictionary initialized with the name=value pairs
+    in the keyword argument list.  For example:  dict(one=1, two=2)
+<h3 id="craftr.core.manifest.Manifest.get_options_namespace">get_options_namespace</h3></p>
+<pre class="codehilite"><code class="language-python">Manifest.get_options_namespace(provider, errors=None)</code></pre>
+
+
+<p>Create a :class:<code>Namespace</code> object filled with the option values specified
+in the manifest where the option values are read from <em>provider</em>.</p>
+<p>:param provider: A dictionary that provides option values.
+:param errors: A list to which tuples of error information will be
+  appended. The tuples are in the format (option, value, exc).
+:return Namespace</p>
 <h3 id="craftr.core.manifest.Manifest.Invalid">InvalidManifest</h3>
 
 <pre class="codehilite"><code class="language-python">Manifest.InvalidManifest(*args, **kwargs)</code></pre>
 
 
 <p>This exception can be raised by :meth:<code>Manifest.parse</code></p>
+<h2 id="craftr.core.manifest.TripletOption">TripletOption</h2>
+
+<pre class="codehilite"><code class="language-python">TripletOption(name, default=False, **kwargs)</code></pre>
+
+
+<p>Just like the :class:<code>BoolOption</code> but with a third option, accepting
+"null" and "none" (which maps to :const:<code>None</code>).</p>
+<h3 id="craftr.core.manifest.TripletOption.alias">alias</h3>
+
+<p>str(object='') -&gt; str
+str(bytes_or_buffer[, encoding[, errors]]) -&gt; str</p>
+<p>Create a new string object from the given object. If encoding or
+errors is specified, then the object must expose a data buffer
+that will be decoded using the given encoding and error handler.
+Otherwise, returns the result of object.<strong>str</strong>() (if defined)
+or repr(object).
+encoding defaults to sys.getdefaultencoding().
+errors defaults to 'strict'.
+<h2 id="craftr.core.manifest.validate_package_name">validate_package_name</h2></p>
+<pre class="codehilite"><code class="language-python">validate_package_name(name)</code></pre>
+
+
+<p>Validates the package <em>name</em>. A valid package name must consist only
+of letters, digits, hyphes, underscores and periods. The first character
+of a package must be a letter or digit.</p>
+<p>:raise ValueError: If <em>name</em> is not a valid package name.</p>
 <h2 id="craftr.core.manifest.Namespace">Namespace</h2>
 
 <pre class="codehilite"><code class="language-python">Namespace(*args, **kwargs)</code></pre>
@@ -784,6 +760,31 @@ in the manifest where the option values are read from <em>provider</em>.</p>
 
 <p>An empty class which is used to assign arbitrary attributes to. An instance
 of this class is created by :meth:<code>Manifest.get_options_namespace</code>.</p>
+<h2 id="craftr.core.manifest.InvalidManifest">InvalidManifest</h2>
+
+<pre class="codehilite"><code class="language-python">InvalidManifest(*args, **kwargs)</code></pre>
+
+
+<p>This exception can be raised by :meth:<code>Manifest.parse</code></p>
+<h2 id="craftr.core.manifest.PathOption">PathOption</h2>
+
+<pre class="codehilite"><code class="language-python">PathOption(name, default='', **kwargs)</code></pre>
+
+
+<p>Option for paths. Relative paths are automatically converted to absolute
+paths. It is assumed that relative paths are specified relative to
+:attr:<code>Session.maindir</code>.</p>
+<h3 id="craftr.core.manifest.PathOption.alias">alias</h3>
+
+<p>str(object='') -&gt; str
+str(bytes_or_buffer[, encoding[, errors]]) -&gt; str</p>
+<p>Create a new string object from the given object. If encoding or
+errors is specified, then the object must expose a data buffer
+that will be decoded using the given encoding and error handler.
+Otherwise, returns the result of object.<strong>str</strong>() (if defined)
+or repr(object).
+encoding defaults to sys.getdefaultencoding().
+errors defaults to 'strict'.</p>
               
             </article>
           </div>

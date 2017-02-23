@@ -571,6 +571,29 @@
                 
                 <h1 id="craftr.loaders">craftr.loaders</h1>
 
+<h2 id="craftr.loaders.external_file">external_file</h2>
+
+<pre class="codehilite"><code class="language-python">external_file(*urls, filename=None, directory=None, copy_file_url=False, name=None)</code></pre>
+
+
+<p>Downloads a file from the first valid URL and saves it into <em>directory</em>
+under the specified <em>filename</em>.</p>
+<p>:param urls: One or more URLs. Supports <code>http://</code>, <code>https://</code>,
+    <code>ftp://</code> and <code>file://`. Note that if a</code>file://<code>URL is
+    specified, the file is not copied to the output filename unless
+    *copy_file_url* is True.
+:param filename: The output filename of the downloaded file. Defaults
+    to the filename of the downloaded file.
+:param directory: The directory to save the file to. If *filename*
+    is a relative path, it will be joined with this directory. Defaults
+    to a path in the build directory.
+:param copy_file_url: If True,</code>file://<code>` URLs will be copied instead
+    of used as-is.
+:param name: The name of the loader action. This name is used to store
+    information in the :attr:</code>Session.cache<code>so we can re-use existing
+    downloaded data. :func:</code>~craftr.defaults.gtn` will be used to
+    retrieve the default value for this parameter.
+:return: The path to the downloaded file.</p>
 <h2 id="craftr.loaders.external_archive">external_archive</h2>
 
 <pre class="codehilite"><code class="language-python">external_archive(*urls, exclude_files=(), directory=None, name=None)</code></pre>
@@ -595,29 +618,6 @@ a pattern must match all files in that directory.</p>
     downloaded data. :func:<code>~craftr.defaults.gtn</code> will be used to
     retrieve the default value for this parameter.
 :return: The path to the top-level directory of the unpacked archive.</p>
-<h2 id="craftr.loaders.external_file">external_file</h2>
-
-<pre class="codehilite"><code class="language-python">external_file(*urls, filename=None, directory=None, copy_file_url=False, name=None)</code></pre>
-
-
-<p>Downloads a file from the first valid URL and saves it into <em>directory</em>
-under the specified <em>filename</em>.</p>
-<p>:param urls: One or more URLs. Supports <code>http://</code>, <code>https://</code>,
-    <code>ftp://</code> and <code>file://`. Note that if a</code>file://<code>URL is
-    specified, the file is not copied to the output filename unless
-    *copy_file_url* is True.
-:param filename: The output filename of the downloaded file. Defaults
-    to the filename of the downloaded file.
-:param directory: The directory to save the file to. If *filename*
-    is a relative path, it will be joined with this directory. Defaults
-    to a path in the build directory.
-:param copy_file_url: If True,</code>file://<code>` URLs will be copied instead
-    of used as-is.
-:param name: The name of the loader action. This name is used to store
-    information in the :attr:</code>Session.cache<code>so we can re-use existing
-    downloaded data. :func:</code>~craftr.defaults.gtn` will be used to
-    retrieve the default value for this parameter.
-:return: The path to the downloaded file.</p>
               
             </article>
           </div>

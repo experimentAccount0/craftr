@@ -583,19 +583,38 @@
 <p>This exception is raised when a process did not exit after a
 specific timeout. If this exception was raised, the child process
 has already been killed.</p>
-<h2 id="craftr.utils.shell.test_program">test_program</h2>
-
-<pre class="codehilite"><code class="language-python">test_program(name)</code></pre>
-
-
-<p>Uses :func:<code>find_program</code> to find the path to <em>name</em> and returns
-True if it could be found, False otherwise.</p>
 <h2 id="craftr.utils.shell.join">join</h2>
 
 <pre class="codehilite"><code class="language-python">join(cmd, for_ninja=False)</code></pre>
 
 
 <p>Join a list of strings to a single command string.</p>
+<h2 id="craftr.utils.shell.find_program">find_program</h2>
+
+<pre class="codehilite"><code class="language-python">find_program(name)</code></pre>
+
+
+<p>Finds the program <em>name</em> in the directories listed by the <code>PATH</code>
+environment variable and returns the full absolute path to it. On Windows,
+this also takes the <code>PATHEXT</code> variable into account.</p>
+<p>:param name: The name of the program to find.
+:return: :class:<code>str</code> -- The absolute path to the program.
+:raise FileNotFoundError: If the program could not be found in the PATH.
+:raise PermissionError: If a candidate for "name" was found but
+  it is not executable.</p>
+<h2 id="craftr.utils.shell.format">format</h2>
+
+<pre class="codehilite"><code class="language-python">format(fmt, *args, **kwargs)</code></pre>
+
+
+<p>"
+  Similar to :meth:<code>str.format</code>, but this function will escape all arguments
+  with the :func:<code>quote</code> function. This is useful to easily generate commands.</p>
+<p>.. code:: python</p>
+<pre class="codehilite"><code>&gt;&gt;&gt; format('gcc {} -o {}', 'my source/main.c', 'spaces are bad/main')
+'gcc &quot;my source/main.c&quot; -o &quot;spaces are bad/main&quot;'</code></pre>
+
+
 <h2 id="craftr.utils.shell.run">run</h2>
 
 <pre class="codehilite"><code class="language-python">run(cmd, *, stdin=None, input=None, stdout=None, stderr=None, shell=False, timeout=None, check=False, cwd=None, env=None, encoding='utf-8')</code></pre>
@@ -614,52 +633,13 @@ to a properly escaped string for the shell to execute.</p>
   finish before the timeout expires.
 :raise OSError: For some OS-level error, eg. if the program could not be
     found.</p>
-<h2 id="craftr.utils.shell.format">format</h2>
+<h2 id="craftr.utils.shell.test_program">test_program</h2>
 
-<pre class="codehilite"><code class="language-python">format(fmt, *args, **kwargs)</code></pre>
-
-
-<p>"
-  Similar to :meth:<code>str.format</code>, but this function will escape all arguments
-  with the :func:<code>quote</code> function. This is useful to easily generate commands.</p>
-<p>.. code:: python</p>
-<pre class="codehilite"><code>&gt;&gt;&gt; format('gcc {} -o {}', 'my source/main.c', 'spaces are bad/main')
-'gcc &quot;my source/main.c&quot; -o &quot;spaces are bad/main&quot;'</code></pre>
+<pre class="codehilite"><code class="language-python">test_program(name)</code></pre>
 
 
-<h2 id="craftr.utils.shell.split">split</h2>
-
-<pre class="codehilite"><code class="language-python">split(s)</code></pre>
-
-
-<p>Enhanced implementation of :func:<code>shlex.split</code>.</p>
-<h2 id="craftr.utils.shell.find_program">find_program</h2>
-
-<pre class="codehilite"><code class="language-python">find_program(name)</code></pre>
-
-
-<p>Finds the program <em>name</em> in the directories listed by the <code>PATH</code>
-environment variable and returns the full absolute path to it. On Windows,
-this also takes the <code>PATHEXT</code> variable into account.</p>
-<p>:param name: The name of the program to find.
-:return: :class:<code>str</code> -- The absolute path to the program.
-:raise FileNotFoundError: If the program could not be found in the PATH.
-:raise PermissionError: If a candidate for "name" was found but
-  it is not executable.</p>
-<h2 id="craftr.utils.shell.safe">safe</h2>
-
-<pre class="codehilite"><code class="language-python">safe(*args, **kwargs)</code></pre>
-
-
-<p>If this object is passed to <code>quote()</code>, it will not be escaped.</p>
-<h2 id="craftr.utils.shell.pipe">pipe</h2>
-
-<pre class="codehilite"><code class="language-python">pipe(*args, merge=True, **kwargs)</code></pre>
-
-
-<p>Like <code>run()</code>, but pipes stdout and stderr to a buffer instead of
-directing them to the current standard out and error files. If <em>merge</em>
-is True, stderr will be merged into stdout.</p>
+<p>Uses :func:<code>find_program</code> to find the path to <em>name</em> and returns
+True if it could be found, False otherwise.</p>
 <h2 id="craftr.utils.shell.CalledProcessError">CalledProcessError</h2>
 
 <pre class="codehilite"><code class="language-python">CalledProcessError(process)</code></pre>
@@ -668,12 +648,26 @@ is True, stderr will be merged into stdout.</p>
 <p>This exception is raised when a process exits with a non-zero
 returncode and the run was to be checked for such state. The exception
 contains the process information.</p>
-<h2 id="craftr.utils.shell.CompletedProcess">CompletedProcess</h2>
+<h2 id="craftr.utils.shell.pipe">pipe</h2>
 
-<pre class="codehilite"><code class="language-python">CompletedProcess(cmd, returncode, stdout, stderr)</code></pre>
+<pre class="codehilite"><code class="language-python">pipe(*args, merge=True, **kwargs)</code></pre>
 
 
-<p>This class represents a completed process.</p>
+<p>Like <code>run()</code>, but pipes stdout and stderr to a buffer instead of
+directing them to the current standard out and error files. If <em>merge</em>
+is True, stderr will be merged into stdout.</p>
+<h2 id="craftr.utils.shell.safe">safe</h2>
+
+<pre class="codehilite"><code class="language-python">safe(*args, **kwargs)</code></pre>
+
+
+<p>If this object is passed to <code>quote()</code>, it will not be escaped.</p>
+<h2 id="craftr.utils.shell.split">split</h2>
+
+<pre class="codehilite"><code class="language-python">split(s)</code></pre>
+
+
+<p>Enhanced implementation of :func:<code>shlex.split</code>.</p>
 <h2 id="craftr.utils.shell.quote">quote</h2>
 
 <pre class="codehilite"><code class="language-python">quote(s, for_ninja=False)</code></pre>
@@ -681,6 +675,12 @@ contains the process information.</p>
 
 <p>Enhanced implementation of :func:<code>shlex.quote</code> as it generates single-quotes
 on Windows which can lead to problems.</p>
+<h2 id="craftr.utils.shell.CompletedProcess">CompletedProcess</h2>
+
+<pre class="codehilite"><code class="language-python">CompletedProcess(cmd, returncode, stdout, stderr)</code></pre>
+
+
+<p>This class represents a completed process.</p>
               
             </article>
           </div>

@@ -575,92 +575,14 @@
                 
                 <h1 id="craftr.utils.path">craftr.utils.path</h1>
 
-<h2 id="craftr.utils.path.easy_listdir">easy_listdir</h2>
+<h2 id="craftr.utils.path.addsuffix">addsuffix</h2>
 
-<pre class="codehilite"><code class="language-python">easy_listdir(directory)</code></pre>
-
-
-<p>A friendly version of :func:<code>os.listdir</code> that does not error if the
-<em>directory</em> doesn't exist.</p>
-<h2 id="craftr.utils.path.rmvsuffix">rmvsuffix</h2>
-
-<pre class="codehilite"><code class="language-python">rmvsuffix(subject)</code></pre>
+<pre class="codehilite"><code class="language-python">addsuffix(subject, suffix, replace=False)</code></pre>
 
 
-<p>Remove the suffix from <em>subject</em>.</p>
-<h2 id="craftr.utils.path.common">common</h2>
-
-<pre class="codehilite"><code class="language-python">common(paths)</code></pre>
-
-
-<p>Returns the longest sub-path of each path in the <em>paths</em> list. If <em>paths</em> is
-empty, contains mixed absolute/relative paths or the paths have no common
-path, a :class:<code>ValueError</code> is raised.</p>
-<p>If there is only one element in <em>paths</em>, its parent directory is returned.</p>
-<h2 id="craftr.utils.path.norm">norm</h2>
-
-<pre class="codehilite"><code class="language-python">norm(path, parent=None)</code></pre>
-
-
-<p>Normalizes the specified <em>path</em>. This turns it into an absolute path and
-removes all superfluous path elements. Similar to :func:<code>os.path.normpath</code>,
-but accepts a <em>parent</em> argument which is considered when <em>path</em> is relative.</p>
-<h2 id="craftr.utils.path.transition">transition</h2>
-
-<pre class="codehilite"><code class="language-python">transition(filename, oldbase, newbase)</code></pre>
-
-
-<p>Translates the <em>filename</em> from the directory <em>oldbase</em> to the new
-directory <em>newbase</em>. This is identical to finding the relative path
-of <em>filename</em> to <em>oldbase</em> and joining it with <em>newbase</em>. The <code>filename</code>
-must be a sub-path of <em>oldbase</em>.</p>
-<p>.. code:: python</p>
-<blockquote>
-<blockquote>
-<blockquote>
-<p>transition('src/main.c', 'src', 'build/obj')
-  build/obj/main.c</p>
-</blockquote>
-</blockquote>
-</blockquote>
-<h2 id="craftr.utils.path.makedirs">makedirs</h2>
-
-<pre class="codehilite"><code class="language-python">makedirs(path)</code></pre>
-
-
-<p>Like :func:<code>os.makedirs</code>, but this function does not raise an exception
-when the directory at <em>path</em> already exists.</p>
-<h2 id="craftr.utils.path.addprefix">addprefix</h2>
-
-<pre class="codehilite"><code class="language-python">addprefix(subject, prefix)</code></pre>
-
-
-<p>Adds the specified <em>prefix</em> to the last path element in <em>subject</em>.
-If <em>prefix</em> is a callable, it must accept exactly one argument, which
-is the last path element, and return a modified value.</p>
-<h2 id="craftr.utils.path.issub">issub</h2>
-
-<pre class="codehilite"><code class="language-python">issub(path)</code></pre>
-
-
-<p>Returns True if <em>path</em> is a relative path that does not point outside
-of its parent directory or is equal to its parent directory (thus, this
-function will also return False for a path like <code>./</code>).</p>
-<h2 id="craftr.utils.path.setsuffix">setsuffix</h2>
-
-<pre class="codehilite"><code class="language-python">setsuffix(subject, suffix)</code></pre>
-
-
-<p>Synonymous for passing the True for the <em>replace</em> parameter in
-:func:<code>addsuffix</code>.</p>
-<h2 id="craftr.utils.path.rel">rel</h2>
-
-<pre class="codehilite"><code class="language-python">rel(path, parent=None, nopar=False)</code></pre>
-
-
-<p>Like :func:<code>os.path.relpath</code>, but the <em>nopar</em> parameter can be set to return
-an absolute path if the relative path would create a path element that
-references a parent directory (<code>..</code>) or current directory (<code>.</code>).</p>
+<p>Adds the specified <em>suffix</em> to the <em>subject</em>. If <em>replace</em> is True, the
+old suffix will be removed first. If <em>suffix</em> is callable, it must accept
+exactly one argument and return a modified value.</p>
 <h2 id="craftr.utils.path.glob">glob</h2>
 
 <pre class="codehilite"><code class="language-python">glob(patterns, parent=None, excludes=(), include_dotfiles=False, ignore_false_excludes=False)</code></pre>
@@ -688,12 +610,6 @@ result before returning.</p>
 :param ignore_false_excludes: False by default. If True, items listed
   in <em>excludes</em> that have not been globbed will raise an exception.
 :return: A list of filenames.</p>
-<h2 id="craftr.utils.path.getimtime">getimtime</h2>
-
-<pre class="codehilite"><code class="language-python">getimtime(path)</code></pre>
-
-
-<p>Just like :func:<code>getmtime()</code>, but rounds down to an integer.</p>
 <h2 id="craftr.utils.path.get_long_path_name">get_long_path_name</h2>
 
 <pre class="codehilite"><code class="language-python">get_long_path_name(path)</code></pre>
@@ -704,14 +620,20 @@ case-insenstive filesystem, such as Windows. It returns the correct
 capitalization for <em>path</em>, given that it exists. For other platforms,
 the <em>path</em> is returned as-is.</p>
 <p>If <em>path</em> does not exist, it is returned unchanged in any case.</p>
-<h2 id="craftr.utils.path.addsuffix">addsuffix</h2>
+<h2 id="craftr.utils.path.isglob">isglob</h2>
 
-<pre class="codehilite"><code class="language-python">addsuffix(subject, suffix, replace=False)</code></pre>
+<pre class="codehilite"><code class="language-python">isglob(path)</code></pre>
 
 
-<p>Adds the specified <em>suffix</em> to the <em>subject</em>. If <em>replace</em> is True, the
-old suffix will be removed first. If <em>suffix</em> is callable, it must accept
-exactly one argument and return a modified value.</p>
+<p>:param path: The string to check
+:return bool: True if the path is a glob pattern, False otherwise.</p>
+<h2 id="craftr.utils.path.easy_listdir">easy_listdir</h2>
+
+<pre class="codehilite"><code class="language-python">easy_listdir(directory)</code></pre>
+
+
+<p>A friendly version of :func:<code>os.listdir</code> that does not error if the
+<em>directory</em> doesn't exist.</p>
 <h2 id="craftr.utils.path.remove">remove</h2>
 
 <pre class="codehilite"><code class="language-python">remove(path, recursive=False, silent=False)</code></pre>
@@ -729,19 +651,27 @@ used.</p>
 
 <p>Returns the suffix of a filename. If the file has no suffix, returns None.
 Can return an empty string if the filenam ends with a period.</p>
-<h2 id="craftr.utils.path.isglob">isglob</h2>
-
-<pre class="codehilite"><code class="language-python">isglob(path)</code></pre>
-
-
-<p>:param path: The string to check
-:return bool: True if the path is a glob pattern, False otherwise.</p>
 <h2 id="craftr.utils.path.canonical">canonical</h2>
 
 <pre class="codehilite"><code class="language-python">canonical(path)</code></pre>
 
 
 <p>A synonym for :meth:<code>os.path.normpath</code>.</p>
+<h2 id="craftr.utils.path.issub">issub</h2>
+
+<pre class="codehilite"><code class="language-python">issub(path)</code></pre>
+
+
+<p>Returns True if <em>path</em> is a relative path that does not point outside
+of its parent directory or is equal to its parent directory (thus, this
+function will also return False for a path like <code>./</code>).</p>
+<h2 id="craftr.utils.path.setsuffix">setsuffix</h2>
+
+<pre class="codehilite"><code class="language-python">setsuffix(subject, suffix)</code></pre>
+
+
+<p>Synonymous for passing the True for the <em>replace</em> parameter in
+:func:<code>addsuffix</code>.</p>
 <h2 id="craftr.utils.path.tempfile">tempfile</h2>
 
 <pre class="codehilite"><code class="language-python">tempfile(suffix='', prefix='tmp', dir=None, text=False)</code></pre>
@@ -786,6 +716,76 @@ maybedir('foo/bar')
 </blockquote>
 </blockquote>
 </blockquote>
+<h2 id="craftr.utils.path.rmvsuffix">rmvsuffix</h2>
+
+<pre class="codehilite"><code class="language-python">rmvsuffix(subject)</code></pre>
+
+
+<p>Remove the suffix from <em>subject</em>.</p>
+<h2 id="craftr.utils.path.rel">rel</h2>
+
+<pre class="codehilite"><code class="language-python">rel(path, parent=None, nopar=False)</code></pre>
+
+
+<p>Like :func:<code>os.path.relpath</code>, but the <em>nopar</em> parameter can be set to return
+an absolute path if the relative path would create a path element that
+references a parent directory (<code>..</code>) or current directory (<code>.</code>).</p>
+<h2 id="craftr.utils.path.transition">transition</h2>
+
+<pre class="codehilite"><code class="language-python">transition(filename, oldbase, newbase)</code></pre>
+
+
+<p>Translates the <em>filename</em> from the directory <em>oldbase</em> to the new
+directory <em>newbase</em>. This is identical to finding the relative path
+of <em>filename</em> to <em>oldbase</em> and joining it with <em>newbase</em>. The <code>filename</code>
+must be a sub-path of <em>oldbase</em>.</p>
+<p>.. code:: python</p>
+<blockquote>
+<blockquote>
+<blockquote>
+<p>transition('src/main.c', 'src', 'build/obj')
+  build/obj/main.c</p>
+</blockquote>
+</blockquote>
+</blockquote>
+<h2 id="craftr.utils.path.addprefix">addprefix</h2>
+
+<pre class="codehilite"><code class="language-python">addprefix(subject, prefix)</code></pre>
+
+
+<p>Adds the specified <em>prefix</em> to the last path element in <em>subject</em>.
+If <em>prefix</em> is a callable, it must accept exactly one argument, which
+is the last path element, and return a modified value.</p>
+<h2 id="craftr.utils.path.norm">norm</h2>
+
+<pre class="codehilite"><code class="language-python">norm(path, parent=None)</code></pre>
+
+
+<p>Normalizes the specified <em>path</em>. This turns it into an absolute path and
+removes all superfluous path elements. Similar to :func:<code>os.path.normpath</code>,
+but accepts a <em>parent</em> argument which is considered when <em>path</em> is relative.</p>
+<h2 id="craftr.utils.path.common">common</h2>
+
+<pre class="codehilite"><code class="language-python">common(paths)</code></pre>
+
+
+<p>Returns the longest sub-path of each path in the <em>paths</em> list. If <em>paths</em> is
+empty, contains mixed absolute/relative paths or the paths have no common
+path, a :class:<code>ValueError</code> is raised.</p>
+<p>If there is only one element in <em>paths</em>, its parent directory is returned.</p>
+<h2 id="craftr.utils.path.makedirs">makedirs</h2>
+
+<pre class="codehilite"><code class="language-python">makedirs(path)</code></pre>
+
+
+<p>Like :func:<code>os.makedirs</code>, but this function does not raise an exception
+when the directory at <em>path</em> already exists.</p>
+<h2 id="craftr.utils.path.getimtime">getimtime</h2>
+
+<pre class="codehilite"><code class="language-python">getimtime(path)</code></pre>
+
+
+<p>Just like :func:<code>getmtime()</code>, but rounds down to an integer.</p>
               
             </article>
           </div>

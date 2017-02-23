@@ -583,12 +583,6 @@
 <p>Generator that yields the progress after every chunk has been copied
 from <em>sfp</em> to <em>dfp</em>. If <em>size</em> is not specified, <em>sfp</em> will be seeked
 first. The yielded progress is a tuple of <code>(bytes_copied, size)</code>.</p>
-<h2 id="craftr.utils.pyutils.flatten">flatten</h2>
-
-<pre class="codehilite"><code class="language-python">flatten(iterable)</code></pre>
-
-
-<p>Flattens two levels of nested iterables into a single list.</p>
 <h2 id="craftr.utils.pyutils.import_">import_</h2>
 
 <pre class="codehilite"><code class="language-python">import_(fqn)</code></pre>
@@ -599,12 +593,12 @@ first. The yielded progress is a tuple of <code>(bytes_copied, size)</code>.</p>
   name to import it from.
 :raise ImportError: If the object can not be imported.
 :return: any</p>
-<h2 id="craftr.utils.pyutils.combine_context">combine_context</h2>
+<h2 id="craftr.utils.pyutils.flatten">flatten</h2>
 
-<pre class="codehilite"><code class="language-python">combine_context(*inputs)</code></pre>
+<pre class="codehilite"><code class="language-python">flatten(iterable)</code></pre>
 
 
-<p>Combines multiple context managers.</p>
+<p>Flattens two levels of nested iterables into a single list.</p>
 <h2 id="craftr.utils.pyutils.strip_flags">strip_flags</h2>
 
 <pre class="codehilite"><code class="language-python">strip_flags(command, flags)</code></pre>
@@ -615,6 +609,12 @@ mutated directlry.</p>
 <p>:param command: A list of command-line arguments.
 :param remove_flags: An iterable of flags to remove.
 :return: The <em>command</em> parameter.</p>
+<h2 id="craftr.utils.pyutils.combine_context">combine_context</h2>
+
+<pre class="codehilite"><code class="language-python">combine_context(*inputs)</code></pre>
+
+
+<p>Combines multiple context managers.</p>
               
             </article>
           </div>

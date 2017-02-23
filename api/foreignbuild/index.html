@@ -571,6 +571,13 @@
                 
                 <h1 id="craftr.foreignbuild">craftr.foreignbuild</h1>
 
+<h2 id="craftr.foreignbuild.make">make</h2>
+
+<pre class="codehilite"><code class="language-python">make(filename='Makefile', *args, cwd=None, inputs=(), outputs=(), name=None)</code></pre>
+
+
+<p>Create a target that executes the specified Makefile. If <em>cwd</em> is not
+specified, it defaults to the parent directory if <em>filename</em>.</p>
 <h2 id="craftr.foreignbuild.configure">configure</h2>
 
 <pre class="codehilite"><code class="language-python">configure(filename='configure', args=(), cwd=None, env=None, show_output=False)</code></pre>
@@ -580,13 +587,6 @@
 current working directory will be the parent directory of <em>filename</em>.
 This function will skip invokation of the configure script if arguments
 and environment haven't change since the last time.</p>
-<h2 id="craftr.foreignbuild.make">make</h2>
-
-<pre class="codehilite"><code class="language-python">make(filename='Makefile', *args, cwd=None, inputs=(), outputs=(), name=None)</code></pre>
-
-
-<p>Create a target that executes the specified Makefile. If <em>cwd</em> is not
-specified, it defaults to the parent directory if <em>filename</em>.</p>
               
             </article>
           </div>

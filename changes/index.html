@@ -589,9 +589,13 @@
 <ul>
 <li>change <code>load()</code> now accepts a <code>mode</code> parameter instead of <code>get_namespace</code>,
   can be one of <code>'exports'</code> (defualt), <code>'namespace'</code> and <code>'mmodule'</code></li>
+<li>change <code>gentarget()</code> to automatically append an argument that references an
+  environment variable with the name of the target so that the new
+  <strong>pass-down-arguments</strong> can be used (also effects <code>runtarget()</code>)</li>
 <li>add <code>gentask(explicit)</code> parameter</li>
 <li>add <code>env</code> parameter to <code>shell.run()</code> and <code>shell.pipe()</code></li>
 <li>add <code>craftr.foreignbuild</code> module</li>
+<li>add <code>craftr.core.build.PlatformHelper.format_env_ref()</code> function</li>
 </ul>
 <p>Standard Library</p>
 <ul>
@@ -603,6 +607,8 @@
 <ul>
 <li>add <code>--pm</code> option to enable the post-mortem debugger when an exception
   occurs and is uncaught by the Craftr runtime</li>
+<li>add support for per-target <strong>pass-down-arguments</strong> with the syntax
+  <code>craftr build target[args ...]</code></li>
 </ul>
 <h1 id="v200dev7">v2.0.0.dev7</h1>
 <p>Bugfixes</p>

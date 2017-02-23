@@ -583,6 +583,21 @@
 <p>This module provides colorized terminal output and other terminal helpers.
 In order to colorize output, the :mod:<code>termcolor</code> module is required. On
 Windows, the <code>colorama</code> module is also necessary.</p>
+<h2 id="craftr.utils.tty.clear_line">clear_line</h2>
+
+<pre class="codehilite"><code class="language-python">clear_line()</code></pre>
+
+
+<p>Clears out the current line in the terminal completely and resets the
+curser to the first column.</p>
+<h2 id="craftr.utils.tty.compile">compile</h2>
+
+<pre class="codehilite"><code class="language-python">compile(color=None, on_color=None, attrs=None)</code></pre>
+
+
+<p>Compile an ANSI escape sequence and return it. Return an empty string if
+the :mod:<code>termcolor</code> module is not available. To reset the styling, use the
+:data:<code>reset</code> string.</p>
 <h2 id="craftr.utils.tty.colored">colored</h2>
 
 <pre class="codehilite"><code class="language-python">colored(text, color=None, on_color=None, attrs=None)</code></pre>
@@ -597,21 +612,6 @@ module is not available, in which case <em>text</em> is returned unchanged.</p>
 
 <p>Determines the size of the terminal. If the size can not be obtained, returns
 the specified <em>default</em> size.</p>
-<h2 id="craftr.utils.tty.compile">compile</h2>
-
-<pre class="codehilite"><code class="language-python">compile(color=None, on_color=None, attrs=None)</code></pre>
-
-
-<p>Compile an ANSI escape sequence and return it. Return an empty string if
-the :mod:<code>termcolor</code> module is not available. To reset the styling, use the
-:data:<code>reset</code> string.</p>
-<h2 id="craftr.utils.tty.clear_line">clear_line</h2>
-
-<pre class="codehilite"><code class="language-python">clear_line()</code></pre>
-
-
-<p>Clears out the current line in the terminal completely and resets the
-curser to the first column.</p>
               
             </article>
           </div>

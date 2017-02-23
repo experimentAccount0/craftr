@@ -577,14 +577,42 @@
 
 <h1 id="modcraftrtargetbuilder">:mod:<code>craftr.targetbuilder</code></h1>
 <p>Provides the :class:<code>TargetBuilder</code> and :class:<code>Framework</code> classes.</p>
-<h2 id="craftr.targetbuilder.get_full_name">get_full_name</h2>
+<h2 id="craftr.targetbuilder.Framework">Framework</h2>
 
-<pre class="codehilite"><code class="language-python">get_full_name(target_name, module=None, module_name=None, version=None)</code></pre>
+<pre class="codehilite"><code class="language-python">Framework(_Framework__name=None, **kwargs)</code></pre>
 
 
-<p>Given a <em>target_name</em>, this function generates the fully qualified name of
-that target that includes the <em>module</em> name and version. If <em>module</em> is
-omitted, the currently executed module is used.</p>
+<p>A framework is simply a dictionary with a name to identify it. Frameworks
+are used to represent build options.</p>
+<h2 id="craftr.targetbuilder.TargetBuilder">TargetBuilder</h2>
+
+<pre class="codehilite"><code class="language-python">TargetBuilder(name, option_kwargs=None, frameworks=(), inputs=(), outputs=(), implicit_deps=(), order_only_deps=())</code></pre>
+
+
+<p>This is a helper class for target generators that does a lot of convenience
+handling such as creating a :class:<code>OptionMerge</code> from the build options
+specified with the <em>frameworks</em> argument or from the input
+:class:<code>Targets&lt;build.Target&gt;</code>.</p>
+<p>:param name: The name of the target. Derive this target name by using
+  the :func:<code>gtn</code> function.
+:param option_kwargs: A dictionary of additional call-level options
+  that have been passed to the target generator function. These will
+  take top priority in the :class:<code>OptionMerge</code>.
+:param inputs: A list of input files or :class:<code>build.Target</code> objects
+  from which the outputs will be used as input files and the build
+  options will be included in the :class:<code>OptionMerge</code>.
+:param frameworks: A list of build :class:<code>Framework</code> objects that will be
+  included in the :class:<code>OptionMerge</code>.
+:param outputs: A list of output filenames.
+:param implicit_deps: A list of filenames added as implicit dependencies.
+:param order_only_deps: A list of filenames added as order only dependencies.</p>
+<h3 id="craftr.targetbuilder.TargetBuilder.build">build</h3>
+
+<pre class="codehilite"><code class="language-python">TargetBuilder.build(commands, inputs=(), outputs=(), implicit_deps=(), order_only_deps=(), metadata=None, **kwargs)</code></pre>
+
+
+<p>Create a :class:<code>build.Target</code> from the information in the builder,
+add it to the build graph and return it.</p>
 <h2 id="craftr.targetbuilder.gtn">gtn</h2>
 
 <pre class="codehilite"><code class="language-python">gtn(target_name=None, name_hint=NotImplemented)</code></pre>
@@ -617,35 +645,6 @@ instead of figuring the name of the assigned variable.</p>
 no exception will be raised but also no alternative target name will
 be generated and :const:<code>None</code> will be returned. This is useful for wrapping
 existing target generator functions.</p>
-<h2 id="craftr.targetbuilder.TargetBuilder">TargetBuilder</h2>
-
-<pre class="codehilite"><code class="language-python">TargetBuilder(name, option_kwargs=None, frameworks=(), inputs=(), outputs=(), implicit_deps=(), order_only_deps=())</code></pre>
-
-
-<p>This is a helper class for target generators that does a lot of convenience
-handling such as creating a :class:<code>OptionMerge</code> from the build options
-specified with the <em>frameworks</em> argument or from the input
-:class:<code>Targets&lt;build.Target&gt;</code>.</p>
-<p>:param name: The name of the target. Derive this target name by using
-  the :func:<code>gtn</code> function.
-:param option_kwargs: A dictionary of additional call-level options
-  that have been passed to the target generator function. These will
-  take top priority in the :class:<code>OptionMerge</code>.
-:param inputs: A list of input files or :class:<code>build.Target</code> objects
-  from which the outputs will be used as input files and the build
-  options will be included in the :class:<code>OptionMerge</code>.
-:param frameworks: A list of build :class:<code>Framework</code> objects that will be
-  included in the :class:<code>OptionMerge</code>.
-:param outputs: A list of output filenames.
-:param implicit_deps: A list of filenames added as implicit dependencies.
-:param order_only_deps: A list of filenames added as order only dependencies.</p>
-<h3 id="craftr.targetbuilder.TargetBuilder.build">build</h3>
-
-<pre class="codehilite"><code class="language-python">TargetBuilder.build(commands, inputs=(), outputs=(), implicit_deps=(), order_only_deps=(), metadata=None, **kwargs)</code></pre>
-
-
-<p>Create a :class:<code>build.Target</code> from the information in the builder,
-add it to the build graph and return it.</p>
 <h2 id="craftr.targetbuilder.OptionMerge">OptionMerge</h2>
 
 <pre class="codehilite"><code class="language-python">OptionMerge(*frameworks)</code></pre>
@@ -665,13 +664,14 @@ last.</p>
 specified <em>key</em> in all option dictionaries in this OptionMerge object.
 It gives an error if one option dictionary contains a non-sequence for
 <em>key</em>.</p>
-<h2 id="craftr.targetbuilder.Framework">Framework</h2>
+<h2 id="craftr.targetbuilder.get_full_name">get_full_name</h2>
 
-<pre class="codehilite"><code class="language-python">Framework(_Framework__name=None, **kwargs)</code></pre>
+<pre class="codehilite"><code class="language-python">get_full_name(target_name, module=None, module_name=None, version=None)</code></pre>
 
 
-<p>A framework is simply a dictionary with a name to identify it. Frameworks
-are used to represent build options.</p>
+<p>Given a <em>target_name</em>, this function generates the fully qualified name of
+that target that includes the <em>module</em> name and version. If <em>module</em> is
+omitted, the currently executed module is used.</p>
               
             </article>
           </div>

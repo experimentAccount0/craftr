@@ -628,17 +628,34 @@ for the meta build process (such as a :class:<code>craftr.core.build.Graph</code
   be assured that no name conflicts and accidental modifications/deletes
   occur.</p>
 <p>Reserved keywords in the cache are <code>"build"</code> and <code>"loaders"</code>.</p>
-<h3 id="craftr.core.session.Session.expand_relative_options">expand_relative_options</h3>
+<h3 id="craftr.core.session.Session.find_module">find_module</h3>
 
-<pre class="codehilite"><code class="language-python">Session.expand_relative_options(module_name=None)</code></pre>
+<pre class="codehilite"><code class="language-python">Session.find_module(name, version, resolve_preferred_version=True)</code></pre>
 
 
-<p>After the main module has been detected, relative option names (starting
-with <code>.</code>) should be converted to absolute option names. This is what
-the method does.</p>
+<p>Finds a module in the :attr:<code>path</code> matching the specified <em>name</em> and
+<em>version</em>.</p>
+<p>:param name: The name of the module.
+:param version: A :class:<code>VersionCriteria</code>, :class:<code>Version</code> or string
+  in a VersionCritiera format.
+:param resolve_preferred_version: If this parameter is True (default)
+  and a preferred version is specified in :attr:<code>preferred_versions</code>,
+  that preferred version is loaded or :class:<code>ModuleNotFound</code> is raised.
+:raise ModuleNotFound: If the module can not be found.
+:return: :class:<code>Module</code></p>
 <h3 id="craftr.core.session.Session.stl_dir">stl_dir</h3>
 
 <p>str(object='') -&gt; str
+str(bytes_or_buffer[, encoding[, errors]]) -&gt; str</p>
+<p>Create a new string object from the given object. If encoding or
+errors is specified, then the object must expose a data buffer
+that will be decoded using the given encoding and error handler.
+Otherwise, returns the result of object.<strong>str</strong>() (if defined)
+or repr(object).
+encoding defaults to sys.getdefaultencoding().
+errors defaults to 'strict'.
+<h3 id="craftr.core.session.Session.stl_auxiliary_dir">stl_auxiliary_dir</h3>
+str(object='') -&gt; str
 str(bytes_or_buffer[, encoding[, errors]]) -&gt; str</p>
 <p>Create a new string object from the given object. If encoding or
 errors is specified, then the object must expose a data buffer
@@ -656,33 +673,16 @@ to store temporary files. The temporary directory will be deleted when
 the Session context ends unless the <code>craftr.keep_temporary_directory</code>
 option is set.</p>
 <p>:raise RuntimeError: If the session is not currently in context.</p>
-<h3 id="craftr.core.session.Session.find_module">find_module</h3>
+<h3 id="craftr.core.session.Session.expand_relative_options">expand_relative_options</h3>
 
-<pre class="codehilite"><code class="language-python">Session.find_module(name, version, resolve_preferred_version=True)</code></pre>
+<pre class="codehilite"><code class="language-python">Session.expand_relative_options(module_name=None)</code></pre>
 
 
-<p>Finds a module in the :attr:<code>path</code> matching the specified <em>name</em> and
-<em>version</em>.</p>
-<p>:param name: The name of the module.
-:param version: A :class:<code>VersionCriteria</code>, :class:<code>Version</code> or string
-  in a VersionCritiera format.
-:param resolve_preferred_version: If this parameter is True (default)
-  and a preferred version is specified in :attr:<code>preferred_versions</code>,
-  that preferred version is loaded or :class:<code>ModuleNotFound</code> is raised.
-:raise ModuleNotFound: If the module can not be found.
-:return: :class:<code>Module</code></p>
-<h3 id="craftr.core.session.Session.stl_auxiliary_dir">stl_auxiliary_dir</h3>
+<p>After the main module has been detected, relative option names (starting
+with <code>.</code>) should be converted to absolute option names. This is what
+the method does.</p>
+<h3 id="craftr.core.session.Session.parse_manifest">parse_manifest</h3>
 
-<p>str(object='') -&gt; str
-str(bytes_or_buffer[, encoding[, errors]]) -&gt; str</p>
-<p>Create a new string object from the given object. If encoding or
-errors is specified, then the object must expose a data buffer
-that will be decoded using the given encoding and error handler.
-Otherwise, returns the result of object.<strong>str</strong>() (if defined)
-or repr(object).
-encoding defaults to sys.getdefaultencoding().
-errors defaults to 'strict'.
-<h3 id="craftr.core.session.Session.parse_manifest">parse_manifest</h3></p>
 <pre class="codehilite"><code class="language-python">Session.parse_manifest(filename)</code></pre>
 
 
@@ -750,13 +750,6 @@ manifest and executes it. Note that this must occur in a context where
 the :data:<code>session</code> is available.</p>
 <p>:raise RuntimeError: If there is no current :data:<code>session</code> or if the
   module was already executed.</p>
-<h3 id="craftr.core.session.Module.get_init_globals">get_init_globals</h3>
-
-<pre class="codehilite"><code class="language-python">Module.get_init_globals()</code></pre>
-
-
-<p>Returns a dictionary initialized with the default built-in values for a
-build script.</p>
 <h3 id="craftr.core.session.Module.init_options">init_options</h3>
 
 <pre class="codehilite"><code class="language-python">Module.init_options(recursive=False, _break_recursion=None)</code></pre>
@@ -768,6 +761,13 @@ build script.</p>
 :raise ModuleNotFound: If <em>recursive</em> is specified and a dependency
   was not found.
 :raise RuntimeError: If there is no current session context.</p>
+<h3 id="craftr.core.session.Module.get_init_globals">get_init_globals</h3>
+
+<pre class="codehilite"><code class="language-python">Module.get_init_globals()</code></pre>
+
+
+<p>Returns a dictionary initialized with the default built-in values for a
+build script.</p>
               
             </article>
           </div>

@@ -578,6 +578,27 @@
 <h1 id="modcraftrdefaults">:mod:<code>craftr.defaults</code></h1>
 <p>This module provides the default global namespace for Craftr modules. Names
 starting with an underscore will be ignored.</p>
+<h2 id="craftr.defaults.return_">return_</h2>
+
+<pre class="codehilite"><code class="language-python">return_()</code></pre>
+
+
+<p>Raises a :class:<code>ModuleReturn</code> exception.</p>
+<h2 id="craftr.defaults.map">map</h2>
+
+<pre class="codehilite"><code class="language-python">map(procedure, iterable)</code></pre>
+
+
+<p>Alternative for the built-in <code>map()</code> function that returns a list instead
+of an iterable (which is the behaviour since Python 3).</p>
+<h2 id="craftr.defaults.glob">glob</h2>
+
+<pre class="codehilite"><code class="language-python">glob(patterns, parent=None, exclude=(), include_dotfiles=False, ignore_false_excludes=False)</code></pre>
+
+
+<p>Wrapper for :func:<code>path.glob</code> that automatically uses the current modules
+project directory for the <em>parent</em> argument if it has not been specifically
+set.</p>
 <h2 id="craftr.defaults.write_response_file">write_response_file</h2>
 
 <pre class="codehilite"><code class="language-python">write_response_file(arguments, builder=None, name=None, force_file=False, suffix='')</code></pre>
@@ -594,6 +615,15 @@ whether to write a response file or to return the <em>arguments</em> as is.</p>
 the returned <em>arguments</em> will be a list with a single string that is the
 filename prepended with <code>@</code>. The <em>filename</em> part can be None if no
 response file needed to be exported.</p>
+<h2 id="craftr.defaults.task">task</h2>
+
+<pre class="codehilite"><code class="language-python">task(inputs=(), outputs=(), args=None, **kwargs)</code></pre>
+
+
+<p>Generate a one-off task. Optionally you can specified a list of <em>inputs</em>
+and <em>outputs</em>. If <em>args</em> is not specified, the <em>inputs</em> and <em>outputs</em> will
+be passed as arguments to the task function. Otherwise, <em>args</em> will be
+passed.</p>
 <h2 id="craftr.defaults.gentool">gentool</h2>
 
 <pre class="codehilite"><code class="language-python">gentool(commands, preamble=None, environ=None, name=None)</code></pre>
@@ -615,31 +645,21 @@ to it. It is typically used for example like this:</p>
     explicit=True,
     environ = {'PATH': append_PATH(qt5.bin_dir if qt5 else None)}
   )</p>
-<h2 id="craftr.defaults.load_file">load_file</h2>
+<h2 id="craftr.defaults.genalias">genalias</h2>
 
-<pre class="codehilite"><code class="language-python">load_file(filename, export_default_namespace=True)</code></pre>
-
-
-<p>Loads a Python file into a new module-like object and returns it. The
-<em>filename</em> is assumed relative to the currently executed module's
-directory (NOT the project directory which can be different).</p>
-<h2 id="craftr.defaults.include_defs">include_defs</h2>
-
-<pre class="codehilite"><code class="language-python">include_defs(filename, globals=None)</code></pre>
+<pre class="codehilite"><code class="language-python">genalias(*targets, name=None, **kwargs)</code></pre>
 
 
-<p>Uses :mod:<code>load_file</code> to load a Python file and then copies all symbols
-that do not start with an underscore into the <em>globals</em> dictionary. If
-<em>globals</em> is not specified, it will fall back to the globals of the frame
-that calls the function.</p>
-<h2 id="craftr.defaults.buildlocal">buildlocal</h2>
+<p>Create a target that serves as an alias for all targets list in <em>targets</em>.</p>
+<h2 id="craftr.defaults.relocate_files">relocate_files</h2>
 
-<pre class="codehilite"><code class="language-python">buildlocal(rel_path)</code></pre>
+<pre class="codehilite"><code class="language-python">relocate_files(files, outdir, suffix, replace_suffix=True, parent=None)</code></pre>
 
 
-<p>Given a relative path, returns the path (still relative) to the build
-directory for the current module. This is basically a shorthand for
-prepending the module name and version to <em>path</em>.</p>
+<p>Converts a list of filenames, relocating them to <em>outdir</em> and replacing
+their existing suffix. If <em>suffix</em> is a callable, it will be passed the
+new filename and expected to return the same filename, eventually with
+a different suffix.</p>
 <h2 id="craftr.defaults.gentask">gentask</h2>
 
 <pre class="codehilite"><code class="language-python">gentask(func, args=None, inputs=(), outputs=(), name=None, explicit=True, **kwargs)</code></pre>
@@ -662,76 +682,6 @@ default, tasks need to be explicitly built or required by other targets.</p>
 :param name: Alternative target name.
 :param kwargs: Additional parameters for the :class:<code>Task</code> constructor.
 :return: A :class:<code>Target</code> object.</p>
-<h2 id="craftr.defaults.gentarget">gentarget</h2>
-
-<pre class="codehilite"><code class="language-python">gentarget(commands, inputs=(), outputs=(), *args, **kwargs)</code></pre>
-
-
-<p>Create a :class:<code>~_build.Target</code> object. The name of the target will be
-derived from the variable name it is assigned to unless <em>name</em> is specified.</p>
-<h2 id="craftr.defaults.local">local</h2>
-
-<pre class="codehilite"><code class="language-python">local(rel_path)</code></pre>
-
-
-<p>Given a relative path, returns the absolute path relative to the current
-module's project directory.</p>
-<h2 id="craftr.defaults.glob">glob</h2>
-
-<pre class="codehilite"><code class="language-python">glob(patterns, parent=None, exclude=(), include_dotfiles=False, ignore_false_excludes=False)</code></pre>
-
-
-<p>Wrapper for :func:<code>path.glob</code> that automatically uses the current modules
-project directory for the <em>parent</em> argument if it has not been specifically
-set.</p>
-<h2 id="craftr.defaults.error">error</h2>
-
-<pre class="codehilite"><code class="language-python">error(*message)</code></pre>
-
-
-<p>Raises a :class:<code>ModuleError</code> exception.</p>
-<h2 id="craftr.defaults.runtarget">runtarget</h2>
-
-<pre class="codehilite"><code class="language-python">runtarget(target, *args, inputs=(), outputs=(), **kwargs)</code></pre>
-
-
-<p>Simplification of :func:<code>gentarget</code> to make it more obvious that a
-generate target is actually executed.</p>
-<h2 id="craftr.defaults.genalias">genalias</h2>
-
-<pre class="codehilite"><code class="language-python">genalias(*targets, name=None, **kwargs)</code></pre>
-
-
-<p>Create a target that serves as an alias for all targets list in <em>targets</em>.</p>
-<h2 id="craftr.defaults.map">map</h2>
-
-<pre class="codehilite"><code class="language-python">map(procedure, iterable)</code></pre>
-
-
-<p>Alternative for the built-in <code>map()</code> function that returns a list instead
-of an iterable (which is the behaviour since Python 3).</p>
-<h2 id="craftr.defaults.task">task</h2>
-
-<pre class="codehilite"><code class="language-python">task(inputs=(), outputs=(), args=None, **kwargs)</code></pre>
-
-
-<p>Generate a one-off task. Optionally you can specified a list of <em>inputs</em>
-and <em>outputs</em>. If <em>args</em> is not specified, the <em>inputs</em> and <em>outputs</em> will
-be passed as arguments to the task function. Otherwise, <em>args</em> will be
-passed.</p>
-<h2 id="craftr.defaults.return_">return_</h2>
-
-<pre class="codehilite"><code class="language-python">return_()</code></pre>
-
-
-<p>Raises a :class:<code>ModuleReturn</code> exception.</p>
-<h2 id="craftr.defaults.filter">filter</h2>
-
-<pre class="codehilite"><code class="language-python">filter(predicate, iterable)</code></pre>
-
-
-<p>Alternative for the built-in <code>filter()</code> function that returns a list
-instead of an iterable (which is the behaviour since Python 3).</p>
 <h2 id="craftr.defaults.load">load</h2>
 
 <pre class="codehilite"><code class="language-python">load(name, into=None, mode='exports', _stackframe=1)</code></pre>
@@ -759,6 +709,13 @@ information unless <em>get_namespace</em> is False.</p>
 :raise ModuleNotFound: If the module could not be found.
 :raise RuntimeError: If the module that is attempted to be loaded is not
   declared in the current module's manifest.</p>
+<h2 id="craftr.defaults.runtarget">runtarget</h2>
+
+<pre class="codehilite"><code class="language-python">runtarget(target, *args, inputs=(), outputs=(), **kwargs)</code></pre>
+
+
+<p>Simplification of :func:<code>gentarget</code> to make it more obvious that a
+generate target is actually executed.</p>
 <h2 id="craftr.defaults.ModuleReturn">ModuleReturn</h2>
 
 <pre class="codehilite"><code class="language-python">ModuleReturn(*args, **kwargs)</code></pre>
@@ -766,15 +723,41 @@ information unless <em>get_namespace</em> is False.</p>
 
 <p>This exception is raised to "return" form a module execution pre-emptively
 without causing an error. See :func:<code>return_()</code></p>
-<h2 id="craftr.defaults.relocate_files">relocate_files</h2>
+<h2 id="craftr.defaults.local">local</h2>
 
-<pre class="codehilite"><code class="language-python">relocate_files(files, outdir, suffix, replace_suffix=True, parent=None)</code></pre>
+<pre class="codehilite"><code class="language-python">local(rel_path)</code></pre>
 
 
-<p>Converts a list of filenames, relocating them to <em>outdir</em> and replacing
-their existing suffix. If <em>suffix</em> is a callable, it will be passed the
-new filename and expected to return the same filename, eventually with
-a different suffix.</p>
+<p>Given a relative path, returns the absolute path relative to the current
+module's project directory.</p>
+<h2 id="craftr.defaults.error">error</h2>
+
+<pre class="codehilite"><code class="language-python">error(*message)</code></pre>
+
+
+<p>Raises a :class:<code>ModuleError</code> exception.</p>
+<h2 id="craftr.defaults.gentarget">gentarget</h2>
+
+<pre class="codehilite"><code class="language-python">gentarget(commands, inputs=(), outputs=(), *args, **kwargs)</code></pre>
+
+
+<p>Create a :class:<code>~_build.Target</code> object. The name of the target will be
+derived from the variable name it is assigned to unless <em>name</em> is specified.</p>
+<h2 id="craftr.defaults.load_file">load_file</h2>
+
+<pre class="codehilite"><code class="language-python">load_file(filename, export_default_namespace=True)</code></pre>
+
+
+<p>Loads a Python file into a new module-like object and returns it. The
+<em>filename</em> is assumed relative to the currently executed module's
+directory (NOT the project directory which can be different).</p>
+<h2 id="craftr.defaults.filter">filter</h2>
+
+<pre class="codehilite"><code class="language-python">filter(predicate, iterable)</code></pre>
+
+
+<p>Alternative for the built-in <code>filter()</code> function that returns a list
+instead of an iterable (which is the behaviour since Python 3).</p>
 <h2 id="craftr.defaults.zip">zip</h2>
 
 <pre class="codehilite"><code class="language-python">zip(*iterables, fill=NotImplemented)</code></pre>
@@ -783,6 +766,23 @@ a different suffix.</p>
 <p>Alternative to the Python built-in <code>zip()</code> function. This function returns
 a list rather than an iterable and also supports swapping to the
 :func:<code>itertools.izip_longest</code> version if the <em>fill</em> parameter is specified.</p>
+<h2 id="craftr.defaults.include_defs">include_defs</h2>
+
+<pre class="codehilite"><code class="language-python">include_defs(filename, globals=None)</code></pre>
+
+
+<p>Uses :mod:<code>load_file</code> to load a Python file and then copies all symbols
+that do not start with an underscore into the <em>globals</em> dictionary. If
+<em>globals</em> is not specified, it will fall back to the globals of the frame
+that calls the function.</p>
+<h2 id="craftr.defaults.buildlocal">buildlocal</h2>
+
+<pre class="codehilite"><code class="language-python">buildlocal(rel_path)</code></pre>
+
+
+<p>Given a relative path, returns the path (still relative) to the build
+directory for the current module. This is basically a shorthand for
+prepending the module name and version to <em>path</em>.</p>
               
             </article>
           </div>
