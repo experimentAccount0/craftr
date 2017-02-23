@@ -1,0 +1,860 @@
+
+<!DOCTYPE html>
+<html class="no-js">
+  <head>
+    
+      <meta charset="utf-8">
+      <meta name="viewport" content="width=device-width,initial-scale=1">
+      
+      
+      
+      
+        <link rel="shortcut icon" href="../../../assets/images/favicon.ico">
+      
+      <meta name="generator" content="mkdocs-0.16.1, mkdocs-material-1.0.5">
+    
+    
+      
+        <title>path - Craftr v2.0.0.dev7 Documentation</title>
+      
+    
+    
+      <script src="../../../assets/javascripts/modernizr-56ade86843.js"></script>
+    
+    
+      <link rel="stylesheet" href="../../../assets/stylesheets/application-9c62e3c932.css">
+      
+    
+    
+      
+        
+        
+        
+        <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Roboto:300,400,400i,700|Roboto+Mono">
+        <style>body,input{font-family:"Roboto","Helvetica Neue",Helvetica,Arial,sans-serif}code,kbd,pre{font-family:"Roboto Mono","Courier New",Courier,monospace}</style>
+      
+      <link rel="stylesheet" href="https://fonts.googleapis.com/icon?family=Material+Icons">
+    
+    
+    
+  </head>
+  
+  
+  
+  
+    <body>
+  
+    <svg class="md-svg">
+      <defs>
+        
+        
+      </defs>
+    </svg>
+    <input class="md-toggle" data-md-toggle="drawer" type="checkbox" id="drawer">
+    <input class="md-toggle" data-md-toggle="search" type="checkbox" id="search">
+    <label class="md-overlay" data-md-component="overlay" for="drawer"></label>
+    
+      <header class="md-header">
+  <nav class="md-header-nav md-grid">
+    <div class="md-flex">
+      <div class="md-flex__cell md-flex__cell--shrink">
+        <a href="../../.." title="Craftr v2.0.0.dev7 Documentation" class=" md-icon md-icon--home  md-header-nav__button">
+          
+        </a>
+      </div>
+      <div class="md-flex__cell md-flex__cell--shrink">
+        <label class="md-icon md-icon--menu md-header-nav__button" for="drawer"></label>
+      </div>
+      <div class="md-flex__cell md-flex__cell--stretch">
+        <span class="md-flex__ellipsis md-header-nav__title">
+          
+            
+              
+                <span class="md-header-nav__parent">
+                  Developer Reference
+                </span>
+              
+                <span class="md-header-nav__parent">
+                  utils
+                </span>
+              
+            
+            path
+          
+        </span>
+      </div>
+      <div class="md-flex__cell md-flex__cell--shrink">
+        
+          <label class="md-icon md-icon--search md-header-nav__button" for="search"></label>
+          
+<div class="md-search" data-md-component="search">
+  <div class="md-search__overlay"></div>
+  <div class="md-search__inner">
+    <form class="md-search__form" name="search">
+      <input type="text" class="md-search__input" name="query" placeholder="Search" accesskey="s" autocapitalize="off" autocorrect="off" autocomplete="off" spellcheck="false">
+      <label class="md-icon md-search__icon" for="search"></label>
+    </form>
+    <div class="md-search__output">
+      <div class="md-search__scrollwrap" data-md-scrollfix>
+        <div class="md-search-result" data-md-component="result"></div>
+      </div>
+    </div>
+  </div>
+</div>
+        
+      </div>
+      <div class="md-flex__cell md-flex__cell--shrink">
+          <div class="md-header-nav__source">
+            
+          </div>
+      </div>
+    </div>
+  </nav>
+</header>
+    
+    <div class="md-container">
+      <main class="md-main">
+        <div class="md-main__inner md-grid" data-md-component="container">
+          
+            
+              <div class="md-sidebar md-sidebar--primary" data-md-component="navigation">
+                <div class="md-sidebar__scrollwrap">
+                  <div class="md-sidebar__inner">
+                    <nav class="md-nav md-nav--primary">
+  <label class="md-nav__title md-nav__title--site" for="drawer">
+    <i class=" md-icon md-icon--home  md-nav__button">
+      
+    </i>
+    Craftr v2.0.0.dev7 Documentation
+  </label>
+  
+  <ul class="md-nav__list" data-md-scrollfix>
+    
+      
+      
+  <li class="md-nav__item">
+    
+      <a href="../../.." title="Home" class="md-nav__link">
+        Home
+      </a>
+    
+  </li>
+
+    
+      
+      
+  <li class="md-nav__item">
+    
+      <a href="../../../getting-started/" title="Getting Started" class="md-nav__link">
+        Getting Started
+      </a>
+    
+  </li>
+
+    
+      
+      
+  <li class="md-nav__item md-nav__item--nested">
+    
+      <input class="md-toggle md-nav__toggle" data-md-toggle="nav-3" type="checkbox" id="nav-3">
+    
+    <label class="md-nav__link" for="nav-3">
+      Reference
+    </label>
+    <nav class="md-nav" data-md-component="collapsible">
+      <label class="md-nav__title" for="nav-3">
+        Reference
+      </label>
+      <ul class="md-nav__list" data-md-scrollfix>
+        
+        
+          
+          
+  <li class="md-nav__item">
+    
+      <a href="../../../ref/package/" title="Package Description" class="md-nav__link">
+        Package Description
+      </a>
+    
+  </li>
+
+        
+          
+          
+  <li class="md-nav__item">
+    
+      <a href="../../../ref/targets/" title="Targets" class="md-nav__link">
+        Targets
+      </a>
+    
+  </li>
+
+        
+          
+          
+  <li class="md-nav__item">
+    
+      <a href="../../../ref/tasks/" title="Tasks" class="md-nav__link">
+        Tasks
+      </a>
+    
+  </li>
+
+        
+          
+          
+  <li class="md-nav__item">
+    
+      <a href="../../../ref/loaders/" title="Loaders" class="md-nav__link">
+        Loaders
+      </a>
+    
+  </li>
+
+        
+          
+          
+  <li class="md-nav__item">
+    
+      <a href="../../../ref/builtins/" title="Built-ins" class="md-nav__link">
+        Built-ins
+      </a>
+    
+  </li>
+
+        
+          
+          
+  <li class="md-nav__item">
+    
+      <a href="../../../ref/config/" title="Build Configuration" class="md-nav__link">
+        Build Configuration
+      </a>
+    
+  </li>
+
+        
+      </ul>
+    </nav>
+  </li>
+
+    
+      
+      
+  <li class="md-nav__item md-nav__item--nested">
+    
+      <input class="md-toggle md-nav__toggle" data-md-toggle="nav-4" type="checkbox" id="nav-4" checked>
+    
+    <label class="md-nav__link" for="nav-4">
+      Developer Reference
+    </label>
+    <nav class="md-nav" data-md-component="collapsible">
+      <label class="md-nav__title" for="nav-4">
+        Developer Reference
+      </label>
+      <ul class="md-nav__list" data-md-scrollfix>
+        
+        
+          
+          
+  <li class="md-nav__item md-nav__item--nested">
+    
+      <input class="md-toggle md-nav__toggle" data-md-toggle="nav-4-1" type="checkbox" id="nav-4-1">
+    
+    <label class="md-nav__link" for="nav-4-1">
+      core
+    </label>
+    <nav class="md-nav" data-md-component="collapsible">
+      <label class="md-nav__title" for="nav-4-1">
+        core
+      </label>
+      <ul class="md-nav__list" data-md-scrollfix>
+        
+        
+          
+          
+  <li class="md-nav__item">
+    
+      <a href="../../core/build/" title="build" class="md-nav__link">
+        build
+      </a>
+    
+  </li>
+
+        
+          
+          
+  <li class="md-nav__item">
+    
+      <a href="../../core/config/" title="config" class="md-nav__link">
+        config
+      </a>
+    
+  </li>
+
+        
+          
+          
+  <li class="md-nav__item">
+    
+      <a href="../../core/logging/" title="logging" class="md-nav__link">
+        logging
+      </a>
+    
+  </li>
+
+        
+          
+          
+  <li class="md-nav__item">
+    
+      <a href="../../core/manifest/" title="manifest" class="md-nav__link">
+        manifest
+      </a>
+    
+  </li>
+
+        
+          
+          
+  <li class="md-nav__item">
+    
+      <a href="../../core/renames/" title="renames" class="md-nav__link">
+        renames
+      </a>
+    
+  </li>
+
+        
+          
+          
+  <li class="md-nav__item">
+    
+      <a href="../../core/session/" title="session" class="md-nav__link">
+        session
+      </a>
+    
+  </li>
+
+        
+      </ul>
+    </nav>
+  </li>
+
+        
+          
+          
+  <li class="md-nav__item">
+    
+      <a href="../../platform/" title="platform" class="md-nav__link">
+        platform
+      </a>
+    
+  </li>
+
+        
+          
+          
+  <li class="md-nav__item md-nav__item--nested">
+    
+      <input class="md-toggle md-nav__toggle" data-md-toggle="nav-4-3" type="checkbox" id="nav-4-3" checked>
+    
+    <label class="md-nav__link" for="nav-4-3">
+      utils
+    </label>
+    <nav class="md-nav" data-md-component="collapsible">
+      <label class="md-nav__title" for="nav-4-3">
+        utils
+      </label>
+      <ul class="md-nav__list" data-md-scrollfix>
+        
+        
+          
+          
+  <li class="md-nav__item">
+    
+      <a href="../argspec/" title="argspec" class="md-nav__link">
+        argspec
+      </a>
+    
+  </li>
+
+        
+          
+          
+  <li class="md-nav__item">
+    
+      <a href="../cson/" title="cson" class="md-nav__link">
+        cson
+      </a>
+    
+  </li>
+
+        
+          
+          
+  <li class="md-nav__item">
+    
+      <a href="../httputils/" title="httputils" class="md-nav__link">
+        httputils
+      </a>
+    
+  </li>
+
+        
+          
+          
+  <li class="md-nav__item">
+    
+    <input class="md-toggle md-nav__toggle" data-md-toggle="toc" type="checkbox" id="toc">
+    
+    
+    <a href="./" title="path" class="md-nav__link md-nav__link--active">
+      path
+    </a>
+    
+  </li>
+
+        
+          
+          
+  <li class="md-nav__item">
+    
+      <a href="../pyutils/" title="pyutils" class="md-nav__link">
+        pyutils
+      </a>
+    
+  </li>
+
+        
+          
+          
+  <li class="md-nav__item">
+    
+      <a href="../shell/" title="shell" class="md-nav__link">
+        shell
+      </a>
+    
+  </li>
+
+        
+          
+          
+  <li class="md-nav__item">
+    
+      <a href="../singleton/" title="singleton" class="md-nav__link">
+        singleton
+      </a>
+    
+  </li>
+
+        
+          
+          
+  <li class="md-nav__item">
+    
+      <a href="../tty/" title="tty" class="md-nav__link">
+        tty
+      </a>
+    
+  </li>
+
+        
+      </ul>
+    </nav>
+  </li>
+
+        
+          
+          
+  <li class="md-nav__item">
+    
+      <a href="../../defaults/" title="defaults" class="md-nav__link">
+        defaults
+      </a>
+    
+  </li>
+
+        
+          
+          
+  <li class="md-nav__item">
+    
+      <a href="../../foreignbuild/" title="foreignbuild" class="md-nav__link">
+        foreignbuild
+      </a>
+    
+  </li>
+
+        
+          
+          
+  <li class="md-nav__item">
+    
+      <a href="../../loaders/" title="loaders" class="md-nav__link">
+        loaders
+      </a>
+    
+  </li>
+
+        
+          
+          
+  <li class="md-nav__item">
+    
+      <a href="../../targetbuilder/" title="targetbuilder" class="md-nav__link">
+        targetbuilder
+      </a>
+    
+  </li>
+
+        
+      </ul>
+    </nav>
+  </li>
+
+    
+      
+      
+  <li class="md-nav__item">
+    
+      <a href="../../../changes/" title="Changelog" class="md-nav__link">
+        Changelog
+      </a>
+    
+  </li>
+
+    
+      
+      
+  <li class="md-nav__item">
+    
+      <a href="../../../faq/" title="FAQ" class="md-nav__link">
+        FAQ
+      </a>
+    
+  </li>
+
+    
+      
+      
+  <li class="md-nav__item">
+    
+      <a href="../../../projects/" title="Projects using Craftr" class="md-nav__link">
+        Projects using Craftr
+      </a>
+    
+  </li>
+
+    
+  </ul>
+</nav>
+                  </div>
+                </div>
+              </div>
+            
+            
+              <div class="md-sidebar md-sidebar--secondary" data-md-component="toc">
+                <div class="md-sidebar__scrollwrap">
+                  <div class="md-sidebar__inner">
+                    
+<nav class="md-nav md-nav--secondary">
+  
+  
+  
+</nav>
+                  </div>
+                </div>
+              </div>
+            
+          
+          <div class="md-content">
+            <article class="md-content__inner md-typeset">
+               
+              
+                
+                <h1 id="craftr.utils.path">craftr.utils.path</h1>
+
+<h2 id="craftr.utils.path.easy_listdir">easy_listdir</h2>
+
+<pre class="codehilite"><code class="language-python">easy_listdir(directory)</code></pre>
+
+
+<p>A friendly version of :func:<code>os.listdir</code> that does not error if the
+<em>directory</em> doesn't exist.</p>
+<h2 id="craftr.utils.path.rmvsuffix">rmvsuffix</h2>
+
+<pre class="codehilite"><code class="language-python">rmvsuffix(subject)</code></pre>
+
+
+<p>Remove the suffix from <em>subject</em>.</p>
+<h2 id="craftr.utils.path.common">common</h2>
+
+<pre class="codehilite"><code class="language-python">common(paths)</code></pre>
+
+
+<p>Returns the longest sub-path of each path in the <em>paths</em> list. If <em>paths</em> is
+empty, contains mixed absolute/relative paths or the paths have no common
+path, a :class:<code>ValueError</code> is raised.</p>
+<p>If there is only one element in <em>paths</em>, its parent directory is returned.</p>
+<h2 id="craftr.utils.path.norm">norm</h2>
+
+<pre class="codehilite"><code class="language-python">norm(path, parent=None)</code></pre>
+
+
+<p>Normalizes the specified <em>path</em>. This turns it into an absolute path and
+removes all superfluous path elements. Similar to :func:<code>os.path.normpath</code>,
+but accepts a <em>parent</em> argument which is considered when <em>path</em> is relative.</p>
+<h2 id="craftr.utils.path.transition">transition</h2>
+
+<pre class="codehilite"><code class="language-python">transition(filename, oldbase, newbase)</code></pre>
+
+
+<p>Translates the <em>filename</em> from the directory <em>oldbase</em> to the new
+directory <em>newbase</em>. This is identical to finding the relative path
+of <em>filename</em> to <em>oldbase</em> and joining it with <em>newbase</em>. The <code>filename</code>
+must be a sub-path of <em>oldbase</em>.</p>
+<p>.. code:: python</p>
+<blockquote>
+<blockquote>
+<blockquote>
+<p>transition('src/main.c', 'src', 'build/obj')
+  build/obj/main.c</p>
+</blockquote>
+</blockquote>
+</blockquote>
+<h2 id="craftr.utils.path.makedirs">makedirs</h2>
+
+<pre class="codehilite"><code class="language-python">makedirs(path)</code></pre>
+
+
+<p>Like :func:<code>os.makedirs</code>, but this function does not raise an exception
+when the directory at <em>path</em> already exists.</p>
+<h2 id="craftr.utils.path.addprefix">addprefix</h2>
+
+<pre class="codehilite"><code class="language-python">addprefix(subject, prefix)</code></pre>
+
+
+<p>Adds the specified <em>prefix</em> to the last path element in <em>subject</em>.
+If <em>prefix</em> is a callable, it must accept exactly one argument, which
+is the last path element, and return a modified value.</p>
+<h2 id="craftr.utils.path.issub">issub</h2>
+
+<pre class="codehilite"><code class="language-python">issub(path)</code></pre>
+
+
+<p>Returns True if <em>path</em> is a relative path that does not point outside
+of its parent directory or is equal to its parent directory (thus, this
+function will also return False for a path like <code>./</code>).</p>
+<h2 id="craftr.utils.path.setsuffix">setsuffix</h2>
+
+<pre class="codehilite"><code class="language-python">setsuffix(subject, suffix)</code></pre>
+
+
+<p>Synonymous for passing the True for the <em>replace</em> parameter in
+:func:<code>addsuffix</code>.</p>
+<h2 id="craftr.utils.path.rel">rel</h2>
+
+<pre class="codehilite"><code class="language-python">rel(path, parent=None, nopar=False)</code></pre>
+
+
+<p>Like :func:<code>os.path.relpath</code>, but the <em>nopar</em> parameter can be set to return
+an absolute path if the relative path would create a path element that
+references a parent directory (<code>..</code>) or current directory (<code>.</code>).</p>
+<h2 id="craftr.utils.path.glob">glob</h2>
+
+<pre class="codehilite"><code class="language-python">glob(patterns, parent=None, excludes=(), include_dotfiles=False, ignore_false_excludes=False)</code></pre>
+
+
+<p>Wrapper for :func:<code>glob2.glob</code> that accepts an arbitrary number of
+patterns and matches them. The paths are normalized with :func:<code>norm</code>.</p>
+<p>Relative patterns are automaticlly joined with <em>parent</em>. If the
+parameter is omitted, it defaults to the currently executed build
+scripts project directory.</p>
+<p>If <em>excludes</em> is specified, it must be a string or a list of strings
+that is/contains glob patterns or filenames to be removed from the
+result before returning.</p>
+<p>.. note::</p>
+<p>Every file listed in <em>excludes</em> will only remove <strong>one</strong> item from
+  the result list that was generated from <em>patterns</em>. Thus, if you
+  want to exclude some files with a pattern except for a specific file
+  that would also match that pattern, simply list that file another
+  time in the <em>patterns</em>.</p>
+<p>:param patterns: A list of glob patterns or filenames.
+:param parent: The parent directory for relative paths.
+:param excludes: A list of glob patterns or filenames.
+:param include_dotfiles: If True, <code>*</code> and <code>**</code> can also capture
+  file or directory names starting with a dot.
+:param ignore_false_excludes: False by default. If True, items listed
+  in <em>excludes</em> that have not been globbed will raise an exception.
+:return: A list of filenames.</p>
+<h2 id="craftr.utils.path.getimtime">getimtime</h2>
+
+<pre class="codehilite"><code class="language-python">getimtime(path)</code></pre>
+
+
+<p>Just like :func:<code>getmtime()</code>, but rounds down to an integer.</p>
+<h2 id="craftr.utils.path.get_long_path_name">get_long_path_name</h2>
+
+<pre class="codehilite"><code class="language-python">get_long_path_name(path)</code></pre>
+
+
+<p>This function is important when using Craftr on platforms with
+case-insenstive filesystem, such as Windows. It returns the correct
+capitalization for <em>path</em>, given that it exists. For other platforms,
+the <em>path</em> is returned as-is.</p>
+<p>If <em>path</em> does not exist, it is returned unchanged in any case.</p>
+<h2 id="craftr.utils.path.addsuffix">addsuffix</h2>
+
+<pre class="codehilite"><code class="language-python">addsuffix(subject, suffix, replace=False)</code></pre>
+
+
+<p>Adds the specified <em>suffix</em> to the <em>subject</em>. If <em>replace</em> is True, the
+old suffix will be removed first. If <em>suffix</em> is callable, it must accept
+exactly one argument and return a modified value.</p>
+<h2 id="craftr.utils.path.remove">remove</h2>
+
+<pre class="codehilite"><code class="language-python">remove(path, recursive=False, silent=False)</code></pre>
+
+
+<p>Like :func:<code>os.remove</code>, but the <em>silent</em> parmaeter can be specified to
+prevent the function from raising an exception if the <em>path</em> could not be
+removed. Also, the <em>recursive</em> parameter allows you to use this function
+to remove directories as well. In this case, :func:<code>shutil.rmtree</code> is
+used.</p>
+<h2 id="craftr.utils.path.getsuffix">getsuffix</h2>
+
+<pre class="codehilite"><code class="language-python">getsuffix(subject)</code></pre>
+
+
+<p>Returns the suffix of a filename. If the file has no suffix, returns None.
+Can return an empty string if the filenam ends with a period.</p>
+<h2 id="craftr.utils.path.isglob">isglob</h2>
+
+<pre class="codehilite"><code class="language-python">isglob(path)</code></pre>
+
+
+<p>:param path: The string to check
+:return bool: True if the path is a glob pattern, False otherwise.</p>
+<h2 id="craftr.utils.path.canonical">canonical</h2>
+
+<pre class="codehilite"><code class="language-python">canonical(path)</code></pre>
+
+
+<p>A synonym for :meth:<code>os.path.normpath</code>.</p>
+<h2 id="craftr.utils.path.tempfile">tempfile</h2>
+
+<pre class="codehilite"><code class="language-python">tempfile(suffix='', prefix='tmp', dir=None, text=False)</code></pre>
+
+
+<p>A better temporary file class where the <code>close()</code> function does not delete
+  the file but only <code>__exit__()</code> does. Obviously, this allows you to close
+  the file and re-use it with some other processing before it finally gets
+  deleted.</p>
+<p>This is especially important on Windows because apparently another
+  process can't read the file while it's still opened in the process
+  that created it.</p>
+<p><code>python
+  from craftr.tools import tempfile
+  with tempfile(suffix='c', text=True) as fp:
+    fp.write('`include` &lt;stdio.h&gt;
+int main() { }
+')
+    fp.close()
+    shell.run(['gcc', fp.name])</code></p>
+<p>@param suffix: The suffix of the temporary file.
+  @param prefix: The prefix of the temporary file.
+  @param dir: Override the temporary directory.
+  @param text: True to open the file in text mode. Otherwise, it
+    will be opened in binary mode.</p>
+<h2 id="craftr.utils.path.maybedir">maybedir</h2>
+
+<pre class="codehilite"><code class="language-python">maybedir(path)</code></pre>
+
+
+<p>Returns True if <em>path</em> ends with a separator. This information can be used
+to interpret a path as a directory or a filename only from its
+representation.</p>
+<p>.. code:: python</p>
+<blockquote>
+<blockquote>
+<blockquote>
+<p>maybedir('foobar/')
+  True
+maybedir('foo/bar')
+  False</p>
+</blockquote>
+</blockquote>
+</blockquote>
+              
+            </article>
+          </div>
+        </div>
+      </main>
+      
+        
+<footer class="md-footer">
+  
+    <div class="md-footer-nav">
+      <nav class="md-footer-nav__inner md-grid">
+        
+          <a href="../httputils/" title="httputils" class="md-flex md-footer-nav__link md-footer-nav__link--prev" rel="prev">
+            <div class="md-flex__cell md-flex__cell--shrink">
+              <i class="md-icon md-icon--arrow-back md-footer-nav__button"></i>
+            </div>
+            <div class="md-flex__cell md-flex__cell--stretch md-footer-nav__title">
+              <span class="md-flex__ellipsis">
+                <span class="md-footer-nav__direction">
+                  Previous
+                </span>
+                httputils
+              </span>
+            </div>
+          </a>
+        
+        
+          <a href="../pyutils/" title="pyutils" class="md-flex md-footer-nav__link md-footer-nav__link--next" rel="next">
+            <div class="md-flex__cell md-flex__cell--stretch md-footer-nav__title">
+              <span class="md-flex__ellipsis">
+                <span class="md-footer-nav__direction">
+                  Next
+                </span>
+                pyutils
+              </span>
+            </div>
+            <div class="md-flex__cell md-flex__cell--shrink">
+              <i class="md-icon md-icon--arrow-forward md-footer-nav__button"></i>
+            </div>
+          </a>
+        
+      </nav>
+    </div>
+  
+  <div class="md-footer-meta md-typeset">
+    <div class="md-footer-meta__inner md-grid">
+      <div class="md-footer-copyright">
+        
+        powered by
+        <a href="http://www.mkdocs.org" title="MkDocs">MkDocs</a>
+        and
+        <a href="http://squidfunk.github.io/mkdocs-material/" title="Material for MkDocs">
+          Material for MkDocs</a>
+      </div>
+      
+        
+      
+    </div>
+  </div>
+</footer>
+      
+    </div>
+    
+      <script src="../../../assets/javascripts/application-f7ac33b6fb.js"></script>
+      <script>app.initialize({url:{base:"../../.."}})</script>
+      
+    
+    
+      
+    
+  </body>
+</html>

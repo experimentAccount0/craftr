@@ -9,20 +9,20 @@
       
       
       
-        <link rel="shortcut icon" href="../../assets/images/favicon.ico">
+        <link rel="shortcut icon" href="../../../assets/images/favicon.ico">
       
       <meta name="generator" content="mkdocs-0.16.1, mkdocs-material-1.0.5">
     
     
       
-        <title>Build Configuration - Craftr v2.0.0.dev7 Documentation</title>
+        <title>shell - Craftr v2.0.0.dev7 Documentation</title>
       
     
     
-      <script src="../../assets/javascripts/modernizr-56ade86843.js"></script>
+      <script src="../../../assets/javascripts/modernizr-56ade86843.js"></script>
     
     
-      <link rel="stylesheet" href="../../assets/stylesheets/application-9c62e3c932.css">
+      <link rel="stylesheet" href="../../../assets/stylesheets/application-9c62e3c932.css">
       
     
     
@@ -58,7 +58,7 @@
   <nav class="md-header-nav md-grid">
     <div class="md-flex">
       <div class="md-flex__cell md-flex__cell--shrink">
-        <a href="../.." title="Craftr v2.0.0.dev7 Documentation" class=" md-icon md-icon--home  md-header-nav__button">
+        <a href="../../.." title="Craftr v2.0.0.dev7 Documentation" class=" md-icon md-icon--home  md-header-nav__button">
           
         </a>
       </div>
@@ -71,11 +71,15 @@
             
               
                 <span class="md-header-nav__parent">
-                  Reference
+                  Developer Reference
+                </span>
+              
+                <span class="md-header-nav__parent">
+                  utils
                 </span>
               
             
-            Build Configuration
+            shell
           
         </span>
       </div>
@@ -130,7 +134,7 @@
       
   <li class="md-nav__item">
     
-      <a href="../.." title="Home" class="md-nav__link">
+      <a href="../../.." title="Home" class="md-nav__link">
         Home
       </a>
     
@@ -141,7 +145,7 @@
       
   <li class="md-nav__item">
     
-      <a href="../../getting-started/" title="Getting Started" class="md-nav__link">
+      <a href="../../../getting-started/" title="Getting Started" class="md-nav__link">
         Getting Started
       </a>
     
@@ -152,7 +156,7 @@
       
   <li class="md-nav__item md-nav__item--nested">
     
-      <input class="md-toggle md-nav__toggle" data-md-toggle="nav-3" type="checkbox" id="nav-3" checked>
+      <input class="md-toggle md-nav__toggle" data-md-toggle="nav-3" type="checkbox" id="nav-3">
     
     <label class="md-nav__link" for="nav-3">
       Reference
@@ -168,7 +172,7 @@
           
   <li class="md-nav__item">
     
-      <a href="../package/" title="Package Description" class="md-nav__link">
+      <a href="../../../ref/package/" title="Package Description" class="md-nav__link">
         Package Description
       </a>
     
@@ -179,7 +183,7 @@
           
   <li class="md-nav__item">
     
-      <a href="../targets/" title="Targets" class="md-nav__link">
+      <a href="../../../ref/targets/" title="Targets" class="md-nav__link">
         Targets
       </a>
     
@@ -190,7 +194,7 @@
           
   <li class="md-nav__item">
     
-      <a href="../tasks/" title="Tasks" class="md-nav__link">
+      <a href="../../../ref/tasks/" title="Tasks" class="md-nav__link">
         Tasks
       </a>
     
@@ -201,7 +205,7 @@
           
   <li class="md-nav__item">
     
-      <a href="../loaders/" title="Loaders" class="md-nav__link">
+      <a href="../../../ref/loaders/" title="Loaders" class="md-nav__link">
         Loaders
       </a>
     
@@ -212,7 +216,7 @@
           
   <li class="md-nav__item">
     
-      <a href="../builtins/" title="Built-ins" class="md-nav__link">
+      <a href="../../../ref/builtins/" title="Built-ins" class="md-nav__link">
         Built-ins
       </a>
     
@@ -223,77 +227,9 @@
           
   <li class="md-nav__item">
     
-    <input class="md-toggle md-nav__toggle" data-md-toggle="toc" type="checkbox" id="toc">
-    
-      
-    
-    
-      <label class="md-nav__link md-nav__link--active" for="toc">
+      <a href="../../../ref/config/" title="Build Configuration" class="md-nav__link">
         Build Configuration
-      </label>
-    
-    <a href="./" title="Build Configuration" class="md-nav__link md-nav__link--active">
-      Build Configuration
-    </a>
-    
-      
-<nav class="md-nav md-nav--secondary">
-  
-  
-  
-    <label class="md-nav__title" for="toc">Table of contents</label>
-    <ul class="md-nav__list" data-md-scrollfix>
-      
-        <li class="md-nav__item">
-  <a href="#options" title="Options" class="md-nav__link">
-    Options
-  </a>
-  
-    <nav class="md-nav">
-      <ul class="md-nav__list">
-        
-          <li class="md-nav__item">
-  <a href="#craftrninja" title="craftr.ninja" class="md-nav__link">
-    craftr.ninja
-  </a>
-  
-</li>
-        
-      </ul>
-    </nav>
-  
-</li>
-      
-        <li class="md-nav__item">
-  <a href="#configuring" title="Configuring" class="md-nav__link">
-    Configuring
-  </a>
-  
-    <nav class="md-nav">
-      <ul class="md-nav__list">
-        
-          <li class="md-nav__item">
-  <a href="#include-configuration-files" title="Include configuration files" class="md-nav__link">
-    Include configuration files
-  </a>
-  
-</li>
-        
-          <li class="md-nav__item">
-  <a href="#setting-global-options" title="Setting global options" class="md-nav__link">
-    Setting global options
-  </a>
-  
-</li>
-        
-      </ul>
-    </nav>
-  
-</li>
-      
-    </ul>
-  
-</nav>
+      </a>
     
   </li>
 
@@ -307,7 +243,7 @@
       
   <li class="md-nav__item md-nav__item--nested">
     
-      <input class="md-toggle md-nav__toggle" data-md-toggle="nav-4" type="checkbox" id="nav-4">
+      <input class="md-toggle md-nav__toggle" data-md-toggle="nav-4" type="checkbox" id="nav-4" checked>
     
     <label class="md-nav__link" for="nav-4">
       Developer Reference
@@ -339,7 +275,7 @@
           
   <li class="md-nav__item">
     
-      <a href="../../api/core/build/" title="build" class="md-nav__link">
+      <a href="../../core/build/" title="build" class="md-nav__link">
         build
       </a>
     
@@ -350,7 +286,7 @@
           
   <li class="md-nav__item">
     
-      <a href="../../api/core/config/" title="config" class="md-nav__link">
+      <a href="../../core/config/" title="config" class="md-nav__link">
         config
       </a>
     
@@ -361,7 +297,7 @@
           
   <li class="md-nav__item">
     
-      <a href="../../api/core/logging/" title="logging" class="md-nav__link">
+      <a href="../../core/logging/" title="logging" class="md-nav__link">
         logging
       </a>
     
@@ -372,7 +308,7 @@
           
   <li class="md-nav__item">
     
-      <a href="../../api/core/manifest/" title="manifest" class="md-nav__link">
+      <a href="../../core/manifest/" title="manifest" class="md-nav__link">
         manifest
       </a>
     
@@ -383,7 +319,7 @@
           
   <li class="md-nav__item">
     
-      <a href="../../api/core/renames/" title="renames" class="md-nav__link">
+      <a href="../../core/renames/" title="renames" class="md-nav__link">
         renames
       </a>
     
@@ -394,7 +330,7 @@
           
   <li class="md-nav__item">
     
-      <a href="../../api/core/session/" title="session" class="md-nav__link">
+      <a href="../../core/session/" title="session" class="md-nav__link">
         session
       </a>
     
@@ -410,7 +346,7 @@
           
   <li class="md-nav__item">
     
-      <a href="../../api/platform/" title="platform" class="md-nav__link">
+      <a href="../../platform/" title="platform" class="md-nav__link">
         platform
       </a>
     
@@ -421,7 +357,7 @@
           
   <li class="md-nav__item md-nav__item--nested">
     
-      <input class="md-toggle md-nav__toggle" data-md-toggle="nav-4-3" type="checkbox" id="nav-4-3">
+      <input class="md-toggle md-nav__toggle" data-md-toggle="nav-4-3" type="checkbox" id="nav-4-3" checked>
     
     <label class="md-nav__link" for="nav-4-3">
       utils
@@ -437,7 +373,7 @@
           
   <li class="md-nav__item">
     
-      <a href="../../api/utils/argspec/" title="argspec" class="md-nav__link">
+      <a href="../argspec/" title="argspec" class="md-nav__link">
         argspec
       </a>
     
@@ -448,7 +384,7 @@
           
   <li class="md-nav__item">
     
-      <a href="../../api/utils/cson/" title="cson" class="md-nav__link">
+      <a href="../cson/" title="cson" class="md-nav__link">
         cson
       </a>
     
@@ -459,7 +395,7 @@
           
   <li class="md-nav__item">
     
-      <a href="../../api/utils/httputils/" title="httputils" class="md-nav__link">
+      <a href="../httputils/" title="httputils" class="md-nav__link">
         httputils
       </a>
     
@@ -470,7 +406,7 @@
           
   <li class="md-nav__item">
     
-      <a href="../../api/utils/path/" title="path" class="md-nav__link">
+      <a href="../path/" title="path" class="md-nav__link">
         path
       </a>
     
@@ -481,7 +417,7 @@
           
   <li class="md-nav__item">
     
-      <a href="../../api/utils/pyutils/" title="pyutils" class="md-nav__link">
+      <a href="../pyutils/" title="pyutils" class="md-nav__link">
         pyutils
       </a>
     
@@ -492,9 +428,12 @@
           
   <li class="md-nav__item">
     
-      <a href="../../api/utils/shell/" title="shell" class="md-nav__link">
-        shell
-      </a>
+    <input class="md-toggle md-nav__toggle" data-md-toggle="toc" type="checkbox" id="toc">
+    
+    
+    <a href="./" title="shell" class="md-nav__link md-nav__link--active">
+      shell
+    </a>
     
   </li>
 
@@ -503,7 +442,7 @@
           
   <li class="md-nav__item">
     
-      <a href="../../api/utils/singleton/" title="singleton" class="md-nav__link">
+      <a href="../singleton/" title="singleton" class="md-nav__link">
         singleton
       </a>
     
@@ -514,7 +453,7 @@
           
   <li class="md-nav__item">
     
-      <a href="../../api/utils/tty/" title="tty" class="md-nav__link">
+      <a href="../tty/" title="tty" class="md-nav__link">
         tty
       </a>
     
@@ -530,7 +469,7 @@
           
   <li class="md-nav__item">
     
-      <a href="../../api/defaults/" title="defaults" class="md-nav__link">
+      <a href="../../defaults/" title="defaults" class="md-nav__link">
         defaults
       </a>
     
@@ -541,7 +480,7 @@
           
   <li class="md-nav__item">
     
-      <a href="../../api/foreignbuild/" title="foreignbuild" class="md-nav__link">
+      <a href="../../foreignbuild/" title="foreignbuild" class="md-nav__link">
         foreignbuild
       </a>
     
@@ -552,7 +491,7 @@
           
   <li class="md-nav__item">
     
-      <a href="../../api/loaders/" title="loaders" class="md-nav__link">
+      <a href="../../loaders/" title="loaders" class="md-nav__link">
         loaders
       </a>
     
@@ -563,7 +502,7 @@
           
   <li class="md-nav__item">
     
-      <a href="../../api/targetbuilder/" title="targetbuilder" class="md-nav__link">
+      <a href="../../targetbuilder/" title="targetbuilder" class="md-nav__link">
         targetbuilder
       </a>
     
@@ -579,7 +518,7 @@
       
   <li class="md-nav__item">
     
-      <a href="../../changes/" title="Changelog" class="md-nav__link">
+      <a href="../../../changes/" title="Changelog" class="md-nav__link">
         Changelog
       </a>
     
@@ -590,7 +529,7 @@
       
   <li class="md-nav__item">
     
-      <a href="../../faq/" title="FAQ" class="md-nav__link">
+      <a href="../../../faq/" title="FAQ" class="md-nav__link">
         FAQ
       </a>
     
@@ -601,7 +540,7 @@
       
   <li class="md-nav__item">
     
-      <a href="../../projects/" title="Projects using Craftr" class="md-nav__link">
+      <a href="../../../projects/" title="Projects using Craftr" class="md-nav__link">
         Projects using Craftr
       </a>
     
@@ -623,58 +562,6 @@
   
   
   
-    <label class="md-nav__title" for="toc">Table of contents</label>
-    <ul class="md-nav__list" data-md-scrollfix>
-      
-        <li class="md-nav__item">
-  <a href="#options" title="Options" class="md-nav__link">
-    Options
-  </a>
-  
-    <nav class="md-nav">
-      <ul class="md-nav__list">
-        
-          <li class="md-nav__item">
-  <a href="#craftrninja" title="craftr.ninja" class="md-nav__link">
-    craftr.ninja
-  </a>
-  
-</li>
-        
-      </ul>
-    </nav>
-  
-</li>
-      
-        <li class="md-nav__item">
-  <a href="#configuring" title="Configuring" class="md-nav__link">
-    Configuring
-  </a>
-  
-    <nav class="md-nav">
-      <ul class="md-nav__list">
-        
-          <li class="md-nav__item">
-  <a href="#include-configuration-files" title="Include configuration files" class="md-nav__link">
-    Include configuration files
-  </a>
-  
-</li>
-        
-          <li class="md-nav__item">
-  <a href="#setting-global-options" title="Setting global options" class="md-nav__link">
-    Setting global options
-  </a>
-  
-</li>
-        
-      </ul>
-    </nav>
-  
-</li>
-      
-    </ul>
-  
 </nav>
                   </div>
                 </div>
@@ -686,39 +573,114 @@
                
               
                 
-                  <h1>Build Configuration</h1>
-                
-                <p>Configuration values in Craftr are stored in the <code>Session.options</code> dictionary.
-There are those options that are defined in Craftr packages and are automatically
-validated, but they are not limited by these definitions.</p>
-<p>Note that options that are not listed in Craftr package manifests do <em>not</em>
-have the <em>inheriting</em> behaviour, thus the full qualified option name must
-be defined.</p>
-<h2 id="options">Options</h2>
-<h3 id="craftrninja"><code>craftr.ninja</code></h3>
-<p>The path or name of the Ninja executable to invoke. Defaults to the <code>NINJA</code>
-environment variable or simply <code>ninja</code>.</p>
-<h2 id="configuring">Configuring</h2>
-<p>On the command-line, you can use the <code>-d/--option</code> argument to set options.
-These options override every option read from configuration files. Alternatively,
-you can specify one or more configuration files to load with the <code>-c/--config</code>
-argument. If none are specified, the file <code>.craftrconfig</code> in the current working
-directory is loaded if it exists.</p>
-<p>If present, the file <code>.craftrconfig</code> in the users home directory will always
-be loaded.</p>
-<p>Configuration files are simple <code>.ini</code> files with two additions:</p>
-<h3 id="include-configuration-files">Include configuration files</h3>
-<p>A configuration file can include another configuration file using the
-<code>include</code> section directive. Note that the <code>if-exists</code> portion is optional
-and can be used if you don't want it to be an error if the included file
-does not exist.</p>
-<pre class="codehilite"><code class="language-ini">[include &quot;path/to/file.ini&quot; if-exists]</code></pre>
+                <h1 id="craftr.utils.shell">craftr.utils.shell</h1>
+
+<h2 id="craftr.utils.shell.TimeoutExpired">TimeoutExpired</h2>
+
+<pre class="codehilite"><code class="language-python">TimeoutExpired(process, timeout)</code></pre>
 
 
-<h3 id="setting-global-options">Setting global options</h3>
-<p>The <code>[__global__]</code> section can be used to define options without a prefix.</p>
-<pre class="codehilite"><code class="language-ini">[__global__]
-debug = true</code></pre>
+<p>This exception is raised when a process did not exit after a
+specific timeout. If this exception was raised, the child process
+has already been killed.</p>
+<h2 id="craftr.utils.shell.test_program">test_program</h2>
+
+<pre class="codehilite"><code class="language-python">test_program(name)</code></pre>
+
+
+<p>Uses :func:<code>find_program</code> to find the path to <em>name</em> and returns
+True if it could be found, False otherwise.</p>
+<h2 id="craftr.utils.shell.join">join</h2>
+
+<pre class="codehilite"><code class="language-python">join(cmd, for_ninja=False)</code></pre>
+
+
+<p>Join a list of strings to a single command string.</p>
+<h2 id="craftr.utils.shell.run">run</h2>
+
+<pre class="codehilite"><code class="language-python">run(cmd, *, stdin=None, input=None, stdout=None, stderr=None, shell=False, timeout=None, check=False, cwd=None, env=None, encoding='utf-8')</code></pre>
+
+
+<p>Run the process with the specified <em>cmd</em>. If <em>cmd</em> is a list of
+commands and <em>shell</em> is True, the list will be automatically converted
+to a properly escaped string for the shell to execute.</p>
+<p>.. note::</p>
+<p>If "shell" is True, this function will manually check if the file
+  exists and is executable first and raise :class:<code>FileNotFoundError</code>
+  if not.</p>
+<p>:raise CalledProcessError: If <em>check</em> is True and the process exited with
+  a non-zero exit-code.
+:raise TimeoutExpired: If <em>timeout</em> was specified and the process did not
+  finish before the timeout expires.
+:raise OSError: For some OS-level error, eg. if the program could not be
+    found.</p>
+<h2 id="craftr.utils.shell.format">format</h2>
+
+<pre class="codehilite"><code class="language-python">format(fmt, *args, **kwargs)</code></pre>
+
+
+<p>"
+  Similar to :meth:<code>str.format</code>, but this function will escape all arguments
+  with the :func:<code>quote</code> function. This is useful to easily generate commands.</p>
+<p>.. code:: python</p>
+<pre class="codehilite"><code>&gt;&gt;&gt; format('gcc {} -o {}', 'my source/main.c', 'spaces are bad/main')
+'gcc &quot;my source/main.c&quot; -o &quot;spaces are bad/main&quot;'</code></pre>
+
+
+<h2 id="craftr.utils.shell.split">split</h2>
+
+<pre class="codehilite"><code class="language-python">split(s)</code></pre>
+
+
+<p>Enhanced implementation of :func:<code>shlex.split</code>.</p>
+<h2 id="craftr.utils.shell.find_program">find_program</h2>
+
+<pre class="codehilite"><code class="language-python">find_program(name)</code></pre>
+
+
+<p>Finds the program <em>name</em> in the directories listed by the <code>PATH</code>
+environment variable and returns the full absolute path to it. On Windows,
+this also takes the <code>PATHEXT</code> variable into account.</p>
+<p>:param name: The name of the program to find.
+:return: :class:<code>str</code> -- The absolute path to the program.
+:raise FileNotFoundError: If the program could not be found in the PATH.
+:raise PermissionError: If a candidate for "name" was found but
+  it is not executable.</p>
+<h2 id="craftr.utils.shell.safe">safe</h2>
+
+<pre class="codehilite"><code class="language-python">safe(*args, **kwargs)</code></pre>
+
+
+<p>If this object is passed to <code>quote()</code>, it will not be escaped.</p>
+<h2 id="craftr.utils.shell.pipe">pipe</h2>
+
+<pre class="codehilite"><code class="language-python">pipe(*args, merge=True, **kwargs)</code></pre>
+
+
+<p>Like <code>run()</code>, but pipes stdout and stderr to a buffer instead of
+directing them to the current standard out and error files. If <em>merge</em>
+is True, stderr will be merged into stdout.</p>
+<h2 id="craftr.utils.shell.CalledProcessError">CalledProcessError</h2>
+
+<pre class="codehilite"><code class="language-python">CalledProcessError(process)</code></pre>
+
+
+<p>This exception is raised when a process exits with a non-zero
+returncode and the run was to be checked for such state. The exception
+contains the process information.</p>
+<h2 id="craftr.utils.shell.CompletedProcess">CompletedProcess</h2>
+
+<pre class="codehilite"><code class="language-python">CompletedProcess(cmd, returncode, stdout, stderr)</code></pre>
+
+
+<p>This class represents a completed process.</p>
+<h2 id="craftr.utils.shell.quote">quote</h2>
+
+<pre class="codehilite"><code class="language-python">quote(s, for_ninja=False)</code></pre>
+
+
+<p>Enhanced implementation of :func:<code>shlex.quote</code> as it generates single-quotes
+on Windows which can lead to problems.</p>
               
             </article>
           </div>
@@ -731,7 +693,7 @@ debug = true</code></pre>
     <div class="md-footer-nav">
       <nav class="md-footer-nav__inner md-grid">
         
-          <a href="../builtins/" title="Built-ins" class="md-flex md-footer-nav__link md-footer-nav__link--prev" rel="prev">
+          <a href="../pyutils/" title="pyutils" class="md-flex md-footer-nav__link md-footer-nav__link--prev" rel="prev">
             <div class="md-flex__cell md-flex__cell--shrink">
               <i class="md-icon md-icon--arrow-back md-footer-nav__button"></i>
             </div>
@@ -740,19 +702,19 @@ debug = true</code></pre>
                 <span class="md-footer-nav__direction">
                   Previous
                 </span>
-                Built-ins
+                pyutils
               </span>
             </div>
           </a>
         
         
-          <a href="../../api/core/build/" title="build" class="md-flex md-footer-nav__link md-footer-nav__link--next" rel="next">
+          <a href="../singleton/" title="singleton" class="md-flex md-footer-nav__link md-footer-nav__link--next" rel="next">
             <div class="md-flex__cell md-flex__cell--stretch md-footer-nav__title">
               <span class="md-flex__ellipsis">
                 <span class="md-footer-nav__direction">
                   Next
                 </span>
-                build
+                singleton
               </span>
             </div>
             <div class="md-flex__cell md-flex__cell--shrink">
@@ -782,8 +744,8 @@ debug = true</code></pre>
       
     </div>
     
-      <script src="../../assets/javascripts/application-f7ac33b6fb.js"></script>
-      <script>app.initialize({url:{base:"../.."}})</script>
+      <script src="../../../assets/javascripts/application-f7ac33b6fb.js"></script>
+      <script>app.initialize({url:{base:"../../.."}})</script>
       
     
     

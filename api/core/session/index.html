@@ -1,0 +1,842 @@
+
+<!DOCTYPE html>
+<html class="no-js">
+  <head>
+    
+      <meta charset="utf-8">
+      <meta name="viewport" content="width=device-width,initial-scale=1">
+      
+      
+      
+      
+        <link rel="shortcut icon" href="../../../assets/images/favicon.ico">
+      
+      <meta name="generator" content="mkdocs-0.16.1, mkdocs-material-1.0.5">
+    
+    
+      
+        <title>session - Craftr v2.0.0.dev7 Documentation</title>
+      
+    
+    
+      <script src="../../../assets/javascripts/modernizr-56ade86843.js"></script>
+    
+    
+      <link rel="stylesheet" href="../../../assets/stylesheets/application-9c62e3c932.css">
+      
+    
+    
+      
+        
+        
+        
+        <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Roboto:300,400,400i,700|Roboto+Mono">
+        <style>body,input{font-family:"Roboto","Helvetica Neue",Helvetica,Arial,sans-serif}code,kbd,pre{font-family:"Roboto Mono","Courier New",Courier,monospace}</style>
+      
+      <link rel="stylesheet" href="https://fonts.googleapis.com/icon?family=Material+Icons">
+    
+    
+    
+  </head>
+  
+  
+  
+  
+    <body>
+  
+    <svg class="md-svg">
+      <defs>
+        
+        
+      </defs>
+    </svg>
+    <input class="md-toggle" data-md-toggle="drawer" type="checkbox" id="drawer">
+    <input class="md-toggle" data-md-toggle="search" type="checkbox" id="search">
+    <label class="md-overlay" data-md-component="overlay" for="drawer"></label>
+    
+      <header class="md-header">
+  <nav class="md-header-nav md-grid">
+    <div class="md-flex">
+      <div class="md-flex__cell md-flex__cell--shrink">
+        <a href="../../.." title="Craftr v2.0.0.dev7 Documentation" class=" md-icon md-icon--home  md-header-nav__button">
+          
+        </a>
+      </div>
+      <div class="md-flex__cell md-flex__cell--shrink">
+        <label class="md-icon md-icon--menu md-header-nav__button" for="drawer"></label>
+      </div>
+      <div class="md-flex__cell md-flex__cell--stretch">
+        <span class="md-flex__ellipsis md-header-nav__title">
+          
+            
+              
+                <span class="md-header-nav__parent">
+                  Developer Reference
+                </span>
+              
+                <span class="md-header-nav__parent">
+                  core
+                </span>
+              
+            
+            session
+          
+        </span>
+      </div>
+      <div class="md-flex__cell md-flex__cell--shrink">
+        
+          <label class="md-icon md-icon--search md-header-nav__button" for="search"></label>
+          
+<div class="md-search" data-md-component="search">
+  <div class="md-search__overlay"></div>
+  <div class="md-search__inner">
+    <form class="md-search__form" name="search">
+      <input type="text" class="md-search__input" name="query" placeholder="Search" accesskey="s" autocapitalize="off" autocorrect="off" autocomplete="off" spellcheck="false">
+      <label class="md-icon md-search__icon" for="search"></label>
+    </form>
+    <div class="md-search__output">
+      <div class="md-search__scrollwrap" data-md-scrollfix>
+        <div class="md-search-result" data-md-component="result"></div>
+      </div>
+    </div>
+  </div>
+</div>
+        
+      </div>
+      <div class="md-flex__cell md-flex__cell--shrink">
+          <div class="md-header-nav__source">
+            
+          </div>
+      </div>
+    </div>
+  </nav>
+</header>
+    
+    <div class="md-container">
+      <main class="md-main">
+        <div class="md-main__inner md-grid" data-md-component="container">
+          
+            
+              <div class="md-sidebar md-sidebar--primary" data-md-component="navigation">
+                <div class="md-sidebar__scrollwrap">
+                  <div class="md-sidebar__inner">
+                    <nav class="md-nav md-nav--primary">
+  <label class="md-nav__title md-nav__title--site" for="drawer">
+    <i class=" md-icon md-icon--home  md-nav__button">
+      
+    </i>
+    Craftr v2.0.0.dev7 Documentation
+  </label>
+  
+  <ul class="md-nav__list" data-md-scrollfix>
+    
+      
+      
+  <li class="md-nav__item">
+    
+      <a href="../../.." title="Home" class="md-nav__link">
+        Home
+      </a>
+    
+  </li>
+
+    
+      
+      
+  <li class="md-nav__item">
+    
+      <a href="../../../getting-started/" title="Getting Started" class="md-nav__link">
+        Getting Started
+      </a>
+    
+  </li>
+
+    
+      
+      
+  <li class="md-nav__item md-nav__item--nested">
+    
+      <input class="md-toggle md-nav__toggle" data-md-toggle="nav-3" type="checkbox" id="nav-3">
+    
+    <label class="md-nav__link" for="nav-3">
+      Reference
+    </label>
+    <nav class="md-nav" data-md-component="collapsible">
+      <label class="md-nav__title" for="nav-3">
+        Reference
+      </label>
+      <ul class="md-nav__list" data-md-scrollfix>
+        
+        
+          
+          
+  <li class="md-nav__item">
+    
+      <a href="../../../ref/package/" title="Package Description" class="md-nav__link">
+        Package Description
+      </a>
+    
+  </li>
+
+        
+          
+          
+  <li class="md-nav__item">
+    
+      <a href="../../../ref/targets/" title="Targets" class="md-nav__link">
+        Targets
+      </a>
+    
+  </li>
+
+        
+          
+          
+  <li class="md-nav__item">
+    
+      <a href="../../../ref/tasks/" title="Tasks" class="md-nav__link">
+        Tasks
+      </a>
+    
+  </li>
+
+        
+          
+          
+  <li class="md-nav__item">
+    
+      <a href="../../../ref/loaders/" title="Loaders" class="md-nav__link">
+        Loaders
+      </a>
+    
+  </li>
+
+        
+          
+          
+  <li class="md-nav__item">
+    
+      <a href="../../../ref/builtins/" title="Built-ins" class="md-nav__link">
+        Built-ins
+      </a>
+    
+  </li>
+
+        
+          
+          
+  <li class="md-nav__item">
+    
+      <a href="../../../ref/config/" title="Build Configuration" class="md-nav__link">
+        Build Configuration
+      </a>
+    
+  </li>
+
+        
+      </ul>
+    </nav>
+  </li>
+
+    
+      
+      
+  <li class="md-nav__item md-nav__item--nested">
+    
+      <input class="md-toggle md-nav__toggle" data-md-toggle="nav-4" type="checkbox" id="nav-4" checked>
+    
+    <label class="md-nav__link" for="nav-4">
+      Developer Reference
+    </label>
+    <nav class="md-nav" data-md-component="collapsible">
+      <label class="md-nav__title" for="nav-4">
+        Developer Reference
+      </label>
+      <ul class="md-nav__list" data-md-scrollfix>
+        
+        
+          
+          
+  <li class="md-nav__item md-nav__item--nested">
+    
+      <input class="md-toggle md-nav__toggle" data-md-toggle="nav-4-1" type="checkbox" id="nav-4-1" checked>
+    
+    <label class="md-nav__link" for="nav-4-1">
+      core
+    </label>
+    <nav class="md-nav" data-md-component="collapsible">
+      <label class="md-nav__title" for="nav-4-1">
+        core
+      </label>
+      <ul class="md-nav__list" data-md-scrollfix>
+        
+        
+          
+          
+  <li class="md-nav__item">
+    
+      <a href="../build/" title="build" class="md-nav__link">
+        build
+      </a>
+    
+  </li>
+
+        
+          
+          
+  <li class="md-nav__item">
+    
+      <a href="../config/" title="config" class="md-nav__link">
+        config
+      </a>
+    
+  </li>
+
+        
+          
+          
+  <li class="md-nav__item">
+    
+      <a href="../logging/" title="logging" class="md-nav__link">
+        logging
+      </a>
+    
+  </li>
+
+        
+          
+          
+  <li class="md-nav__item">
+    
+      <a href="../manifest/" title="manifest" class="md-nav__link">
+        manifest
+      </a>
+    
+  </li>
+
+        
+          
+          
+  <li class="md-nav__item">
+    
+      <a href="../renames/" title="renames" class="md-nav__link">
+        renames
+      </a>
+    
+  </li>
+
+        
+          
+          
+  <li class="md-nav__item">
+    
+    <input class="md-toggle md-nav__toggle" data-md-toggle="toc" type="checkbox" id="toc">
+    
+      
+    
+    
+    <a href="./" title="session" class="md-nav__link md-nav__link--active">
+      session
+    </a>
+    
+  </li>
+
+        
+      </ul>
+    </nav>
+  </li>
+
+        
+          
+          
+  <li class="md-nav__item">
+    
+      <a href="../../platform/" title="platform" class="md-nav__link">
+        platform
+      </a>
+    
+  </li>
+
+        
+          
+          
+  <li class="md-nav__item md-nav__item--nested">
+    
+      <input class="md-toggle md-nav__toggle" data-md-toggle="nav-4-3" type="checkbox" id="nav-4-3">
+    
+    <label class="md-nav__link" for="nav-4-3">
+      utils
+    </label>
+    <nav class="md-nav" data-md-component="collapsible">
+      <label class="md-nav__title" for="nav-4-3">
+        utils
+      </label>
+      <ul class="md-nav__list" data-md-scrollfix>
+        
+        
+          
+          
+  <li class="md-nav__item">
+    
+      <a href="../../utils/argspec/" title="argspec" class="md-nav__link">
+        argspec
+      </a>
+    
+  </li>
+
+        
+          
+          
+  <li class="md-nav__item">
+    
+      <a href="../../utils/cson/" title="cson" class="md-nav__link">
+        cson
+      </a>
+    
+  </li>
+
+        
+          
+          
+  <li class="md-nav__item">
+    
+      <a href="../../utils/httputils/" title="httputils" class="md-nav__link">
+        httputils
+      </a>
+    
+  </li>
+
+        
+          
+          
+  <li class="md-nav__item">
+    
+      <a href="../../utils/path/" title="path" class="md-nav__link">
+        path
+      </a>
+    
+  </li>
+
+        
+          
+          
+  <li class="md-nav__item">
+    
+      <a href="../../utils/pyutils/" title="pyutils" class="md-nav__link">
+        pyutils
+      </a>
+    
+  </li>
+
+        
+          
+          
+  <li class="md-nav__item">
+    
+      <a href="../../utils/shell/" title="shell" class="md-nav__link">
+        shell
+      </a>
+    
+  </li>
+
+        
+          
+          
+  <li class="md-nav__item">
+    
+      <a href="../../utils/singleton/" title="singleton" class="md-nav__link">
+        singleton
+      </a>
+    
+  </li>
+
+        
+          
+          
+  <li class="md-nav__item">
+    
+      <a href="../../utils/tty/" title="tty" class="md-nav__link">
+        tty
+      </a>
+    
+  </li>
+
+        
+      </ul>
+    </nav>
+  </li>
+
+        
+          
+          
+  <li class="md-nav__item">
+    
+      <a href="../../defaults/" title="defaults" class="md-nav__link">
+        defaults
+      </a>
+    
+  </li>
+
+        
+          
+          
+  <li class="md-nav__item">
+    
+      <a href="../../foreignbuild/" title="foreignbuild" class="md-nav__link">
+        foreignbuild
+      </a>
+    
+  </li>
+
+        
+          
+          
+  <li class="md-nav__item">
+    
+      <a href="../../loaders/" title="loaders" class="md-nav__link">
+        loaders
+      </a>
+    
+  </li>
+
+        
+          
+          
+  <li class="md-nav__item">
+    
+      <a href="../../targetbuilder/" title="targetbuilder" class="md-nav__link">
+        targetbuilder
+      </a>
+    
+  </li>
+
+        
+      </ul>
+    </nav>
+  </li>
+
+    
+      
+      
+  <li class="md-nav__item">
+    
+      <a href="../../../changes/" title="Changelog" class="md-nav__link">
+        Changelog
+      </a>
+    
+  </li>
+
+    
+      
+      
+  <li class="md-nav__item">
+    
+      <a href="../../../faq/" title="FAQ" class="md-nav__link">
+        FAQ
+      </a>
+    
+  </li>
+
+    
+      
+      
+  <li class="md-nav__item">
+    
+      <a href="../../../projects/" title="Projects using Craftr" class="md-nav__link">
+        Projects using Craftr
+      </a>
+    
+  </li>
+
+    
+  </ul>
+</nav>
+                  </div>
+                </div>
+              </div>
+            
+            
+              <div class="md-sidebar md-sidebar--secondary" data-md-component="toc">
+                <div class="md-sidebar__scrollwrap">
+                  <div class="md-sidebar__inner">
+                    
+<nav class="md-nav md-nav--secondary">
+  
+  
+    
+  
+  
+</nav>
+                  </div>
+                </div>
+              </div>
+            
+          
+          <div class="md-content">
+            <article class="md-content__inner md-typeset">
+               
+              
+                
+                <h1 id="craftr.core.session">craftr.core.session</h1>
+
+<h1 id="modcraftrcoresession">:mod:<code>craftr.core.session</code></h1>
+<p>This module provides the :class:<code>Session</code> class which manages the loading
+process of Craftr modules and contains all the important root datastructures
+for the meta build process (such as a :class:<code>craftr.core.build.Graph</code>).</p>
+<h2 id="craftr.core.session.Session">Session</h2>
+
+<pre class="codehilite"><code class="language-python">Session(maindir=None)</code></pre>
+
+
+<p>This class manages the :class:<code>build.Graph</code> and loading of Craftr modules.</p>
+<p>.. attribute:: graph</p>
+<p>A :class:<code>build.Graph</code> instance.</p>
+<p>.. attribute:: path</p>
+<p>A list of paths that will be searched for Craftr modules.</p>
+<p>.. attribute:: module</p>
+<p>The Craftr module that is currently being executed. This is an instance
+  of the :class:<code>Module</code> class and the same as the tip of the
+  :attr:<code>modulestack</code>.</p>
+<p>.. attribute:: modulestack</p>
+<p>A list of modules where the last element (tip) is the module that is
+  currently being executed.</p>
+<p>.. attribute:: modules</p>
+<p>A nested dictionary that maps from name to a dictionary of version
+  numbers mapping to :class:<code>Module</code> objects. These are the modules that
+  have already been loaded into the session or that have been found and
+  cached but not yet been executed.</p>
+<p>.. attribute:: preferred_versions</p>
+<p>A nested dictionary with the same structure as :attr:<code>modules</code>. This
+  dictionary might have been loaded from a dependency lock file and specifies
+  the preferred version to load for a specific module, assuming that the
+  criteria specified in the loading module's manifest is less strict. Note
+  that Craftr will error if a preferred version can not be found.</p>
+<p>.. attribute:: maindir</p>
+<p>The main directory from which Craftr was run. Craftr will switch to the
+  build directory at a later point, which is why we keep this member for
+  reference.</p>
+<p>.. attribute:: builddir</p>
+<p>The absolute path to the build directory.</p>
+<p>.. attribute:: main_module</p>
+<p>The main :class:<code>Module</code>.</p>
+<p>.. attribute:: options</p>
+<p>A dictionary of options that are passed down to Craftr modules.</p>
+<p>.. attributes:: cache</p>
+<p>A JSON object that will be loaded from the current workspace's cache
+  file and written back when Craftr exits without errors. The cache can
+  contain anything and can be modified by everything, however it should
+  be assured that no name conflicts and accidental modifications/deletes
+  occur.</p>
+<p>Reserved keywords in the cache are <code>"build"</code> and <code>"loaders"</code>.</p>
+<h3 id="craftr.core.session.Session.expand_relative_options">expand_relative_options</h3>
+
+<pre class="codehilite"><code class="language-python">Session.expand_relative_options(module_name=None)</code></pre>
+
+
+<p>After the main module has been detected, relative option names (starting
+with <code>.</code>) should be converted to absolute option names. This is what
+the method does.</p>
+<h3 id="craftr.core.session.Session.stl_dir">stl_dir</h3>
+
+<p>str(object='') -&gt; str
+str(bytes_or_buffer[, encoding[, errors]]) -&gt; str</p>
+<p>Create a new string object from the given object. If encoding or
+errors is specified, then the object must expose a data buffer
+that will be decoded using the given encoding and error handler.
+Otherwise, returns the result of object.<strong>str</strong>() (if defined)
+or repr(object).
+encoding defaults to sys.getdefaultencoding().
+errors defaults to 'strict'.
+<h3 id="craftr.core.session.Session.get_temporary_directory">get_temporary_directory</h3></p>
+<pre class="codehilite"><code class="language-python">Session.get_temporary_directory()</code></pre>
+
+
+<p>Returns a writable temporary directory that is primarily used by loaders
+to store temporary files. The temporary directory will be deleted when
+the Session context ends unless the <code>craftr.keep_temporary_directory</code>
+option is set.</p>
+<p>:raise RuntimeError: If the session is not currently in context.</p>
+<h3 id="craftr.core.session.Session.find_module">find_module</h3>
+
+<pre class="codehilite"><code class="language-python">Session.find_module(name, version, resolve_preferred_version=True)</code></pre>
+
+
+<p>Finds a module in the :attr:<code>path</code> matching the specified <em>name</em> and
+<em>version</em>.</p>
+<p>:param name: The name of the module.
+:param version: A :class:<code>VersionCriteria</code>, :class:<code>Version</code> or string
+  in a VersionCritiera format.
+:param resolve_preferred_version: If this parameter is True (default)
+  and a preferred version is specified in :attr:<code>preferred_versions</code>,
+  that preferred version is loaded or :class:<code>ModuleNotFound</code> is raised.
+:raise ModuleNotFound: If the module can not be found.
+:return: :class:<code>Module</code></p>
+<h3 id="craftr.core.session.Session.stl_auxiliary_dir">stl_auxiliary_dir</h3>
+
+<p>str(object='') -&gt; str
+str(bytes_or_buffer[, encoding[, errors]]) -&gt; str</p>
+<p>Create a new string object from the given object. If encoding or
+errors is specified, then the object must expose a data buffer
+that will be decoded using the given encoding and error handler.
+Otherwise, returns the result of object.<strong>str</strong>() (if defined)
+or repr(object).
+encoding defaults to sys.getdefaultencoding().
+errors defaults to 'strict'.
+<h3 id="craftr.core.session.Session.parse_manifest">parse_manifest</h3></p>
+<pre class="codehilite"><code class="language-python">Session.parse_manifest(filename)</code></pre>
+
+
+<p>Parse a manifest by filename and add register the module to the module
+cache. Returns the :class:<code>Module</code> object. If the manifest has already
+been parsed, it will not be re-parsed.</p>
+<p>:raise Manifest.Invalid: If the manifest is invalid.
+:return: :const:<code>None</code> if the manifest is a duplicate of an already
+  parsed manifest (determined by name and version), otherwise the
+  :class:<code>Module</code> object for the manifest's module.</p>
+<h2 id="craftr.core.session.Module">Module</h2>
+
+<pre class="codehilite"><code class="language-python">Module(directory, manifest)</code></pre>
+
+
+<p>This class represents a Craftr module that has been or is currently being
+executed. Every module has a project directory and a manifest with some
+basic information on the module such as its name, version, but also things
+like its dependencies and options.</p>
+<p>Every Craftr project (i.e. module) contains a <code>manifest.json</code> file
+and the main <code>Craftrfile</code>.</p>
+<p>::</p>
+<p>myproject/
+    include/
+    source/
+    Craftrfile
+    manifest.json</p>
+<p>.. attribute:: directory</p>
+<p>The directory that contains the <code>manifest.json</code>. Note that the actual
+  project directory depends on the :attr:<code>Manifest.project_dir</code> member.</p>
+<p>.. attribute:: ident</p>
+<p>A concentation of the name and version defined in the :attr:<code>manifest</code>.</p>
+<p>.. attribute:: project_dir</p>
+<p>Path to the project directory as specified in the :attr:<code>manifest</code>.</p>
+<p>.. attribute:: manifest</p>
+<p>.. attribute:: namespace</p>
+<p>.. attribute:: executed</p>
+<p>True if the module was executed with :meth:<code>run</code>.</p>
+<p>.. attribute:: options</p>
+<p>A :class:<code>~craftr.core.manifest.Namespace</code> that contains all the options
+  for the module. This member is only initialized when the module is run
+  or with :meth:<code>init_options</code>.</p>
+<p>.. attribute:: dependent_files</p>
+<p>A list of all files that influence the state of the module. This list
+  is generated when the module is executed with :func:<code>run</code>. By default,
+  it contains at least the filename of the :attr:<code>manifest</code> and the script
+  file that is executed for the Module. Additional files might be added
+  by some built-in functions like :func:<code>craftr.defaults.load_file</code>.</p>
+<p>.. attribute:: dependencies</p>
+<p>A dictionary that maps a dependency name to an actual version. This
+  dictionary may contain only a subset of the dependencies listed in the
+  modules manifest as the module may only load some of the dependencies.</p>
+<h3 id="craftr.core.session.Module.current_line">current_line</h3>
+
+<p>This property is only accessible when the module is currently begin
+executed, and only from within the same thread. Returns the line at
+which the module is currently being executed.</p>
+<h3 id="craftr.core.session.Module.run">run</h3>
+
+<pre class="codehilite"><code class="language-python">Module.run()</code></pre>
+
+
+<p>Loads the code of the main Craftr build script as specified in the modules
+manifest and executes it. Note that this must occur in a context where
+the :data:<code>session</code> is available.</p>
+<p>:raise RuntimeError: If there is no current :data:<code>session</code> or if the
+  module was already executed.</p>
+<h3 id="craftr.core.session.Module.get_init_globals">get_init_globals</h3>
+
+<pre class="codehilite"><code class="language-python">Module.get_init_globals()</code></pre>
+
+
+<p>Returns a dictionary initialized with the default built-in values for a
+build script.</p>
+<h3 id="craftr.core.session.Module.init_options">init_options</h3>
+
+<pre class="codehilite"><code class="language-python">Module.init_options(recursive=False, _break_recursion=None)</code></pre>
+
+
+<p>Initialize the :attr:<code>options</code> member. Requires an active session context.</p>
+<p>:param recursive: Initialize the options of all dependencies as well.
+:raise InvalidOption: If one or more options are invalid.
+:raise ModuleNotFound: If <em>recursive</em> is specified and a dependency
+  was not found.
+:raise RuntimeError: If there is no current session context.</p>
+              
+            </article>
+          </div>
+        </div>
+      </main>
+      
+        
+<footer class="md-footer">
+  
+    <div class="md-footer-nav">
+      <nav class="md-footer-nav__inner md-grid">
+        
+          <a href="../renames/" title="renames" class="md-flex md-footer-nav__link md-footer-nav__link--prev" rel="prev">
+            <div class="md-flex__cell md-flex__cell--shrink">
+              <i class="md-icon md-icon--arrow-back md-footer-nav__button"></i>
+            </div>
+            <div class="md-flex__cell md-flex__cell--stretch md-footer-nav__title">
+              <span class="md-flex__ellipsis">
+                <span class="md-footer-nav__direction">
+                  Previous
+                </span>
+                renames
+              </span>
+            </div>
+          </a>
+        
+        
+          <a href="../../platform/" title="platform" class="md-flex md-footer-nav__link md-footer-nav__link--next" rel="next">
+            <div class="md-flex__cell md-flex__cell--stretch md-footer-nav__title">
+              <span class="md-flex__ellipsis">
+                <span class="md-footer-nav__direction">
+                  Next
+                </span>
+                platform
+              </span>
+            </div>
+            <div class="md-flex__cell md-flex__cell--shrink">
+              <i class="md-icon md-icon--arrow-forward md-footer-nav__button"></i>
+            </div>
+          </a>
+        
+      </nav>
+    </div>
+  
+  <div class="md-footer-meta md-typeset">
+    <div class="md-footer-meta__inner md-grid">
+      <div class="md-footer-copyright">
+        
+        powered by
+        <a href="http://www.mkdocs.org" title="MkDocs">MkDocs</a>
+        and
+        <a href="http://squidfunk.github.io/mkdocs-material/" title="Material for MkDocs">
+          Material for MkDocs</a>
+      </div>
+      
+        
+      
+    </div>
+  </div>
+</footer>
+      
+    </div>
+    
+      <script src="../../../assets/javascripts/application-f7ac33b6fb.js"></script>
+      <script>app.initialize({url:{base:"../../.."}})</script>
+      
+    
+    
+      
+    
+  </body>
+</html>

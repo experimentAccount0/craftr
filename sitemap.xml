@@ -4,7 +4,7 @@
     
     <url>
      <loc>/</loc>
-     <lastmod>2017-02-19</lastmod>
+     <lastmod>2017-02-23</lastmod>
      <changefreq>daily</changefreq>
     </url>
     
@@ -12,7 +12,7 @@
     
     <url>
      <loc>/getting-started/</loc>
-     <lastmod>2017-02-19</lastmod>
+     <lastmod>2017-02-23</lastmod>
      <changefreq>daily</changefreq>
     </url>
     
@@ -21,37 +21,83 @@
         
     <url>
      <loc>/ref/package/</loc>
-     <lastmod>2017-02-19</lastmod>
+     <lastmod>2017-02-23</lastmod>
      <changefreq>daily</changefreq>
     </url>
         
     <url>
      <loc>/ref/targets/</loc>
-     <lastmod>2017-02-19</lastmod>
+     <lastmod>2017-02-23</lastmod>
      <changefreq>daily</changefreq>
     </url>
         
     <url>
      <loc>/ref/tasks/</loc>
-     <lastmod>2017-02-19</lastmod>
+     <lastmod>2017-02-23</lastmod>
      <changefreq>daily</changefreq>
     </url>
         
     <url>
      <loc>/ref/loaders/</loc>
-     <lastmod>2017-02-19</lastmod>
+     <lastmod>2017-02-23</lastmod>
      <changefreq>daily</changefreq>
     </url>
         
     <url>
      <loc>/ref/builtins/</loc>
-     <lastmod>2017-02-19</lastmod>
+     <lastmod>2017-02-23</lastmod>
      <changefreq>daily</changefreq>
     </url>
         
     <url>
      <loc>/ref/config/</loc>
-     <lastmod>2017-02-19</lastmod>
+     <lastmod>2017-02-23</lastmod>
+     <changefreq>daily</changefreq>
+    </url>
+        
+    
+
+    
+        
+    <url>
+     <loc></loc>
+     <lastmod></lastmod>
+     <changefreq>daily</changefreq>
+    </url>
+        
+    <url>
+     <loc>/api/platform/</loc>
+     <lastmod>2017-02-23</lastmod>
+     <changefreq>daily</changefreq>
+    </url>
+        
+    <url>
+     <loc></loc>
+     <lastmod></lastmod>
+     <changefreq>daily</changefreq>
+    </url>
+        
+    <url>
+     <loc>/api/defaults/</loc>
+     <lastmod>2017-02-23</lastmod>
+     <changefreq>daily</changefreq>
+    </url>
+        
+    <url>
+     <loc>/api/foreignbuild/</loc>
+     <lastmod>2017-02-23</lastmod>
+     <changefreq>daily</changefreq>
+    </url>
+        
+    <url>
+     <loc>/api/loaders/</loc>
+     <lastmod>2017-02-23</lastmod>
+     <changefreq>daily</changefreq>
+    </url>
+        
+    <url>
+     <loc>/api/targetbuilder/</loc>
+     <lastmod>2017-02-23</lastmod>
      <changefreq>daily</changefreq>
     </url>
         
@@ -60,7 +106,7 @@
     
     <url>
      <loc>/changes/</loc>
-     <lastmod>2017-02-19</lastmod>
+     <lastmod>2017-02-23</lastmod>
      <changefreq>daily</changefreq>
     </url>
     
@@ -68,7 +114,7 @@
     
     <url>
      <loc>/faq/</loc>
-     <lastmod>2017-02-19</lastmod>
+     <lastmod>2017-02-23</lastmod>
      <changefreq>daily</changefreq>
     </url>
     
@@ -76,7 +122,7 @@
     
     <url>
      <loc>/projects/</loc>
-     <lastmod>2017-02-19</lastmod>
+     <lastmod>2017-02-23</lastmod>
      <changefreq>daily</changefreq>
     </url>
     
