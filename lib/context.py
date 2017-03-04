@@ -18,10 +18,6 @@
 # OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
 # THE SOFTWARE.
 
-import weakref
-import sys
-from werkzeug.local import LocalProxy
-
 logger = require('./logger')
 weakproxy = require('./weakproxy')
 
