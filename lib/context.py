@@ -22,6 +22,7 @@ import weakref
 import sys
 from werkzeug.local import LocalProxy
 
+logger = require('./logger')
 weakproxy = require('./weakproxy')
 
 
@@ -73,6 +74,8 @@ class CraftrContext:
 
     namespace.participants.append(module)
     module.namespace.__craftr__ = weakproxy.new(namespace)
+    logger.debug('Module %[yellow][{}] from "%[cyan][{}]" added to '
+        '%[blue][{}] namespace.'.format(module.name, module.filename, name))
 
   def current_namespace(self):
     """
