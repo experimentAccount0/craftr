@@ -19,6 +19,7 @@
 # THE SOFTWARE.
 
 logger = require('./logger')
+ninja = require('./ninja')
 weakproxy = require('./weakproxy')
 
 
@@ -30,13 +31,20 @@ class CraftrNamespace:
   targets declared inside the namespace.
   """
 
-  def __init__(self, name):
+  def __init__(self, name, context):
     self.name = name
     self.participants = []
     self.targets = {}
+    self.context = weakproxy.new(context)
 
   def __str__(self):
     return '<CraftrNamespace {!r}>'.format(self.name)
+
+  def register_target(self, name, target):
+    if name in self.targets:
+      raise ValueError('target {!r} already exists')
+    self.context.graph.add_target(target)
+    self.targets[name] = target
 
 
 class CraftrContext:
@@ -47,6 +55,9 @@ class CraftrContext:
 
   def __init__(self):
     self.namespaces = {}
+    self.graph = ninja.Graph()
+    self.platform_helper = ninja.get_platform_helper()
+    self.ninja = None  # Initialized from the CLI
 
   def namespace(self, name, export_api=True):
     """
@@ -66,12 +77,17 @@ class CraftrContext:
     try:
       namespace = self.namespaces[name]
     except KeyError:
-      namespace = self.namespaces[name] = CraftrNamespace(name)
+      namespace = self.namespaces[name] = CraftrNamespace(name, self)
 
     namespace.participants.append(module)
     module.namespace.__craftr__ = weakproxy.new(namespace)
-    logger.debug('Module %[yellow][{}] from "%[cyan][{}]" added to '
-        '%[blue][{}] namespace.'.format(module.name, module.filename, name))
+    logger.debug("Added module '%[cyan][{}]' to '%[magenta][{}]' namespace."
+        .format(module.filename, name))
+
+    if export_api:
+      api = require('./api')
+      for key, value in vars(api).items():
+        setattr(module.namespace, key, value)
 
   def current_namespace(self):
     """
@@ -88,4 +104,3 @@ class CraftrContext:
     if namespace is None:
       raise RuntimeError('CraftrNamespace reference lost')
     return namespace
-

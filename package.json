@@ -5,7 +5,7 @@
   "license": "MIT",
   "description": "Meta build system for Ninja based on Python 3 and Ppy",
   "bin": {
-    "craftr": "cli"
+    "craftr": "cli-wrapper"
   },
   "engines": {
     "python": ">=3.4.0",
