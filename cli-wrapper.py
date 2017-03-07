@@ -25,10 +25,14 @@ actual command-line interface of the locally installed version of Craftr.
 if require.main != module:
   raise EnvironmentError('cli-wrapper should not be require()d')
 
+import sys
 logger = require('./lib/logger')
-fn = require.context.resolve('@craftr/craftr/cli', current_dir='.')
-if not fn:
+
+try:
+  fn = require.context.resolve('@craftr/craftr/cli', current_dir='.')
+except require.ResolveError:
   logger.error('Local package %[cyan][@craftr/craftr] not found.')
   logger.error('Try `%[yellow][ppym install @craftr/craftr]`.')
   sys.exit(1)
+
 require.exec_main(fn)
