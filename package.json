@@ -1,6 +1,6 @@
 {
   "name": "craftr",
-  "version": "0.0.1",
+  "version": "0.3.0",
   "license": "MIT",
   "author": "Niklas Rosenstein <rosensteinniklas@gmail.com>",
   "description": "Meta build system for Ninja based on Python 3 and Ppy",
