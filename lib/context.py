@@ -20,6 +20,7 @@
 
 logger = require('@craftr/logger')
 ninja = require('./ninja')
+path = require('./path')
 weakproxy = require('./weakproxy')
 
 
@@ -31,24 +32,21 @@ class CraftrNamespace:
   targets declared inside the namespace.
   """
 
-  def __init__(self, name, context):
+  def __init__(self, name, context, directory):
     self.name = name
     self.participants = []
     self.targets = {}
     self.context = weakproxy.new(context)
+    self.directory = directory
 
   def __str__(self):
-    return '<CraftrNamespace {!r}>'.format(self.name)
+    return '<CraftrNamespace {!r} at {!r}>'.format(self.name, self.directory)
 
   def register_target(self, name, target):
     if name in self.targets:
       raise ValueError('target {!r} already exists')
     self.context.graph.add_target(target)
     self.targets[name] = target
-
-  @property
-  def directory(self):
-    return self.participants[-1].directory
 
 
 class CraftrContext:
@@ -64,8 +62,9 @@ class CraftrContext:
     self.platform_helper = ninja.get_platform_helper()
     self.ninja = None  # Initialized from the CLI\
     self.options = {}
+    self.do_export = False
 
-  def namespace(self, name=None, export_api=True):
+  def namespace(self, name=None, export_api=True, directory=None):
     """
     Must be called before any targets are added to the build graph by a
     Craftr build script. This will insert a member into the global namespace
@@ -76,6 +75,13 @@ class CraftrContext:
     module will be exported into the namespace of the calling module.
 
     If no *name* is specified, the namespace of the parent module is inherited.
+
+    If the namespace is not already registered, it's directory will be
+    determined automatically from the current module's location, unless the
+    *directory* parameter is set. A relative path in this parameter will be
+    considered relative to the current modules actual location. If the
+    *directory* is specified but the namespace has already been introduced,
+    a #RuntimeError is raised.
     """
 
     module = require.current
@@ -89,7 +95,15 @@ class CraftrContext:
     try:
       namespace = self.namespaces[name]
     except KeyError:
-      namespace = self.namespaces[name] = CraftrNamespace(name, self)
+      if directory is None:
+        directory = module.directory
+      else:
+        directory = path.norm(directory, module.directory)
+      namespace = self.namespaces[name] = CraftrNamespace(name, self, directory)
+    else:
+      if directory is not None:
+        raise RuntimeError('namespace has already been introduced, yet '
+            'a namespace directory has been specified.')
 
     namespace.participants.append(module)
     module.namespace.__craftr__ = weakproxy.new(namespace)

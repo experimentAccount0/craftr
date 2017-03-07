@@ -56,16 +56,15 @@ def main(verbose):
 
 
 @main.command()
-@click.argument('script', required=False)
+@click.argument('script', required=False, default='.')
 @click.argument('options', nargs=-1)
 @click.option('-b', '--build-dir', default='build')
 def generate(script, options, build_dir):
-  if script == '-' or not script:
-    script = 'Craftrfile'
-
   path.makedirs(build_dir)
   craftr.build_dir = build_dir
+  craftr.do_export = True
   require.context.register_index_file('Craftrfile')
+  require.context.register_index_file('craftr/')
 
   # Parse options and fill them into the context options.
   for option in options:

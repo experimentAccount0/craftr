@@ -307,7 +307,7 @@ def write_response_file(arguments, builder=None, name=None, force_file=False, su
       raise ValueError('builder must be specified if name is bot')
     name = builder.name + suffix + '.response.txt'
 
-  if platform.name != 'win':
+  if not platform.WINDOWS:
     return None, arguments
 
   # We'll just assume that there won't be more than 2048 characters for
@@ -320,7 +320,7 @@ def write_response_file(arguments, builder=None, name=None, force_file=False, su
   if builder:
     builder.implicit_deps.append(filename)
 
-  if session.builddir:
+  if craftr.do_export:
     path.makedirs(path.dirname(filename))
     with open(filename, 'w') as fp:
       fp.write(content)
@@ -365,7 +365,7 @@ def append_PATH(*paths):
   return result
 
 
-def option(name, type=str, inherit=True, default=NotImplemented):
+def option(name, type=str, inherit=True, default=NotImplemented, help=None):
   """
   Extracts an option from the Craftr context options and returns it.
   """
