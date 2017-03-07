@@ -25,7 +25,7 @@ starting with an underscore will be ignored.
 craftr = require('../index')
 
 _build = require('./ninja')
-logger = require('./logger')
+logger = require('@craftr/logger')
 platform = require('./platform')
 path = require('./path')
 shell = require('./shell')
@@ -70,8 +70,8 @@ def glob(patterns, parent=None, exclude=(), include_dotfiles=False, ignore_false
   set.
   """
 
-  if parent is None and session and require.session.module:
-    parent = require.session.module.directory
+  if parent is None:
+    parent = craftr.current_namespace().directory
 
   return path.glob(patterns, parent, exclude, include_dotfiles,
     ignore_false_excludes)
@@ -83,7 +83,7 @@ def local(rel_path):
   module's project directory.
   """
 
-  return path.norm(rel_path, require.session.module.directory)
+  return path.norm(rel_path, craftr.current_namespace().directory)
 
 
 def buildlocal(rel_path):
@@ -95,9 +95,9 @@ def buildlocal(rel_path):
 
   if path.isabs(rel_path):
     return rel_path
-  raise NotImplementedError("not sure what to do in Ppy")
-  module = require.session.module.namespace
-  return path.canonical(path.join(session.module.ident, rel_path))
+
+  return path.canonical(path.abs(path.join(craftr.build_dir,
+      craftr.current_namespace().name, rel_path)))
 
 
 def relocate_files(files, outdir, suffix, replace_suffix=True, parent=None):
@@ -109,7 +109,7 @@ def relocate_files(files, outdir, suffix, replace_suffix=True, parent=None):
   """
 
   if parent is None:
-    parent = session.module.namespace.project_dir
+    parent = craftr.current_namespace().directory
   result = []
   for filename in files:
     filename = path.join(outdir, path.rel(filename, parent))
@@ -211,7 +211,7 @@ def gentool(commands, preamble=None, environ=None, name=None):
   return tool
 
 
-def gentarget(commands, inputs=(), outputs=(), *args, name, **kwargs):
+def gentarget(name, commands, inputs=(), outputs=(), *args, **kwargs):
   """
   Create a :class:`~_build.Target` object. The name of the target will be
   derived from the variable name it is assigned to unless *name* is specified.
@@ -363,3 +363,30 @@ def append_PATH(*paths):
   if paths:
     result += _os.path.pathsep + paths
   return result
+
+
+def option(name, type=str, inherit=True, default=NotImplemented):
+  """
+  Extracts an option from the Craftr context options and returns it.
+  """
+
+  full_name = gtn(name)
+  if full_name in craftr.options:
+    value = craftr.options[full_name]
+  elif inherit and name in craftr.options:
+    value = craftr.options[name]
+  else:
+    if default is NotImplemented:
+      return type()
+    return default
+
+  return type(value)
+
+
+__all__ = ['ToolDetectionError', 'ModuleError', 'ModuleReturn',
+    'gtn', 'glob', 'local', 'buildlocal', 'relocate_files', 'filter',
+    'map', 'zip', 'load_file', 'include_defs', 'gentool', 'gentarget',
+    'genalias', 'gentask', 'task', 'write_response_file', 'error', 'return_',
+    'append_PATH',
+    'TargetBuilder', 'Framework',
+    'option', 'platform', 'logger', 'shell', 'path']

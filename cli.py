@@ -31,7 +31,7 @@ import subprocess
 import sys
 
 craftr = require('./index')
-logger = require('./lib/logger')
+logger = require('@craftr/logger')
 ninja = require('./lib/ninja')
 download_ninja = require('./lib/ninja/get-ninja')
 path = require('./lib/path')
@@ -56,21 +56,36 @@ def main(verbose):
 
 
 @main.command()
-@click.argument('script', default='Craftrfile')
+@click.argument('script', required=False)
+@click.argument('options', nargs=-1)
 @click.option('-b', '--build-dir', default='build')
-def generate(script, build_dir):
+def generate(script, options, build_dir):
+  if script == '-' or not script:
+    script = 'Craftrfile'
+
   path.makedirs(build_dir)
   craftr.build_dir = build_dir
+  require.context.register_index_file('Craftrfile')
+
+  # Parse options and fill them into the context options.
+  for option in options:
+    if '=' not in option:
+      key, value = option, 'true'
+    else:
+      key, value = option.split('=', 1)
+    if not value:
+      craftr.options.pop(key, None)
+    else:
+      craftr.options[key] = value
 
   with require.hide_main():
     logger.info("Loading module '%[yellow][{}]'".format(script))
-    require.context.load_module(script, is_main=True,
-        loader=require.context.get_extension('.py'))
+    require.exec_main(script, current_dir='.')
 
   ninja_manifest = path.join(build_dir, 'build.ninja')
   logger.info("Writing '%[cyan][{}]'".format(ninja_manifest))
   with open(ninja_manifest, 'w') as fp:
-    context = ninja.ExportContext(craftr.ninja.version)
+    context = ninja.ExportContext(craftr.ninja.version, craftr.build_dir)
     craftr.graph.export(ninja.NinjaWriter(fp), context, craftr.platform_helper)
 
 

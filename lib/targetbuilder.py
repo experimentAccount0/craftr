@@ -19,9 +19,10 @@
 # THE SOFTWARE.
 
 build = require('./ninja')
-logger = require('./logger')
+logger = require('@craftr/logger')
 craftr = require('../index')
 argschema = require('./argschema')
+pyutils = require('./pyutils')
 
 import collections
 import sys
@@ -167,10 +168,9 @@ class TargetBuilder(object):
         raise TypeError('expected Target or str in "implicit_deps", found {}'
             .format(type(item).__name__))
 
-    target = build.Target(self.name, commands, inputs, outputs, implicit_deps,
+    api = require('./api')
+    return api.gentarget(self.name, commands, inputs, outputs, implicit_deps,
         order_only_deps, metadata=metadata, frameworks=self.frameworks, **kwargs)
-    session.graph.add_target(target)
-    return target
 
 
 class Framework(dict):

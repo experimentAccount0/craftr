@@ -21,7 +21,7 @@
 _defaults = require('./api')
 path = require('./path')
 shell = require('./shell')
-logger = require('./logger')
+logger = require('@craftr/logger')
 craftr = require('../index')
 httputils = require('./httputils')
 _archive = require('./archive')

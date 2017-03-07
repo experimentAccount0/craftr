@@ -36,7 +36,7 @@ elif sys.platform.startswith('msys'):
   env = 'unix'
   MSYS = UNIX = True
 elif sys.platform.startswith('darwin'):
-  name = 'mac'
+  name = 'macos'
   env = 'unix'
   MACOS = UNIX = True
 elif sys.platform.startswith('linux'):
@@ -45,3 +45,33 @@ elif sys.platform.startswith('linux'):
   LINUX = UNIX = True
 else:
   raise EnvironmentError('unsupported platform: "{}"'.format(sys.platform))
+
+
+WINDOS = (name == 'windows')
+CYGWIN = (name == 'cygwin')
+MSYS = (name == 'msys')
+
+LINUX = (name == 'linux')
+MACOS = (name == 'macos')
+
+UNIX = (env == 'unix')
+
+
+path = require('./path')
+if WINDOWS or CYGWIN or MSYS:
+  def obj(x): return path.addsuffix(x, ".obj")
+  def bin(x): return path.addsuffix(x, ".exe")
+  def dll(x): return path.addsuffix(x, ".dll")
+  def lib(x): return path.addsuffix(x, ".lib")
+elif MACOS:
+  def obj(x): return path.addsuffix(x, ".o")
+  def bin(x): return x
+  def dll(x): return path.addsuffix(x, ".dylib")
+  def lib(x): return path.addprefix(path.addsuffix(x, ".a"), "lib")
+elif LINUX:
+  def obj(x): return path.addsuffix(x, ".o")
+  def bin(x): return x
+  def dll(x): return path.addsuffix(x, ".so")
+  def lib(x): return path.addprefix(path.addsuffix(x, ".a"), "lib")
+else:
+  raise RuntimeError("Hm that shouldn't happen..")

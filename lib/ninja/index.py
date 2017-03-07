@@ -44,7 +44,7 @@ download = require('./get-ninja').download_ninja
 
 
 def parse_target_ref(name):
-  match = re.match('//([\w\d\.\-_]+):([\w\d\.\-_]+)', name)
+  match = re.match('//([\w\d\.\-_/]+):([\w\d\.\-_]+)', name)
   if not match:
     raise ValueError('invalid target refstring: {!r}'.format(name))
   return match.groups()
@@ -328,7 +328,8 @@ class Target(object):
 
   @property
   def valid_name(self):
-    return '__{}__{}'.format(*parse_target_ref(self.name))
+    namespace, member = parse_target_ref(self.name)
+    return '__{}__{}'.format(namespace.replace('/', '_'), member)
 
   def export(self, writer, context, platform):
     """
@@ -346,7 +347,7 @@ class Target(object):
     if not self.environ and len(commands) == 1:
       commands = [platform.prepare_single_command(commands[0], self.cwd)]
     else:
-      filename = path.join('.commands', name)
+      filename = path.abs(path.join(context.build_dir, '.commands', name))
       command, __ = platform.write_command_file(filename, commands,
         self.inputs, self.outputs, cwd=self.cwd, environ=self.environ,
         foreach=self.foreach)
@@ -533,8 +534,9 @@ class ExportContext(object):
   .. attribute:: ninja_version
   """
 
-  def __init__(self, ninja_version):
+  def __init__(self, ninja_version, build_dir):
     self.ninja_version = ninja_version
+    self.build_dir = path.abs(build_dir)
 
 
 class PlatformHelper(object, metaclass=abc.ABCMeta):

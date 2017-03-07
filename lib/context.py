@@ -18,7 +18,7 @@
 # OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
 # THE SOFTWARE.
 
-logger = require('./logger')
+logger = require('@craftr/logger')
 ninja = require('./ninja')
 weakproxy = require('./weakproxy')
 
@@ -46,6 +46,10 @@ class CraftrNamespace:
     self.context.graph.add_target(target)
     self.targets[name] = target
 
+  @property
+  def directory(self):
+    return self.participants[-1].directory
+
 
 class CraftrContext:
   """
@@ -54,12 +58,14 @@ class CraftrContext:
   """
 
   def __init__(self):
+    self.build_dir = 'build'
     self.namespaces = {}
     self.graph = ninja.Graph()
     self.platform_helper = ninja.get_platform_helper()
-    self.ninja = None  # Initialized from the CLI
+    self.ninja = None  # Initialized from the CLI\
+    self.options = {}
 
-  def namespace(self, name, export_api=True):
+  def namespace(self, name=None, export_api=True):
     """
     Must be called before any targets are added to the build graph by a
     Craftr build script. This will insert a member into the global namespace
@@ -68,11 +74,17 @@ class CraftrContext:
 
     With *export_api* set to #True, the contents of the `@craftr/craftr/lib/api`
     module will be exported into the namespace of the calling module.
+
+    If no *name* is specified, the namespace of the parent module is inherited.
     """
 
     module = require.current
     if hasattr(module.namespace, '__craftr__'):
       raise RuntimeError('Craftr module already declared')
+
+    if name is None:
+      # Find the parent namespace.
+      name = self.current_namespace(1).name
 
     try:
       namespace = self.namespaces[name]
@@ -86,17 +98,21 @@ class CraftrContext:
 
     if export_api:
       api = require('./api')
-      for key, value in vars(api).items():
-        setattr(module.namespace, key, value)
+      for key in api.__all__:
+        setattr(module.namespace, key, getattr(api, key))
 
-  def current_namespace(self):
+  def current_namespace(self, index=0):
     """
     Returns the Craftr namespace information from the module that is currently
     being executed. If no namespace information is present, a #RuntimeError
     will be raised.
     """
 
-    module = require.current
+    index += 1
+    if index >= len(require.context.current_modules):
+      raise RuntimeError('no parent module at index {!r}'.format(index - 1))
+
+    module = require.context.current_modules[-index]
     if not hasattr(module.namespace, '__craftr__'):
       raise RuntimeError('Module {} has no Craftr namespace information'
           .format(module))

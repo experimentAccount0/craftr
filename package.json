@@ -1,21 +1,17 @@
 {
-  "name": "@craftr/craftr",
+  "name": "craftr",
   "version": "0.0.1",
-  "author": "Niklas Rosenstein <rosensteinniklas@gmail.com>",
   "license": "MIT",
+  "author": "Niklas Rosenstein <rosensteinniklas@gmail.com>",
   "description": "Meta build system for Ninja based on Python 3 and Ppy",
-  "bin": {
-    "craftr": "cli-wrapper"
-  },
   "engines": {
-    "python": ">=3.4.0",
-    "nodepy": ">=0.0.11"
+    "nodepy": ">=0.0.13",
+    "python": ">=3.3.0"
   },
-  "dependencies": {},
+  "dependencies": {
+    "@craftr/logger": "~0.0.1"
+  },
   "python-dependencies": {
-    "colorama": ">=0.3.7",
-    "glob2": ">=0.5",
-    "termcolor": ">=1.1.0",
-    "werkzeug": ">=0.11.15"
+    "glob2": ">=0.5"
   }
 }
