@@ -14,5 +14,8 @@
   "python-dependencies": {
     "glob2": ">=0.5",
     "werkzeug": ">=0.11.15"
+  },
+  "dist": {
+    "exclude_files": ["stl/*", "_test/*"]
   }
 }
