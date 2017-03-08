@@ -488,7 +488,7 @@ def task(inputs = (), outputs = (), args = None, **kwargs):
   return decorator
 
 
-def runtarget(target, *args, inputs=(), outputs=(), **kwargs):
+def runtarget(target, *args, inputs=(), outputs=(), name, **kwargs):
   """
   Simplification of :func:`gentarget` to make it more obvious that a
   generate target is actually executed.
@@ -496,7 +496,7 @@ def runtarget(target, *args, inputs=(), outputs=(), **kwargs):
 
   kwargs.setdefault('explicit', True)
   kwargs.setdefault('pool', 'console')
-  return gentarget([target.runprefix + [target] + list(args)], inputs, outputs, name=name, **kwargs)
+  return gentarget(name, [target.runprefix + [target] + list(args)], inputs, outputs, **kwargs)
 
 
 def write_response_file(arguments, builder=None, name=None, force_file=False, suffix=''):
@@ -601,6 +601,7 @@ __all__ = ['ToolDetectionError', 'ModuleError', 'ModuleReturn',
     'gtn', 'glob', 'local', 'buildlocal', 'relocate_files', 'filter',
     'map', 'zip', 'load_file', 'include_defs', 'gentool', 'gentarget',
     'genalias', 'gentask', 'task', 'write_response_file', 'error', 'return_',
-    'append_PATH',
+    'append_PATH', 'runtarget',
+    'pkg_config', 'external_archive', 'external_file',
     'TargetBuilder', 'Framework',
     'option', 'platform', 'logger', 'shell', 'path']

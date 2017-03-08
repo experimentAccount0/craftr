@@ -63,6 +63,7 @@ class CraftrContext:
     self.platform_helper = ninja.get_platform_helper()
     self.ninja = None  # Initialized from the CLI\
     self.options = {}
+    self.cache = {}
     self.do_export = False
 
   def namespace(self, name=None, export_api=True, directory=None):

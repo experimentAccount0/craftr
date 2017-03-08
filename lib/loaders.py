@@ -60,11 +60,9 @@ def get_loader_cache(loader_name, module=None):
   cache exists, an empty dictionary is returned.
   """
 
-  module = module or craftr.get_current_module_name()
-  assert isinstance(module, str)
+  loader_name = api.gtn(loader_name)
   loaders = craftr.cache.setdefault('loaders', {})
-  module_cache = loaders.setdefault(module, {})
-  return module_cache.setdefault(loader_name, {})
+  return loaders.setdefault(loader_name, {})
 
 
 def _external_file_download_callback(progress_text, directory, filename, cache, data):
@@ -85,15 +83,19 @@ def _external_file_download_callback(progress_text, directory, filename, cache, 
   # Before the download starts but the request is already made, we can
   # check if the file already exists.
   if data['downloaded'] == 0:
-    logger.progress_begin(progress_text, is_spinning)
+    #logger.progress_begin(progress_text, is_spinning)
+    logger.info(progress_text)
   elif data['completed']:
-    logger.progress_end()
+    #logger.progress_end()
+    pass
   elif is_spinning:
     # TODO: Convert bytes to human readable
-    logger.progress_update(None, data['downloaded'])
+    #logger.progress_update(None, data['downloaded'])
+    pass
   elif not is_spinning:
     # TODO: Convert bytes to human readable
-    logger.progress_update(data['downloaded'] / data['size'], data['downloaded'])
+    #logger.progress_update(data['downloaded'] / data['size'], data['downloaded'])
+    pass
 
 
 class NoExternalFileMatch(Exception):
@@ -134,7 +136,7 @@ def external_file(*urls, name, filename = None, directory = None,
   """
 
   if not directory and not filename:
-    directory = path.buildlocal('data')
+    directory = api.buildlocal('data')
   cache = get_loader_cache(name)
 
   # TODO: expand variables of the current module.
@@ -157,14 +159,16 @@ def external_file(*urls, name, filename = None, directory = None,
           filename = path.basename(source_file)
 
         # TODO: Use httputils.download_file() for this as well?
-        logger.progress_begin(progress_info)
+        #logger.progress_begin(progress_info)
+        logger.info(progress_info)
         path.makedirs(directory)
         target_filename = path.join(directory, filename)
         with open(source_file, 'rb') as sfp:
           with open(target_filename, 'wb') as dfp:
             for bytes_copied, size in iter_copyfileobj(sfp, dfp):
-              logger.progress_update(float(bytes_copied) / size)
-        logger.progress_end()
+              #logger.progress_update(float(bytes_copied) / size)
+              pass
+        #logger.progress_end()
 
         # TODO: Copy file permissions
         break
@@ -183,7 +187,8 @@ def external_file(*urls, name, filename = None, directory = None,
       else:
         break
       finally:
-        logger.progress_end()
+        #logger.progress_end()
+        pass
 
   if target_filename:
     cache['download_url'] = url
@@ -219,7 +224,7 @@ def external_archive(*urls, name, exclude_files = (), directory = None):
   """
 
   if not directory:
-    directory = path.buildlocal('data') + '/'
+    directory = api.buildlocal('data') + '/'
 
   archive = external_file(*urls, directory = directory, name = name)
   cache = get_loader_cache(name)  # shared with external_file()
@@ -243,17 +248,21 @@ def external_archive(*urls, name, exclude_files = (), directory = None):
 
   def progress(index, count, filename):
     if index == -1:
-      logger.progress_begin("Unpacking {} ...".format(path.basename(archive)))
-      logger.progress_update(0.0, 'Reading index...')
+      #logger.progress_begin("Unpacking {} ...".format(path.basename(archive)))
+      #logger.progress_update(0.0, 'Reading index...')
+      logger.info("Unpacking {} ...".format(path.basename(archive)))
       return
     progress = index / float(count)
     if index == 0:
-      logger.progress_end()
-      logger.progress_begin(None, False)
+      #logger.progress_end()
+      #logger.progress_begin(None, False)
+      pass
     elif index == (count - 1):
-      logger.progress_end()
+      #logger.progress_end()
+      pass
     else:
-      logger.progress_update(progress, '{} / {}'.format(index, count))
+      #logger.progress_update(progress, '{} / {}'.format(index, count))
+      pass
 
   _archive.extract(archive, directory, suffix = suffix,
     unpack_single_dir = True, check_extract_file = match_exclude_files,
