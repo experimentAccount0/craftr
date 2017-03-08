@@ -18,13 +18,13 @@
 # OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
 # THE SOFTWARE.
 
-_defaults = require('./api')
-path = require('./path')
-shell = require('./shell')
+api = require('./api')
+path = require('./utils/path')
+shell = require('./utils/shell')
 logger = require('@craftr/logger')
 craftr = require('../index')
-httputils = require('./httputils')
-_archive = require('./archive')
+httputils = require('./utils/httputils')
+_archive = require('./utils/archive')
 
 import os
 
@@ -289,7 +289,7 @@ def pkg_config(pkg_name, static = False):
         pkg_name, exc.stderr or exc.stdout))
 
   # Parse the flags.
-  result = _defaults.Framework('pkg-config:{}'.format(pkg_name),
+  result = api.Framework('pkg-config:{}'.format(pkg_name),
       include = [], defines = [], libs = [], libpath = [],
       compile_additional_flags = [], link_additional_flags = [])
   for flag in shell.split(flags):

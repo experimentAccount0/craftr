@@ -34,7 +34,7 @@ craftr = require('./index')
 logger = require('@craftr/logger')
 ninja = require('./lib/ninja')
 download_ninja = require('./lib/ninja/get-ninja')
-path = require('./lib/path')
+path = require('./lib/utils/path')
 
 
 @click.group()

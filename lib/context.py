@@ -20,8 +20,8 @@
 
 logger = require('@craftr/logger')
 ninja = require('./ninja')
-path = require('./path')
-weakproxy = require('./weakproxy')
+path = require('./utils/path')
+weakproxy = require('./utils/weakproxy')
 
 
 class CraftrNamespace:
@@ -44,7 +44,8 @@ class CraftrNamespace:
 
   def register_target(self, name, target):
     if name in self.targets:
-      raise ValueError('target {!r} already exists')
+      raise ValueError('target {!r} already exists in namespace {!r}'
+          .format(name, self.name))
     self.context.graph.add_target(target)
     self.targets[name] = target
 

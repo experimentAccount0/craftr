@@ -22,11 +22,11 @@ This module implements a Python abstraction of Ninja build manifests,
 allowing you to create Ninja manifests from code more easily.
 """
 
-path = require('../path')
+argschema = require('../utils/argschema')
+path = require('../utils/path')
 platform = require('../platform')
-shell = require('../shell')
+shell = require('../utils/shell')
 NinjaWriter = require('./syntax').Writer
-argschema = require('../argschema')
 
 
 import abc
@@ -41,13 +41,6 @@ import sys
 
 version = require('./get-ninja').ninja_version
 download = require('./get-ninja').download_ninja
-
-
-def parse_target_ref(name):
-  match = re.match('//([\w\d\.\-_/]+):([\w\d\.\-_]+)', name)
-  if not match:
-    raise ValueError('invalid target refstring: {!r}'.format(name))
-  return match.groups()
 
 
 def flatten(iterable):
@@ -111,6 +104,7 @@ class Graph(object):
   def __init__(self):
     self.tasks = {}
     self.targets = {}
+    self.normalized_target_names = set()
     self.infiles = {}
     self.outfiles = {}
     self.vars = {}
@@ -142,8 +136,13 @@ class Graph(object):
 
     argschema.validate('target', target, {'type': Target})
     if target.name in self.targets:
-      raise ValueError('a target with the name {!r} already exists'
-        .format(target.name))
+      raise ValueError('a target with the name {!r} already exists'.format(
+          target.name))
+    if target.normalized_name in self.normalized_target_names:
+      raise ValueError('normalized target name collision: {!r}'.format(
+          target.normalized_name))
+
+    self.normalized_target_names.add(target.normalized_name)
     self.targets[target.name] = target
     for infile in target.inputs:
       self.infiles.setdefault(infile, []).append(target)
@@ -171,7 +170,6 @@ class Graph(object):
     self.add_target(target)
     self.tasks[task.name] = task
     return target
-
 
   def export(self, writer, context, platform):
     """
@@ -202,11 +200,12 @@ class Graph(object):
     defaults = []
     for target in self.targets.values():
       if not target.explicit and target.generates_build_instruction:
-        defaults.append(target.valid_name)
+        defaults.append(target.normalized_name)
       target.export(writer, context, platform)
 
     if defaults:
       writer.default(defaults)
+
 
 class Target(object):
   """
@@ -285,6 +284,7 @@ class Target(object):
     self.order_only_deps = expand_mixed_list(order_only_deps, None, 'implicit')
 
     self.name = name
+    self.normalized_name = re.sub('[^\w\d\-\._]', '_', name)
     self.pool = pool
     self.deps = deps
     self.depfile = depfile
@@ -326,11 +326,6 @@ class Target(object):
       raise TypeError("Target.__lshift__() expected Target or str")
     return self
 
-  @property
-  def valid_name(self):
-    namespace, member = parse_target_ref(self.name)
-    return '__{}__{}'.format(namespace.replace('/', '_'), member)
-
   def export(self, writer, context, platform):
     """
     Export the target to a Ninja manifest.
@@ -340,7 +335,7 @@ class Target(object):
     writer.comment("--------" + "-" * len(self.name))
     commands = platform.prepare_commands([list(map(str, c)) for c in self.commands])
 
-    name = self.valid_name
+    name = self.normalized_name
 
     # Check if we need to export a command file or can export the command
     # directly.

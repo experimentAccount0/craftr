@@ -46,18 +46,14 @@ elif sys.platform.startswith('linux'):
 else:
   raise EnvironmentError('unsupported platform: "{}"'.format(sys.platform))
 
-
 WINDOS = (name == 'windows')
 CYGWIN = (name == 'cygwin')
 MSYS = (name == 'msys')
-
 LINUX = (name == 'linux')
 MACOS = (name == 'macos')
-
 UNIX = (env == 'unix')
 
-
-path = require('./path')
+path = require('./utils/path')
 if WINDOWS or CYGWIN or MSYS:
   def obj(x): return path.addsuffix(x, ".obj")
   def bin(x): return path.addsuffix(x, ".exe")
