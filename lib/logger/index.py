@@ -18,6 +18,7 @@
 # OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
 # THE SOFTWARE.
 
+import contextlib
 import logging
 term = require('./term')
 
@@ -45,16 +46,33 @@ class Formatter(logging.Formatter):
     return super().format(record)
 
 
+class LoggerAdapter(logging.LoggerAdapter):
+
+  indentation = 0
+
+  @contextlib.contextmanager
+  def indent(self, amount=1):
+    self.indentation += amount
+    try:
+      yield
+    finally:
+      self.indentation -= amount
+
+  def process(self, msg, kwargs):
+    msg = '  ' * self.indentation + msg
+    return (msg, kwargs)
+
+
 def _init_logger():
   logger = logging.Logger('craftr')
   logger.setLevel(logging.DEBUG)
-
   formatter = Formatter('[%(levelname)s]: %(message)s')
-
   handler = logging.StreamHandler()
   handler.setFormatter(formatter)
   logger.addHandler(handler)
-  return logger
+
+  return LoggerAdapter(logger, {})
 
 
-exports = _init_logger()
+logger = _init_logger()
+exports = logger
