@@ -27,7 +27,7 @@ import sys
 import tempfile
 import zipfile
 
-logger = require('@craftr/logger')
+logger = require('../logger')
 
 _platform = require('../platform')
 _ninja_suffix = '.exe' if _platform.WINDOWS else ''

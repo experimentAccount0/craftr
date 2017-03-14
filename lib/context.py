@@ -18,7 +18,7 @@
 # OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
 # THE SOFTWARE.
 
-logger = require('@craftr/logger')
+logger = require('./logger')
 ninja = require('./ninja')
 path = require('./utils/path')
 weakproxy = require('./utils/weakproxy')

@@ -29,10 +29,10 @@ import os
 import sys
 
 argschema = require('./utils/argschema')
-craftr = require('../index')
+craftr = require('..')
 build = require('./ninja')
 loaders = require('./loaders')
-logger = require('@craftr/logger')
+logger = require('./logger')
 path = require('./utils/path')
 platform = require('./platform')
 pyutils = require('./utils/py')

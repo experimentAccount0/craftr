@@ -5,12 +5,10 @@
   "author": "Niklas Rosenstein <rosensteinniklas@gmail.com>",
   "description": "Meta build system for Ninja based on Python 3 and Ppy",
   "engines": {
-    "nodepy": ">=0.0.13",
+    "nodepy": ">=0.0.16",
     "python": ">=3.3.0"
   },
-  "dependencies": {
-    "@craftr/logger": "~0.0.1"
-  },
+  "dependencies": {},
   "python-dependencies": {
     "glob2": ">=0.5",
     "werkzeug": ">=0.11.15"

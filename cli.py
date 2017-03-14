@@ -31,7 +31,7 @@ import subprocess
 import sys
 
 craftr = require('./index')
-logger = require('@craftr/logger')
+logger = require('./lib/logger')
 ninja = require('./lib/ninja')
 download_ninja = require('./lib/ninja/get-ninja')
 path = require('./lib/utils/path')
