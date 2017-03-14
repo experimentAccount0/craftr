@@ -1,6 +1,6 @@
 <img src="https://i.imgur.com/zkceTvb.png" align="right"></img>
 
-# Craftr
+# Craftr Core
 
 Craftr is a meta build system based on Python and Ninja. It uses [Node.py]
 and the [PPYM] package management ecosystem to provide a modular and
@@ -17,7 +17,7 @@ in your project, but it is highly recommended.
   [Craftr CLI]: https://github.com/craftr-build/craftr-cli
 
     $ ppym install -g @craftr/cli
-    $ ppym install craftr --save-dev
+    $ ppym install @craftr/core --save-dev
 
 ## Example
 
@@ -31,7 +31,7 @@ API locally, then also install the C/C++ language extension:
 Then create a `Craftrfile.py` and put the following into it:
 
 ```python
-require('craftr').namespace('my-project', export_api=True)
+require('@craftr/core').namespace('my-project', export_api=True)
 cxx = require('@craftr/cxx')
 
 cxx.executable(
