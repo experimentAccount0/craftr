@@ -38,6 +38,7 @@ class CraftrNamespace:
     self.targets = {}
     self.context = weakproxy.new(context)
     self.directory = directory
+    self.export_api = True
 
   def __str__(self):
     return '<CraftrNamespace {!r} at {!r}>'.format(self.name, self.directory)
@@ -66,7 +67,7 @@ class CraftrContext:
     self.cache = {}
     self.do_export = False
 
-  def namespace(self, name=None, export_api=True, directory=None):
+  def namespace(self, name=None, export_api=True, directory=None, module=None):
     """
     Must be called before any targets are added to the build graph by a
     Craftr build script. This will insert a member into the global namespace
@@ -86,10 +87,11 @@ class CraftrContext:
     a #RuntimeError is raised.
     """
 
-    module = require.current
-    if hasattr(module.namespace, '__craftr__'):
-      raise RuntimeError('Craftr module already declared')
-
+    if module is None:
+      module = require.current
+      inherited = False
+    else:
+      inherited = True
     if name is None:
       # Find the parent namespace.
       name = self.current_namespace(1).name
@@ -102,6 +104,7 @@ class CraftrContext:
       else:
         directory = path.norm(directory, module.directory)
       namespace = self.namespaces[name] = CraftrNamespace(name, self, directory)
+      namespace.export_api = export_api
     else:
       if directory is not None:
         raise RuntimeError('namespace has already been introduced, yet '
@@ -109,8 +112,8 @@ class CraftrContext:
 
     namespace.participants.append(module)
     module.namespace.__craftr__ = weakproxy.new(namespace)
-    logger.debug("Added module '%[cyan][{}]' to '%[magenta][{}]' namespace."
-        .format(module.filename, name))
+    logger.debug("Added module '%[cyan][{}]' to '%[magenta][{}]' namespace{}."
+        .format(module.filename, name, ' (automatically inherited)' if inherited else ''))
 
     if export_api:
       api = require('./api')
@@ -136,3 +139,23 @@ class CraftrContext:
     if namespace is None:
       raise RuntimeError('CraftrNamespace reference lost')
     return namespace
+
+  def on_nodepy_event(self, event, data):
+    """
+    This function is added to the Node.py event handlers and will cause modules
+    to inherit their parent Craftr namespace if they're in they have been
+    required with a relative path.
+    """
+
+    if event != 'load':
+      return
+
+    module = data
+    if not module.parent or not hasattr(module.parent.namespace, '__craftr__'):
+      return
+    request = module.request
+    if not (request in '..0' or request.startswith('./') or request.startswith('../')):
+      return
+
+    craftr_ns = module.parent.namespace.__craftr__
+    self.namespace(craftr_ns.name, export_api=craftr_ns.export_api, module=module)

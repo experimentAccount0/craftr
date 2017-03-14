@@ -19,4 +19,5 @@
 # THE SOFTWARE.
 
 context = require('./lib/context').CraftrContext()
+require.context.event_handlers.append(context.on_nodepy_event)
 exports = context
