@@ -15,7 +15,7 @@ class Exporter(object):
 
   def __init__(self, craftr, builddir=None, commandsdir=None):
     self.craftr = craftr
-    self.builddir = builddir or craftr.option('builddir')
+    self.builddir = builddir or craftr.builddir
     self.commandsdir = commandsdir or path.join(self.builddir, 'ninja_commands')
 
   def export(self, file):

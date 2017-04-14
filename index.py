@@ -6,12 +6,13 @@ command-line arguments are automatically parsed and only then will the
 normal execution continue.
 """
 
-craftr = require.symbols('./api')
+craftr = require('./api')
 path = require('./path')
 
 import atexit
 import argparse
 import sys
+import textwrap
 
 def main():
   """
@@ -27,6 +28,8 @@ def main():
       specified targets.
     * export: proceed to execute the build script and export the
       build data.
+    * reexport: similar to `export`, but takes all build options specified
+      during the previous export into account.
     * run: the default action if none is specified, only run the build
       script without exporting build information.
 
@@ -34,28 +37,65 @@ def main():
   and `clean` actions. They must be the names of targets to build or
   clean.
 
-  --KEY=VALUE pairs can always be specified and will be copied into the
+  KEY=VALUE pairs can always be specified and will be copied into the
   #craftr.options dictionary. If the =VALUE part is omitted, the value of
   the specified KEY will be set to the string "true". If only the VALUE
-  part is omitted (thus, the format is --KEY= ), the option will be
+  part is omitted (thus, the format is KEY= ), the option will be
   removed from the #craftr.options dictionary.
   """
 
-  usage = '{} [ACTION] {{TARGET,--KEY=VALUE}}...'.format(path.base(sys.argv[0]))
-  parser = argparse.ArgumentParser(usage=usage)
-  parser.add_argument('action', nargs='?', choices={'build', 'clean', 'export', 'run'})
-  parser.add_argument('options', nargs='...')
+  prog = path.base(sys.argv[0])
+  usage = '{} [ACTION] [TARGET ...] [KEY=VALUE ...]'.format(prog)
+
+  help_text = textwrap.dedent(main.__doc__)
+  if require.main.namespace.__doc__:
+    help_text = '{}\n\n{}\n\n{}'.format(require.main.namespace.__doc__, '='*60, help_text)
+  help_text = textwrap.indent(help_text, '  ')
+
+  parser = argparse.ArgumentParser(description=help_text, usage=usage,
+      formatter_class=argparse.RawTextHelpFormatter)
+  parser.add_argument('-b', '--builddir')
+  parser.add_argument('-B', '--backend')
+  parser.add_argument('options', nargs='*')
   args = parser.parse_args()
 
-  craftr.options['action'] = args.action
+  # If the first argument is not a KEY=VALUE pair.
+  action = 'run'
+  if args.options and '=' not in args.options[0]:
+    action = args.options.pop(0)
+  if action not in ('run', 'export', 'reexport', 'build', 'clean'):
+    parser.error('ACTION must be one of run, export, reexport, build or clean')
 
+  # Propagate the specified action and build directory and load the cache.
+  craftr.action = action
+  if args.builddir:
+    craftr.builddir = args.builddir
+  craftr.load_cache()
+
+  # Re-use the options of the previous export when using 'reexport'.
+  if action == 'reexport':
+    if 'options' in craftr.cache:
+      print('reusing previous build options:')
+      for key, value in craftr.cache['options'].items():
+        print('  {}={}'.format(key, value))
+      craftr.options.update(craftr.cache['options'])
+    if not args.backend and 'backend' in craftr.cache:
+      print('reusing previous backend: {}'.format(craftr.cache['backend']))
+      args.backend = craftr.cache['backend']
+
+  # Propagate the backend now (after eventually re-using the option from
+  # the previous export).
+  if args.backend:
+    craftr.backend = args.backend
+
+  # Parse all other arguments into options and target names.
   targets = []
   for option in args.options:
     if option in ('-h', '--help'):
       parser.print_help()
-      sys.exit(0)
-    if option.startswith('--'):
-      key, sep, value = option[2:].partition('=')
+      return sys.exit(0)
+    if '=' in option:
+      key, sep, value = option.partition('=')
       if not key:
         parser.error('invalid option: {!r}'.format(option))
       if sep and not value:
@@ -64,18 +104,19 @@ def main():
         craftr.options[key] = 'true'
       else:
         craftr.options[key] = value
+    else:
+      targets.append(option)
 
-  if args.action in ('build', 'clean'):
-    parser.error('build/clean currently not implemented')
-
-# Add the currently executed module's documentation.
-if require.main.namespace.__doc__:
-  main.help = '{}\n\n{}\n\n{}'.format(require.main.namespace.__doc__, '='*60, main.help)
+  if action in ('build', 'clean'):
+    return parser.error('build/clean currently not implemented')
+  if targets:
+    parser.error('action {!r} does not expected targets: {}'.format(action, targets))
 
 exports = craftr
 main()
 
 @atexit.register
 def finalize_action():
-  if craftr.option('action') == 'export':
+  if craftr.action in ('export', 'reexport'):
     craftr.export()
+    craftr.save_cache()

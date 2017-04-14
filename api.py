@@ -2,18 +2,20 @@
 # All rights reserved.
 
 from collections import Sequence
+import json
 argschema = require('ppym/lib/argschema')
+path = require('./path')
 platform = require('./platform')
 shell = require('./shell')
 
-options = {
-  'action': 'run',
-  'builddir': 'build',
-  'backend': './backend/ninja'
-}
+action = 'run'
+builddir = 'build'
+backend = './backend/ninja'
+options = {}
 rules = {}
 targets = {}
 pools = {}
+cache = {}
 
 
 def option(name, type=str, default=None, inherit=True):
@@ -134,6 +136,33 @@ def target(name, rule, inputs=(), outputs=(), implicit=(),
   rule.targets.append(target)
   return target
 
+def load_cache(builddir=None):
+  """
+  Loads the last cache from the specified *builddir* or alternatively the
+  `builddir` option into the #cache dictionary.
+  """
+
+  builddir = builddir or globals()['builddir']
+  cachefile = path.join(builddir, '.craftr_cache')
+  if not path.isfile(cachefile):
+    return
+  with open(cachefile, 'r') as fp:
+    cache.update(json.load(fp))
+
+def save_cache(builddir=None):
+  """
+  Saves the #cache dictionary in JSON format to the `.craftr_cache` file in
+  the specified *builddir*.
+  """
+
+  builddir = builddir or globals()['builddir']
+  cachefile = path.join(builddir, '.craftr_cache')
+  path.makedirs(builddir)
+  cache['backend'] = backend
+  cache['options'] = options
+  with open(cachefile, 'w') as fp:
+    json.dump(cache, fp)
+
 def export(file=None, backend=None):
   """
   Exports a build manifest to *file* using the specified *backend*. If the
@@ -146,7 +175,7 @@ def export(file=None, backend=None):
   """
 
   if backend is None:
-    backend = option('backend')
+    backend = globals()['backend']
   if isinstance(backend, str):
     backend = require(backend)
   return backend.export(module.namespace, file)
