@@ -7,6 +7,7 @@ from ninja_syntax import Writer as NinjaWriter
 path = require('../path')
 shell = require('../shell')
 platform = require('../platform')
+logger = require('../logger')
 
 class Exporter(object):
   """
@@ -22,6 +23,7 @@ class Exporter(object):
     if file is None:
       file = path.join(self.builddir, 'build.ninja')
     if isinstance(file, str):
+      logger.info('exporting Ninja build manifest: {}'.format(file))
       path.makedirs(path.dir(file))
       with open(file, 'w') as fp:
         self.write_all(NinjaWriter(fp))

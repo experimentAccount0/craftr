@@ -8,6 +8,7 @@ normal execution continue.
 
 craftr = require('./api')
 path = require('./path')
+logger = require('./logger')
 
 import atexit
 import argparse
@@ -75,12 +76,12 @@ def main():
   # Re-use the options of the previous export when using 'reexport'.
   if action == 'reexport':
     if 'options' in craftr.cache:
-      print('reusing previous build options:')
+      logger.info('reusing previous build options:')
       for key, value in craftr.cache['options'].items():
-        print('  {}={}'.format(key, value))
+        logger.info('  {}={}'.format(key, value))
       craftr.options.update(craftr.cache['options'])
     if not args.backend and 'backend' in craftr.cache:
-      print('reusing previous backend: {}'.format(craftr.cache['backend']))
+      logger.info('reusing previous backend: {}'.format(craftr.cache['backend']))
       args.backend = craftr.cache['backend']
 
   # Propagate the backend now (after eventually re-using the option from
