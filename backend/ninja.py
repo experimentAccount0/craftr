@@ -14,10 +14,11 @@ class Exporter(object):
   Exporter for Ninja manifests from Craftr build information.
   """
 
-  def __init__(self, craftr, builddir=None, commandsdir=None):
+  def __init__(self, craftr, builddir=None, commandsdir=None, width=None):
     self.craftr = craftr
     self.builddir = builddir or craftr.builddir
     self.commandsdir = commandsdir or path.join(self.builddir, 'ninja_commands')
+    self.width = width or craftr.option('ninja:width', int, 500)
 
   def export(self, file):
     if file is None:
@@ -26,9 +27,9 @@ class Exporter(object):
       logger.info('exporting Ninja build manifest: {}'.format(file))
       path.makedirs(path.dir(file))
       with open(file, 'w') as fp:
-        self.write_all(NinjaWriter(fp))
+        self.write_all(NinjaWriter(fp, width=self.width))
     else:
-      self.write_all(NinjaWriter(file))
+      self.write_all(NinjaWriter(file, width=self.width))
 
   def write_all(self, writer):
     with open(path.join(__directory__, '../package.json')) as fp:
@@ -37,8 +38,9 @@ class Exporter(object):
     writer.comment('From working directory: {}'.format(path.cwd()))
     writer.newline()
     for key, value in self.craftr.options.items():
-      if key.startswith('ninja:'):
+      if key.startswith('ninja:') and key != 'ninja:width':
         writer.variable(key[6:], value)
+    writer.newline()
     for rule in self.craftr.rules.values():
       self.write_rule(rule, writer)
 
@@ -51,8 +53,14 @@ class Exporter(object):
     writer.rule(ninjafy(rule.name), shell.join(command), pool=rule.pool, deps=rule.deps,
         depfile=rule.depfile, description=rule.description)
     writer.newline()
+    outputs = []
     for target in rule.targets:
       self.write_target(target, writer)
+      outputs.extend(target.outputs)
+    # Create a phony target for the whole rule if there is not already
+    # a target that has the same name.
+    if rule.name not in self.craftr.targets:
+      writer.build(rule.name, 'phony', outputs)
 
   def write_target(self, target, writer):
     rule = ninjafy(target.rule.name)
@@ -80,7 +88,7 @@ def prep_commands(commandsdir, commands, rule_name, cwd=None, env=None):
   generated files and the possibly changed command. For a single command in
   *commands*, that single command is usually returned unchanged.
 
-  !!!note "Keep in mind:
+  !!!note "Keep in mind"
       The second element of the returned tuple is only a single command (thus
       only a list of str instead of a list of list of str)! If multiple
       commands are specified, usually these commands will be exported into a

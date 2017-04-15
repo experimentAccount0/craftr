@@ -17,8 +17,7 @@ targets = {}
 pools = {}
 cache = {}
 
-
-def option(name, type=str, default=None, inherit=True):
+def option(name, type=str, default=NotImplemented, inherit=True):
   """
   Retrieve an option value of the specified *type* by *name*. If *inherit* is
   #True, the namespace of *name* will be removed and checked again. The
@@ -41,6 +40,8 @@ def option(name, type=str, default=None, inherit=True):
     if name in options:
       value = options[name]
   if value is NotImplemented:
+    if default is NotImplemented:
+      return type()
     return default
 
   if type == bool:
@@ -60,7 +61,6 @@ def option(name, type=str, default=None, inherit=True):
           .format(name, value, exc))
 
   return value
-
 
 def rule(name, commands, pool=None, deps=None, depfile=None, cwd=None,
          env=None, description=None):
@@ -100,7 +100,6 @@ def rule(name, commands, pool=None, deps=None, depfile=None, cwd=None,
   rules[name] = rule
   return rule
 
-
 def target(name, rule, inputs=(), outputs=(), implicit=(),
            order_only=(), foreach=False):
   """
@@ -125,10 +124,10 @@ def target(name, rule, inputs=(), outputs=(), implicit=(),
   target = Target(
     name = name,
     rule = rule,
-    inputs = inputs,
-    outputs = outputs,
-    implicit = implicit,
-    order_only = order_only,
+    inputs = [path.norm(x) for x in inputs],
+    outputs = [path.norm(x) for x in outputs],
+    implicit = [path.norm(x) for x in implicit],
+    order_only = [path.norm(x) for x in order_only],
     foreach = foreach
   )
   if name is not None:
@@ -198,7 +197,6 @@ class Rule(object):
 
   def target(self, name=None, inputs=(), outputs=(), implicit=(), order_only=(), foreach=False):
     return target(name, self.name, inputs, outputs, implicit, order_only, foreach)
-
 
 class Target(object):
 
