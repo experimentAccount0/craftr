@@ -135,6 +135,22 @@ def target(name, rule, inputs=(), outputs=(), implicit=(),
   rule.targets.append(target)
   return target
 
+def unique_rule_name(prefix):
+  """
+  This function can be used in functions that generate build targets if no
+  rule name has been specified to retrieve a unique rule name, assuming that
+  no call to #rule() follows before the rule with the returned name has been
+  created.
+  """
+
+  index = 0
+  while True:
+    name = '{}_{:0>4d}'.format(prefix, index)
+    if name not in rules:
+      break
+    index += 1
+  return name
+
 def load_cache(builddir=None):
   """
   Loads the last cache from the specified *builddir* or alternatively the
