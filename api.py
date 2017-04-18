@@ -2,6 +2,7 @@
 # All rights reserved.
 
 from collections import Sequence
+from operator import itemgetter
 import json
 argschema = require('ppym/lib/argschema')
 path = require('./path')
@@ -135,6 +136,52 @@ def target(name, rule, inputs=(), outputs=(), implicit=(),
   rule.targets.append(target)
   return target
 
+def pkg_config(pkg_name, static=False):
+  """
+  If available, this function uses `pkg-config` to extract flags for compiling
+  and linking with the package specified with *pkg_name*. If `pkg-config` is
+  not available or the it can not find the package, a #PkgConfigError is raised.
+
+  Returns a #Product object.
+  """
+
+  cmdversion = ['pkg-config', '--modversion', pkg_name]
+  cmdflags = ['pkg-config', '--cflags', '--libs']
+  if static:
+    cmdflags.append('--static')
+  cmdflags.append(pkg_name)
+
+  try:
+    flags = shell.pipe(cmdflags, check=True).stdout
+    version = shell.pipe(cmdversion, check=True).stdout.rstrip()
+  except FileNotFoundError as exc:
+    raise PkgConfigError('pkg-config is not available ({})'.format(exc))
+  except shell.CalledProcessError as exc:
+    raise PkgConfigError('{} not installed on this system\n\n{}'.format(
+        pkg_name, exc.stderr or exc.stdout))
+
+  product = Product('pkg-config:' + pkg_name, 'cxx_library',
+      includes = [], defines = [], libs = [], libpath = [],
+      ccflags = [], ldflags = [], version = version)
+  # TODO: What about a C++ library? Is it okay to use ccflags nevertheless? Or
+  #       how do we otherwise find out if the library is a C++ library?
+
+  for flag in shell.split(flags):
+    if flag.startswith('-I'):
+      product['includes'].append(flag[2:])
+    elif flag.startswith('-D'):
+      product['defines'].append(flag[2:])
+    elif flag.startswith('-l'):
+      product['libs'].append(flag[2:])
+    elif flag.startswith('-L'):
+      product['libpath'].append(flag[2:])
+    elif flag.startswith('-Wl,'):
+      product['ldflags'].append(flag[4:])
+    else:
+      product['ccflags'].append(flag)
+
+  return product
+
 def unique_rule_name(prefix):
   """
   This function can be used in functions that generate build targets if no
@@ -228,3 +275,53 @@ class Target(object):
   def __repr__(self):
     return '<craftr.Target {} :: {!r}>'.format(
         repr(self.name) if self.name else '<unnamed>', self.rule.name)
+
+class Product(object):
+  """
+  A #Product is an extended representation of a build target with additional
+  information that is used by target generating functions. It may also
+  represent externally produced build information. An example of this is the
+  #pkg_config() function which returns a #Product that does not further specify
+  a #Target but instead represent an external library.
+
+  # Members
+  name (str): The name of the product. For automatically generated Products
+      from a target generator function, this is usually the target name.
+  types (list of str): A list of product type identifiers. For example, the
+      type identifier for C/C++ libraries is `'cxx_library'`.
+  targets (list of Target): A list of targets that this product wraps.
+      Target generator functions may choose to use the outputs of these
+      targets as new inputs.
+  data (dict): A dictionary that contains the product information. The format
+      of this information depends on the Product's #types.
+  """
+
+  def __init__(self, name, types, targets=None, **data):
+    if isinstance(types, str):
+      types = [types]
+    for item in types:
+      if not isinstance(item, str):
+        raise ValueError('Product type must be str')
+    self.name = name
+    self.types = types
+    self.data = data
+
+  def __repr__(self):
+    return 'Product({!r}, {})'.format(self.name, self.types)
+
+  def __str__(self):
+    lines = ['Product({!r}, {}):'.format(self.name, self.types)]
+    for key, value in sorted(self.data.items(), key=itemgetter(0)):
+      lines.append('  | {}: {!r}'.format(key, value))
+    return '\n'.join(lines)
+
+  def __getitem__(self, key):
+    return self.data[key]
+
+  def __setitem__(self, key, value):
+    self.data[key] = value
+
+class PkgConfigError(Exception):
+  """
+  Raised by #pkg_config().
+  """
