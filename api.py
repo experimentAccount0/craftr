@@ -160,25 +160,23 @@ def pkg_config(pkg_name, static=False):
     raise PkgConfigError('{} not installed on this system\n\n{}'.format(
         pkg_name, exc.stderr or exc.stdout))
 
-  product = Product('pkg-config:' + pkg_name, 'cxx_library',
-      includes = [], defines = [], libs = [], libpath = [],
-      ccflags = [], ldflags = [], version = version)
+  product = Product('pkg-config:' + pkg_name, 'cxx_library', version=version)
   # TODO: What about a C++ library? Is it okay to use ccflags nevertheless? Or
   #       how do we otherwise find out if the library is a C++ library?
 
   for flag in shell.split(flags):
     if flag.startswith('-I'):
-      product['includes'].append(flag[2:])
+      product.data.setdefault('includes', []).append(flag[2:])
     elif flag.startswith('-D'):
-      product['defines'].append(flag[2:])
+      product.data.setdefault('defines', []).append(flag[2:])
     elif flag.startswith('-l'):
-      product['libs'].append(flag[2:])
+      product.data.setdefault('libs', []).append(flag[2:])
     elif flag.startswith('-L'):
-      product['libpath'].append(flag[2:])
+      product.data.setdefault('libpath', []).append(flag[2:])
     elif flag.startswith('-Wl,'):
-      product['ldflags'].append(flag[4:])
+      product.data.setdefault('ldflags', []).append(flag[4:])
     else:
-      product['ccflags'].append(flag)
+      product.data.setdefault('ccflags', []).append(flag)
 
   return product
 
@@ -305,6 +303,24 @@ class Product(object):
     self.name = name
     self.types = types
     self.data = data
+
+  def __eq__(self, other):
+    """
+    Returns #True if the #other Product has at least one type in common with
+    this Product and the #data matches exactly. Does **not** take the Product
+    #name into account.
+    """
+
+    if not isinstance(other, Product):
+      return False
+    if not other.types and self.types:
+      return False
+    for typename in other.types:
+      if typename in self.types:
+        break
+    else:
+      return False
+    return self.data == other.data
 
   def __repr__(self):
     return 'Product({!r}, {})'.format(self.name, self.types)

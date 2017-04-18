@@ -9,7 +9,6 @@ import sys
 craftr = require('../api')
 platform = require('../platform')
 shell = require('../shell')
-Library = require('./cxx/library')
 
 @functools.lru_cache()
 def get_config(python_bin=None):
@@ -50,10 +49,10 @@ def get_library(python_bin=None):
   if platform.WINDOWS and 'LIBDIR' not in config:
     config['LIBDIR'] = path.join(config['prefix'], 'libs')
 
-  library = Library(
-    name = config['_PYTHON_BIN'],
+  library = craftr.Product(config['_PYTHON_BIN'], 'cxx_library',
     includes = [config['INCLUDEPY']],
     libpath = [config['LIBDIR']],
+    version = config['VERSION']
   )
 
   # The name of the Python library is something like "libpython2.7.a",
@@ -62,9 +61,9 @@ def get_library(python_bin=None):
   if 'LIBRARY' in config:
     lib = re.search('python\d\.\d(?:d|m|u){0,3}', config['LIBRARY'])
     if lib:
-      library.libs = [lib.group(0)]
+      library['libs'] = [lib.group(0)]
   elif platform.WINDOWS:
     # This will make pyconfig.h nominate the correct .lib file.
-    library.defines = ['MS_COREDLL']
+    library['defines'] = ['MS_COREDLL']
 
   return library
