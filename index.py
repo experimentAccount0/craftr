@@ -57,6 +57,7 @@ def main():
       formatter_class=argparse.RawTextHelpFormatter)
   parser.add_argument('-b', '--builddir')
   parser.add_argument('-B', '--backend')
+  parser.add_argument('-t', '--buildtype')
   parser.add_argument('options', nargs='*')
   args = parser.parse_args()
 
@@ -81,13 +82,23 @@ def main():
         logger.info('  {}={}'.format(key, value))
       craftr.options.update(craftr.cache['options'])
     if not args.backend and 'backend' in craftr.cache:
-      logger.info('reusing previous backend: {}'.format(craftr.cache['backend']))
       args.backend = craftr.cache['backend']
+      logger.info('reusing previous backend: {}'.format(args.backend))
+    if not args.buildtype and 'buildtype' in craftr.cache:
+      args.buildtype = craftr.cache['buildtype']
+      logger.info('reusing previous buildtype: {}'.format(args.buildtype))
+
+  if not args.buildtype:
+    args.buildtype = 'develop'
 
   # Propagate the backend now (after eventually re-using the option from
   # the previous export).
   if args.backend:
     craftr.backend = args.backend
+  if args.buildtype:
+    if args.buildtype not in ('debug', 'develop', 'release'):
+      parser.error('invalid buildtype: {!r}'.format(args.buildtype))
+    craftr.buildtype = args.buildtype
 
   # Parse all other arguments into options and target names.
   targets = []

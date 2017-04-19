@@ -8,10 +8,12 @@ argschema = require('ppym/lib/argschema')
 path = require('./path')
 platform = require('./platform')
 shell = require('./shell')
+logger = require('./logger')
 
 action = 'run'
 builddir = 'build'
 backend = './backend/ninja'
+buildtype = 'develop'  #: choices are 'develop', 'debug' and 'release'
 options = {}
 rules = {}
 targets = {}
