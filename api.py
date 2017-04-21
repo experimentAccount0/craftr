@@ -4,6 +4,7 @@
 from collections import Sequence
 from operator import itemgetter
 import json
+import sys
 argschema = require('ppym/lib/argschema')
 path = require('./path')
 platform = require('./platform')
@@ -242,6 +243,28 @@ def export(file=None, backend=None):
     backend = require(backend)
   return backend.export(module.namespace, file)
 
+def error(*objects, code=1):
+  """
+  Raise an #Error exception with the message specified with *objects*. If
+  uncatched, the exception will be handled by a special exception handler.
+  """
+
+  raise Error(' '.join(map(str, objects)), code)
+
+def register_error_handler():
+  """
+  Registers a `sys.excepthook` for the #Error exception type. This function
+  is automatically called from `index.py`.
+  """
+
+  _old_hook = sys.excepthook
+  def craftr_error_hook(et, ev, tb):
+    if et == Error:
+      logger.error(ev)
+      return sys.exit(ev.code)
+    return _old_hook(et, ev, tb)
+  sys.excepthook = craftr_error_hook
+
 class Rule(object):
 
   def __init__(self, name, commands, pool, deps, depfile, cwd, env, description):
@@ -343,3 +366,15 @@ class PkgConfigError(Exception):
   """
   Raised by #pkg_config().
   """
+
+class Error(Exception):
+  """
+  Raised by #error().
+  """
+
+  def __init__(self, message, code=1):
+    self.message = str(message)
+    self.code = code
+
+  def __str__(self):
+    return self.message

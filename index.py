@@ -66,7 +66,7 @@ def main():
   if args.options and '=' not in args.options[0]:
     action = args.options.pop(0)
   if action not in ('run', 'export', 'reexport', 'build', 'clean'):
-    parser.error('ACTION must be one of run, export, reexport, build or clean')
+    craftr.error('ACTION must be one of run, export, reexport, build or clean')
 
   # Propagate the specified action and build directory and load the cache.
   craftr.action = action
@@ -97,7 +97,7 @@ def main():
     craftr.backend = args.backend
   if args.buildtype:
     if args.buildtype not in ('debug', 'develop', 'release'):
-      parser.error('invalid buildtype: {!r}'.format(args.buildtype))
+      craftr.error('invalid buildtype: {!r}'.format(args.buildtype))
     craftr.buildtype = args.buildtype
 
   # Parse all other arguments into options and target names.
@@ -109,7 +109,7 @@ def main():
     if '=' in option:
       key, sep, value = option.partition('=')
       if not key:
-        parser.error('invalid option: {!r}'.format(option))
+        craftr.error('invalid option: {!r}'.format(option))
       if sep and not value:
         craftr.options.pop(key, None)
       elif not sep:
@@ -120,11 +120,12 @@ def main():
       targets.append(option)
 
   if action in ('build', 'clean'):
-    return parser.error('build/clean currently not implemented')
+    return craftr.error('build/clean currently not implemented')
   if targets:
-    parser.error('action {!r} does not expected targets: {}'.format(action, targets))
+    craftr.error('action {!r} does not expected targets: {}'.format(action, targets))
 
 exports = craftr
+craftr.register_error_handler()
 main()
 
 @atexit.register
