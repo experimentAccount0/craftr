@@ -38,8 +38,7 @@ def get_config(python_bin=None):
 def get_library(python_bin=None):
   """
   Uses #get_config() to read the configuration values of the specified
-  Python executable and returns a #cxx.Library() that can be used in C/C++
-  compiler interfaces.
+  Python executable and returns a #Product of type `cxx_library`.
   """
 
   config = get_config(python_bin)

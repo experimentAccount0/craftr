@@ -1,9 +1,10 @@
 # Copyright (c) 2017  Niklas Rosenstein
 # All rights reserved.
 
-from collections import Sequence
+from collections import Mapping, Sequence
 from operator import itemgetter
 import json
+import textwrap
 import sys
 argschema = require('ppym/lib/argschema')
 path = require('./path')
@@ -299,7 +300,7 @@ class Target(object):
     return '<craftr.Target {} :: {!r}>'.format(
         repr(self.name) if self.name else '<unnamed>', self.rule.name)
 
-class Product(object):
+class Product(Mapping):
   """
   A #Product is an extended representation of a build target with additional
   information that is used by target generating functions. It may also
@@ -329,6 +330,12 @@ class Product(object):
     self.types = types
     self.data = data
 
+  def __iter__(self):
+    return iter(self.data)
+
+  def __len__(self):
+    return len(self.data)
+
   def __eq__(self, other):
     """
     Returns #True if the #other Product has at least one type in common with
@@ -351,7 +358,8 @@ class Product(object):
     return 'Product({!r}, {})'.format(self.name, self.types)
 
   def __str__(self):
-    lines = ['Product({!r}, {}):'.format(self.name, self.types)]
+    lines = ['Product({!r}, {})'.format(self.name, self.types)]
+    if self.data: lines[0] += ':'
     for key, value in sorted(self.data.items(), key=itemgetter(0)):
       lines.append('  | {}: {!r}'.format(key, value))
     return '\n'.join(lines)
@@ -361,6 +369,112 @@ class Product(object):
 
   def __setitem__(self, key, value):
     self.data[key] = value
+
+class Merge(Mapping):
+  """
+  This class is a collection of #Mapping#s, usually #Product instances or
+  #dict#ionaries, and treats them as one merged #Mapping. Additionally, it
+  allows to retrieve values cummulatively using #getlist().
+
+  Setting items on the #Merge instance will cause the value to be found
+  as the first value when using #__getitem__() but will cause the value to
+  be treated cumulative to previously set values when using #getlist().
+
+  # Members
+  mappings (list of Mapping): The mappings specified upon initialization.
+      If one or more *recursive_keys* was specified, #Merge.expand() was
+      used to expand any nested mappings into a flat list.
+  used_keys (set of str): A set of the keys that have been used to access
+      properties in this #Merge instance. This is used to check for unused
+      option values passed to target generator functions.
+  """
+
+  def __init__(self, mappings, recursive_keys=()):
+    self.mappings = list(Merge.expand(mappings, recursive_keys))
+    self.mappings.insert(0, {})
+    self.used_keys = set()
+
+  @staticmethod
+  def expand(mappings, recursive_keys):
+    if not recursive_keys:
+      yield from mappings
+      return
+    for obj in mappings:
+      yield obj
+      for key in recursive_keys:
+        try:
+          children = obj[key]
+        except KeyError:
+          pass
+        else:
+          if isinstance(children, Mapping):
+            children = [children]
+          yield from Merge.expand(children, recursive_keys)
+
+  def __iter__(self):
+    keys = set()
+    for obj in self.mappings:
+      for key in obj:
+        if key not in keys:
+          keys.add(key)
+          yield key
+
+  def __len__(self):
+    return sum(1 for __ in self)
+
+  def __str__(self):
+    lines = ['Merge of:']
+    for obj in self.mappings:
+      lines.extend(textwrap.indent(str(obj), '  ').split('\n'))
+    return '\n'.join(lines)
+
+  def __getitem__(self, key):
+    self.used_keys.add(key)
+    for obj in self.mappings:
+      if isinstance(obj, Mapping):
+        try:
+          return obj[key]
+        except KeyError: pass
+      else:
+        try:
+          return getattr(obj, key)
+        except AttributeError: pass
+    raise KeyError(key)
+
+  def __setitem__(self, key, value):
+    if key in self.mappings[0]:
+      self.mappings.insert(0, {})
+    self.mappings[key] = value
+
+  def get(self, key, default=None):
+    try:
+      return self[key]
+    except KeyError:
+      return default
+
+  def getlist(self, key):
+    """
+    Collects all values associated with the specified *key* in the objects
+    passed in the #Merge constructor into a list and returns it.
+    """
+
+    self.used_keys.add(key)
+    result = []
+    for obj in self.mappings:
+      if isinstance(obj, Mapping):
+        try:
+          value = obj[key]
+        except KeyError:
+          continue
+      else:
+        try:
+          value = getattr(obj, key)
+        except AttributeError:
+          continue
+      if isinstance(value, str) or not isinstance(value, Sequence):
+        raise TypeError('expected non-string sequence for {!r}'.format(key), obj)
+      result.extend(value)
+    return value
 
 class PkgConfigError(Exception):
   """
