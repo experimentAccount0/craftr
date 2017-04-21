@@ -7,10 +7,11 @@ import json
 import textwrap
 import sys
 argschema = require('ppym/lib/argschema')
+logger = require('./logger')
 path = require('./path')
 platform = require('./platform')
+pyutils = require('./pyutils')
 shell = require('./shell')
-logger = require('./logger')
 
 action = 'run'
 builddir = 'build'
@@ -322,6 +323,9 @@ class Product(Mapping):
   def __len__(self):
     return len(self.data)
 
+  def __contains__(self, key):
+    return key in self.data
+
   def __eq__(self, other):
     """
     Returns #True if the #other Product has at least one type in common with
@@ -408,6 +412,12 @@ class Merge(Mapping):
   def __len__(self):
     return sum(1 for __ in self)
 
+  def __contains__(self, key):
+    for obj in self.mappings:
+      if key in obj:
+        return True
+    return False
+
   def __str__(self):
     lines = ['Merge of:']
     for obj in self.mappings:
@@ -447,20 +457,14 @@ class Merge(Mapping):
     self.used_keys.add(key)
     result = []
     for obj in self.mappings:
-      if isinstance(obj, Mapping):
-        try:
-          value = obj[key]
-        except KeyError:
-          continue
-      else:
-        try:
-          value = getattr(obj, key)
-        except AttributeError:
-          continue
+      try:
+        value = obj[key]
+      except KeyError:
+        continue
       if isinstance(value, str) or not isinstance(value, Sequence):
         raise TypeError('expected non-string sequence for {!r}'.format(key), obj)
       result.extend(value)
-    return value
+    return result
 
 class Error(Exception):
   """
