@@ -6,7 +6,9 @@
     "ppym": "*"
   },
   "python-dependencies": {
+    "colorama": "",
     "jsonschema": "",
-    "ninja_syntax": ""
+    "ninja_syntax": "",
+    "termcolor": ""
   }
 }
