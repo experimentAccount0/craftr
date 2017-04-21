@@ -476,11 +476,6 @@ class Merge(Mapping):
       result.extend(value)
     return value
 
-class PkgConfigError(Exception):
-  """
-  Raised by #pkg_config().
-  """
-
 class Error(Exception):
   """
   Raised by #error().
@@ -492,3 +487,8 @@ class Error(Exception):
 
   def __str__(self):
     return self.message
+
+class PkgConfigError(Error):
+  """
+  Raised by #pkg_config().
+  """
