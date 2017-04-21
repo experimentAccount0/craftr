@@ -252,20 +252,6 @@ def error(*objects, code=1):
 
   raise Error(' '.join(map(str, objects)), code)
 
-def register_error_handler():
-  """
-  Registers a `sys.excepthook` for the #Error exception type. This function
-  is automatically called from `index.py`.
-  """
-
-  _old_hook = sys.excepthook
-  def craftr_error_hook(et, ev, tb):
-    if et == Error:
-      logger.error(ev)
-      return sys.exit(ev.code)
-    return _old_hook(et, ev, tb)
-  sys.excepthook = craftr_error_hook
-
 class Rule(object):
 
   def __init__(self, name, commands, pool, deps, depfile, cwd, env, description):

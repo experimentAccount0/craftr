@@ -125,7 +125,6 @@ def main():
     craftr.error('action {!r} does not expected targets: {}'.format(action, targets))
 
 exports = craftr
-craftr.register_error_handler()
 main()
 
 @atexit.register
