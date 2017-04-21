@@ -21,12 +21,14 @@ class Formatter(logging.Formatter):
     'DEBUG': {'color': 'yellow'},
   }
 
-  def __init__(self, prefix='==> '):
+  def __init__(self, logger, prefix='==> '):
     self.prefix = prefix
+    self.logger = logger
 
   def format(self, record):
     result = textwrap.indent(record.msg.format(*record.args), ' '*len(self.prefix))
     result = self.prefix + result[len(self.prefix):]
+    result = textwrap.indent(result, '  ' * self.logger.indentation)
     if record.levelname in self.color_map:
       result = term.colored(result, **self.color_map[record.levelname])
     return result
@@ -43,15 +45,13 @@ class LoggerAdapter(logging.LoggerAdapter):
     finally:
       self.indentation -= amount
 
-  def process(self, msg, kwargs):
-    msg = '  ' * self.indentation + msg
-    return (msg, kwargs)
-
 def init_logger():
-  handler = logging.StreamHandler()
-  handler.setFormatter(Formatter(prefix='==> '))
   logger = logging.Logger('craftr')
+  handler = logging.StreamHandler()
   logger.addHandler(handler)
-  return LoggerAdapter(logger, {})
+
+  logger = LoggerAdapter(logger, {})
+  handler.setFormatter(Formatter(logger, prefix='==> '))
+  return logger
 
 exports = init_logger()
