@@ -6,6 +6,7 @@ from os.path import (
     join, split, splitext, isabs, isfile, isdir, islink, ismount, samefile,
     curdir, pardir, sep, pathsep, dirname as dir, basename as base)
 import errno
+import glob as _glob
 import os
 import shutil
 import tempfile as _tempfile
@@ -96,6 +97,18 @@ def getsuffix(subject):
   if index > subject.replace('\\', '/').rfind('/'):
     return subject[index+1:]
   return None
+
+def glob(pattern, parent=None):
+  """
+  Glob pattern matching. Acts always recursive on '**'.
+  """
+
+  if isinstance(pattern, str):
+    pattern = [pattern]
+  result = []
+  for p in pattern:
+    result += _glob.glob(abs(p, parent), recursive=True)
+  return result
 
 def transition(filename, oldbase, newbase):
   """
