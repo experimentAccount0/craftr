@@ -165,7 +165,7 @@ def pkg_config(pkg_name, static=False):
     raise PkgConfigError('{} not installed on this system\n\n{}'.format(
         pkg_name, exc.stderr or exc.stdout))
 
-  product = Product('pkg-config:' + pkg_name, 'cxx_library', version=version)
+  product = Product('pkg-config:' + pkg_name, 'cxx', version=version)
   # TODO: What about a C++ library? Is it okay to use ccflags nevertheless? Or
   #       how do we otherwise find out if the library is a C++ library?
 
@@ -292,14 +292,18 @@ class Product(Mapping):
   A #Product is an extended representation of a build target with additional
   information that is used by target generating functions. It may also
   represent externally produced build information. An example of this is the
-  #pkg_config() function which returns a #Product that does not further specify
-  a #Target but instead represent an external library.
+  #pkg_config() function which returns a #Product that does not represent a
+  #Target but instead an external library.
+
+  Keys in a #Product are automatically prefixed with the product's #type as
+  in `type:key`. This ensures proper namespacing of option values in products
+  of different types.
 
   # Members
   name (str): The name of the product. For automatically generated Products
       from a target generator function, this is usually the target name.
-  types (list of str): A list of product type identifiers. For example, the
-      type identifier for C/C++ libraries is `'cxx_library'`.
+  type (str): A product type identifier. For example, the type identifier
+      for C/C++ libraries is `'cxx'`.
   targets (list of Target): A list of targets that this product wraps.
       Target generator functions may choose to use the outputs of these
       targets as new inputs.
@@ -307,23 +311,27 @@ class Product(Mapping):
       of this information depends on the Product's #types.
   """
 
-  def __init__(self, name, types, targets=None, **data):
-    if isinstance(types, str):
-      types = [types]
-    for item in types:
-      if not isinstance(item, str):
-        raise ValueError('Product type must be str')
+  def __init__(self, name, type, targets=None, **data):
+    argschema.validate('name', name, {'type': str})
+    argschema.validate('type', type, {'type': str})
+    argschema.validate('targets', targets, {'type': [list, None],
+        'items': {'type': Target}})
+    argschema.validate('data.keys()', data.keys(), {'items': {'type': str}})
     self.name = name
-    self.types = types
+    self.type = type
     self.data = data
 
   def __iter__(self):
-    return iter(self.data)
+    for key in self.data:
+      yield self.type + ':' + key
 
   def __len__(self):
     return len(self.data)
 
   def __contains__(self, key):
+    if not key.startswith(self.type + ':'):
+      return False
+    key = key[len(self.type) + 1:]
     return key in self.data
 
   def __eq__(self, other):
@@ -335,29 +343,35 @@ class Product(Mapping):
 
     if not isinstance(other, Product):
       return False
-    if not other.types and self.types:
-      return False
-    for typename in other.types:
-      if typename in self.types:
-        break
-    else:
+    if self.type != other.type:
       return False
     return self.data == other.data
 
   def __repr__(self):
-    return 'Product({!r}, {})'.format(self.name, self.types)
+    return 'Product({!r}, {!r})'.format(self.name, self.type)
 
   def __str__(self):
-    lines = ['Product({!r}, {})'.format(self.name, self.types)]
+    lines = ['Product({!r}, {!r})'.format(self.name, self.type)]
     if self.data: lines[0] += ':'
     for key, value in sorted(self.data.items(), key=itemgetter(0)):
       lines.append('  | {}: {!r}'.format(key, value))
     return '\n'.join(lines)
 
   def __getitem__(self, key):
-    return self.data[key]
+    argschema.validate('key', key, {'type': str})
+    if not key.startswith(self.type + ':'):
+      raise KeyError(key)
+    try:
+      return self.data[key[len(self.type) + 1:]]
+    except KeyError as exc:
+      raise KeyError(key) from exc
 
   def __setitem__(self, key, value):
+    argschema.validate('key', key, {'type': str})
+    if ':' in key and not key.startswith(self.type + ':'):
+      raise KeyError(key)
+    if ':' in key:
+      key = key[len(self.type) + 1]
     self.data[key] = value
 
 class Merge(Mapping):

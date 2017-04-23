@@ -38,7 +38,7 @@ def get_config(python_bin=None):
 def get_library(python_bin=None):
   """
   Uses #get_config() to read the configuration values of the specified
-  Python executable and returns a #Product of type `cxx_library`.
+  Python executable and returns a #Product of type `'cxx'`.
   """
 
   config = get_config(python_bin)
@@ -48,7 +48,7 @@ def get_library(python_bin=None):
   if platform.WINDOWS and 'LIBDIR' not in config:
     config['LIBDIR'] = path.join(config['prefix'], 'libs')
 
-  library = craftr.Product(config['_PYTHON_BIN'], 'cxx_library',
+  library = craftr.Product(config['_PYTHON_BIN'], 'cxx',
     includes = [config['INCLUDEPY']],
     libpath = [config['LIBDIR']],
     version = config['VERSION']
