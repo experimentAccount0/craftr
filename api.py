@@ -312,10 +312,10 @@ class Product(Mapping):
       of this information depends on the Product's #types.
   """
 
-  def __init__(self, name, type, targets=None, meta=None, **data):
+  def __init__(self, name, type, meta=None, targets=None, **data):
     argschema.validate('name', name, {'type': str})
     argschema.validate('type', type, {'type': str})
-    argschema.validate('targets', targets, {'type': [list, None],
+    argschema.validate('targets', targets, {'type': [Sequence, None],
         'items': {'type': Target}})
     argschema.validate('meta', meta, {'type': [None, dict]})
     argschema.validate('data.keys()', data.keys(), {'items': {'type': str}})
@@ -323,6 +323,7 @@ class Product(Mapping):
     self.type = type
     self.meta = meta if meta is not None else {}
     self.data = data
+    self.targets = list(targets) if targets is not None else []
 
   def __iter__(self):
     for key in self.data:
