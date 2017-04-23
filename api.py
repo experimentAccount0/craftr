@@ -20,6 +20,7 @@ buildtype = 'develop'  #: choices are 'develop', 'debug' and 'release'
 options = {}
 rules = {}
 targets = {}
+products = {}
 pools = {}
 cache = {}
 
@@ -134,12 +135,56 @@ def target(name, rule, inputs=(), outputs=(), implicit=(),
     outputs = [path.norm(x) for x in outputs],
     implicit = [path.norm(x) for x in implicit],
     order_only = [path.norm(x) for x in order_only],
-    foreach = foreach
+    foreach = foreach,
   )
   if name is not None:
     targets[name] = target
   rule.targets.append(target)
   return target
+
+def product(name, type, meta=None, **data):
+  """
+  Creates a named #Product instance and returns it. A product represents
+  a collection of information on a build artefact that can be included in
+  other build procedures, usually libraries.
+
+  Note that products can also be created dynamically, which is why the
+  #resolve_product() function should always be used to resolve a product
+  name reference to an actual #Product instance.
+  """
+
+  if name in products:
+    raise ValueError('product {!r} already exists'.format(name))
+  product = Product(name, type, meta, data)
+  products[name] = product
+  return product
+
+def resolve_target(name):
+  if name not in targets:
+    raise ResolveError('target {!r} does not exist'.format(target_name))
+  return targets[name]
+
+def resolve_product(name):
+  """
+  This function is used to search for a #Product in the registered #products
+  dictionary or eventually invoke a dynamic product generation process based
+  on the *name*.
+
+  Currently, only the special `pkg-config:<libname>` names are supported for
+  dynamic product creation.
+  """
+
+  if name in products:
+    return products[name]
+  if name.startswith('pkg-config:'):
+    libname = name[11:]
+    try:
+      product = pkg_config(libname)
+    except PkgConfigError as exc:
+      raise ResolveError(exc)
+    products[name] = product
+    return product
+  raise ResolveError('product {!r} does not exist'.format(name))
 
 def pkg_config(pkg_name, static=False):
   """
@@ -305,25 +350,19 @@ class Product(Mapping):
       from a target generator function, this is usually the target name.
   type (str): A product type identifier. For example, the type identifier
       for C/C++ libraries is `'cxx'`.
-  targets (list of Target): A list of targets that this product wraps.
-      Target generator functions may choose to use the outputs of these
-      targets as new inputs.
   data (dict): A dictionary that contains the product information. The format
       of this information depends on the Product's #types.
   """
 
-  def __init__(self, name, type, meta=None, targets=None, **data):
+  def __init__(self, name, type, meta, data):
     argschema.validate('name', name, {'type': str})
     argschema.validate('type', type, {'type': str})
-    argschema.validate('targets', targets, {'type': [Sequence, None],
-        'items': {'type': Target}})
     argschema.validate('meta', meta, {'type': [None, dict]})
     argschema.validate('data.keys()', data.keys(), {'items': {'type': str}})
     self.name = name
     self.type = type
     self.meta = meta if meta is not None else {}
     self.data = data
-    self.targets = list(targets) if targets is not None else []
 
   def __iter__(self):
     for key in self.data:
@@ -505,6 +544,11 @@ class PkgConfigError(Error):
   Raised by #pkg_config().
   """
 
+class ResolveError(Exception):
+  """
+  Raised when a target or product name could not be resolved.
+  """
+
 def local(*parts):
   """
   Accepts a relative path and returns its absolute representation, assuming
@@ -520,3 +564,42 @@ def buildlocal(*parts):
   """
 
   return path.norm(path.join(*parts), path.abs(builddir))
+
+def split_input_list(inputs):
+  """
+  Accepts as inputs a string or a #Product, or a list mixed of such objects.
+  Separates lists of input files and #Product#s and returns a tuple containung
+  the respective items.
+
+  Strings may be of the format `//<targetname>` in which case they are
+  substituted by the outputs of the referenced target.
+  """
+
+  argschema.validate('inputs', inputs, {'type': [Sequence, str, Product],
+      'items': {'type': [str, Product]}})
+  if isinstance(inputs, (str, Product)):
+    inputs = [inputs]
+
+  files = []
+  products = []
+  for item in inputs:
+    if isinstance(item, str):
+      if item.startswith('//'):
+        # Product existence is optional for inputs.
+        try:
+          product = resolve_product(item[2:])
+        except ResolveError: pass
+        else:
+          products.append(product)
+        # Target existence however is mandatory.
+        target = resolve_target(item[2:])
+        files += target.outputs
+      else:
+        files.append(item)
+    elif isinstance(item, Product):
+      products.append(item)
+      for target in item.targets:
+        files += target.outputs
+    else: assert False
+
+  return files, products
