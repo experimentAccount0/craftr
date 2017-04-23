@@ -504,3 +504,19 @@ class PkgConfigError(Error):
   """
   Raised by #pkg_config().
   """
+
+def local(*parts):
+  """
+  Accepts a relative path and returns its absolute representation, assuming
+  it be relative to the currently executed module.
+  """
+
+  return path.norm(path.join(*parts), require.current.directory)
+
+def buildlocal(*parts):
+  """
+  Accepts a relative path and returns its absolute representation, assuming
+  it be relative to the build output directory specified in #builddir.
+  """
+
+  return path.norm(path.join(*parts), path.abs(builddir))
