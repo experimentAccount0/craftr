@@ -8,10 +8,12 @@ normal execution continue.
 
 craftr = require('./api')
 path = require('./path')
+shell = require('./shell')
 logger = require('./logger')
 
 import atexit
 import argparse
+import os
 import sys
 import textwrap
 
@@ -120,7 +122,14 @@ def main():
       targets.append(option)
 
   if action in ('build', 'clean'):
-    return craftr.error('build/clean currently not implemented')
+    os.chdir(craftr.builddir)
+    args = ['ninja']
+    if action == 'clean':
+      args += ['-t', 'clean']
+    args += targets
+    ret = shell.run(args, check=False).returncode
+    sys.exit(ret)
+
   if targets:
     craftr.error('action {!r} does not expected targets: {}'.format(action, targets))
 
