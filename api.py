@@ -161,7 +161,7 @@ def product(name, type, meta=None, **data):
 
 def resolve_target(name):
   if name not in targets:
-    raise ResolveError('target {!r} does not exist'.format(target_name))
+    raise ResolveError('target {!r} does not exist'.format(name))
   return targets[name]
 
 def resolve_product(name):
@@ -561,9 +561,14 @@ def buildlocal(*parts):
   """
   Accepts a relative path and returns its absolute representation, assuming
   it be relative to the build output directory specified in #builddir.
+
+  If a `:` appears in the path passed to this function, it will be replaced
+  by #path.sep. This is to conveniently support generating a build output
+  directory from a target name,
   """
 
-  return path.norm(path.join(*parts), path.abs(builddir))
+  p = path.join(*parts).replace(':', path.sep)
+  return path.norm(p, path.abs(builddir))
 
 def split_input_list(inputs):
   """
