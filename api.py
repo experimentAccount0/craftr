@@ -165,7 +165,8 @@ def pkg_config(pkg_name, static=False):
     raise PkgConfigError('{} not installed on this system\n\n{}'.format(
         pkg_name, exc.stderr or exc.stdout))
 
-  product = Product('pkg-config:' + pkg_name, 'cxx', version=version)
+  product = Product('pkg-config:' + pkg_name, 'cxx',
+      meta={'name': pkg_name, 'version': version})
   # TODO: What about a C++ library? Is it okay to use ccflags nevertheless? Or
   #       how do we otherwise find out if the library is a C++ library?
 
@@ -311,14 +312,16 @@ class Product(Mapping):
       of this information depends on the Product's #types.
   """
 
-  def __init__(self, name, type, targets=None, **data):
+  def __init__(self, name, type, targets=None, meta=None, **data):
     argschema.validate('name', name, {'type': str})
     argschema.validate('type', type, {'type': str})
     argschema.validate('targets', targets, {'type': [list, None],
         'items': {'type': Target}})
+    argschema.validate('meta', meta, {'type': [None, dict]})
     argschema.validate('data.keys()', data.keys(), {'items': {'type': str}})
     self.name = name
     self.type = type
+    self.meta = meta if meta is not None else {}
     self.data = data
 
   def __iter__(self):
@@ -352,9 +355,13 @@ class Product(Mapping):
 
   def __str__(self):
     lines = ['Product({!r}, {!r})'.format(self.name, self.type)]
-    if self.data: lines[0] += ':'
+    if self.data or self.meta: lines[0] += ':'
     for key, value in sorted(self.data.items(), key=itemgetter(0)):
       lines.append('  | {}: {!r}'.format(key, value))
+    if self.meta:
+      lines.append('  Metadata:')
+    for key, value in sorted(self.meta.items(), key=itemgetter(0)):
+      lines.append('    | {}: {!r}'.format(key, value))
     return '\n'.join(lines)
 
   def __getitem__(self, key):

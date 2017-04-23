@@ -49,9 +49,9 @@ def get_library(python_bin=None):
     config['LIBDIR'] = path.join(config['prefix'], 'libs')
 
   library = craftr.Product(config['_PYTHON_BIN'], 'cxx',
+    meta = {'version': config['VERSION'], 'name': config['_PYTHON_BIN']},
     includes = [config['INCLUDEPY']],
-    libpath = [config['LIBDIR']],
-    version = config['VERSION']
+    libpath = [config['LIBDIR']]
   )
 
   # The name of the Python library is something like "libpython2.7.a",
