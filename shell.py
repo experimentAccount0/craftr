@@ -1,45 +1,27 @@
-# Copyright (c) 2017 Niklas Rosenstein
-#
-# Permission is hereby granted, free of charge, to any person obtaining a copy
-# of this software and associated documentation files (the "Software"), to deal
-# in the Software without restriction, including without limitation the rights
-# to use, copy, modify, merge, publish, distribute, sublicense, and/or sell
-# copies of the Software, and to permit persons to whom the Software is
-# furnished to do so, subject to the following conditions:
-#
-# The above copyright notice and this permission notice shall be included in
-# all copies or substantial portions of the Software.
-#
-# THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
-# IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
-# FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE
-# AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
-# LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
-# OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
-# THE SOFTWARE.
+# Copyright (c) 2017  Niklas Rosenstein
+# All rights reserved.
 
+from subprocess import PIPE, STDOUT
 import os
-import re
 import shlex
 import subprocess
 import sys
-
-from subprocess import PIPE, STDOUT
-
 path = require('./path')
 
+class safe(object):
 
-class safe(str):
-  """
-  If this object is passed to `quote()`, it will not be escaped.
-  """
+  def __init__(self, text):
+    self.text = text
 
-  pass
+  def __repr__(self):
+    return '<shell.safe({1r})>'.format(self.text)
 
+  def __str__(self):
+    return str(self.text)
 
 def split(s):
   """
-  Enhanced implementation of :func:`shlex.split`.
+  Enhanced implementation of #shlex.split().
   """
 
   result = shlex.split(s, posix=(os.name != 'nt'))
@@ -52,15 +34,14 @@ def split(s):
     result = [x[1:-1] if (x and x[0] in quotes and x[-1] in quotes) else x for x in result]
   return result
 
-
 def quote(s, for_ninja=False):
   """
-  Enhanced implementation of :func:`shlex.quote` as it generates single-quotes
+  Enhanced implementation of #shlex.quote() as it generates single-quotes
   on Windows which can lead to problems.
   """
 
   if isinstance(s, safe):
-    return s
+    return str(s)
   if os.name == 'nt' and os.sep == '\\':
     s = s.replace('"', '\\"')
     if re.search('\s', s):
@@ -72,28 +53,37 @@ def quote(s, for_ninja=False):
     s = re.sub(r"'(\$\w+)'", r'\1', s)
   return s
 
+def join(command):
+  return ' '.join(map(quote, command))
 
-def format(fmt, *args, **kwargs):
-  """"
-  Similar to :meth:`str.format`, but this function will escape all arguments
-  with the :func:`quote` function. This is useful to easily generate commands.
-
-  .. code:: python
-
-    >>> format('gcc {} -o {}', 'my source/main.c', 'spaces are bad/main')
-    'gcc "my source/main.c" -o "spaces are bad/main"'
+class _ProcessError(Exception):
+  """
+  Base class that implements the attributes and behaviour of errors
+  that will inherit from this exception class.
   """
 
-  return fmt.format(*map(quote, args), **{k: quote(v) for k, v in kwargs.items()})
+  def __init__(self, process):
+    self.process = process
 
+  @property
+  def returncode(self):
+    return self.process.returncode
 
-def join(cmd, for_ninja=False):
-  """
-  Join a list of strings to a single command string.
-  """
+  @property
+  def cmd(self):
+    return self.process.cmd
 
-  return ' '.join(quote(x, for_ninja=for_ninja) for x in cmd)
+  @property
+  def stdout(self):
+    return self.process.stdout
 
+  @property
+  def stderr(self):
+    return self.process.stderr
+
+  @property
+  def output(self):
+    return self.process.output
 
 def find_program(name):
   """
@@ -108,7 +98,7 @@ def find_program(name):
     it is not executable.
   """
 
-  if path.dirname(name):
+  if path.dir(name):
     name = path.abs(name)
   if path.isabs(name):
     if not path.isfile(name):
@@ -146,7 +136,6 @@ def find_program(name):
     raise PermissionError('{0!r} is not executable'.format(first_candidate))
   raise FileNotFoundError(name)
 
-
 def test_program(name):
   """
   Uses :func:`find_program` to find the path to *name* and returns
@@ -159,37 +148,6 @@ def test_program(name):
     return False
   return True
 
-
-class _ProcessError(Exception):
-  """
-  Base class that implements the attributes and behaviour of errors
-  that will inherit from this exception class.
-  """
-
-  def __init__(self, process):
-    self.process = process
-
-  @property
-  def returncode(self):
-    return self.process.returncode
-
-  @property
-  def cmd(self):
-    return self.process.cmd
-
-  @property
-  def stdout(self):
-    return self.process.stdout
-
-  @property
-  def stderr(self):
-    return self.process.stderr
-
-  @property
-  def output(self):
-    return self.process.output
-
-
 class CalledProcessError(_ProcessError):
   """
   This exception is raised when a process exits with a non-zero
@@ -199,7 +157,6 @@ class CalledProcessError(_ProcessError):
 
   def __str__(self):
     return '{0!r} exited with non-zero exit-code {1}'.format(self.cmd, self.returncode)
-
 
 class TimeoutExpired(_ProcessError):
   """
@@ -215,7 +172,6 @@ class TimeoutExpired(_ProcessError):
 
   def __str__(self):
     return '{0!r} expired timeout of {1} second(s)'.format(self.cmd, self.timeout)
-
 
 class CompletedProcess(object):
   """
@@ -253,9 +209,8 @@ class CompletedProcess(object):
     if self.returncode != 0:
       raise CalledProcessError(self)
 
-
 def run(cmd, *, stdin=None, input=None, stdout=None, stderr=None, shell=False,
-    timeout=None, check=False, cwd=None, encoding=sys.getdefaultencoding()):
+    timeout=None, check=False, cwd=None, env=None, encoding=sys.getdefaultencoding()):
   """
   Run the process with the specified *cmd*. If *cmd* is a list of
   commands and *shell* is True, the list will be automatically converted
@@ -280,6 +235,12 @@ def run(cmd, *, stdin=None, input=None, stdout=None, stderr=None, shell=False,
   elif not shell and isinstance(cmd, str):
     cmd = split(cmd)
 
+  if env is not None:
+    temp = os.environ.copy()
+    temp.update(env)
+    env = temp
+    del temp
+
   if shell:
     # Wrapping the call in a shell invokation will not raise an
     # exception when the file could not actually be executed, thus
@@ -292,7 +253,8 @@ def run(cmd, *, stdin=None, input=None, stdout=None, stderr=None, shell=False,
 
   try:
     popen = subprocess.Popen(
-      cmd, stdin=stdin, stdout=stdout, stderr=stderr, shell=shell, cwd=cwd)
+      cmd, stdin=stdin, stdout=stdout, stderr=stderr, shell=shell,
+      cwd=cwd, env=env)
     stdout, stderr = popen.communicate(input, timeout)
   except subprocess.TimeoutExpired as exc:
     # TimeoutExpired.stderr available only since Python3.5
@@ -316,7 +278,6 @@ def run(cmd, *, stdin=None, input=None, stdout=None, stderr=None, shell=False,
   if check:
     process.check_returncode()
   return process
-
 
 def pipe(*args, merge=True, **kwargs):
   """

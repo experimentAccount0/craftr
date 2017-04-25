@@ -1,26 +1,8 @@
-# Copyright (c) 2017 Niklas Rosenstein
-#
-# Permission is hereby granted, free of charge, to any person obtaining a copy
-# of this software and associated documentation files (the "Software"), to deal
-# in the Software without restriction, including without limitation the rights
-# to use, copy, modify, merge, publish, distribute, sublicense, and/or sell
-# copies of the Software, and to permit persons to whom the Software is
-# furnished to do so, subject to the following conditions:
-#
-# The above copyright notice and this permission notice shall be included in
-# all copies or substantial portions of the Software.
-#
-# THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
-# IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
-# FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE
-# AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
-# LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
-# OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
-# THE SOFTWARE.
+# Copyright (c) 2017  Niklas Rosenstein
+# All rights reserved.
 
 import contextlib
 import sys
-
 
 def flatten(iterable):
   """
@@ -28,7 +10,6 @@ def flatten(iterable):
   """
 
   return [item for subiterable in iterable for item in subiterable]
-
 
 def import_(fqn):
   """
@@ -71,7 +52,6 @@ def import_(fqn):
 
   return result
 
-
 def unique_append(lst, item, id_compare=False):
   if id_compare:
     for x in lst:
@@ -82,18 +62,15 @@ def unique_append(lst, item, id_compare=False):
       return
   lst.append(item)
 
-
 def unique_extend(lst, iterable, id_compare=False):
   for item in iterable:
     unique_append(lst, item, id_compare)
 
-
 def unique_list(iterable, id_compare=False):
   result = []
   for item in iterable:
-    unique_append(result, item)
+    unique_append(result, item, id_compare)
   return result
-
 
 def strip_flags(command, flags):
   """
@@ -124,7 +101,6 @@ def strip_flags(command, flags):
 
   return command
 
-
 @contextlib.contextmanager
 def combine_context(*inputs):
   """
@@ -144,7 +120,6 @@ def combine_context(*inputs):
         raise_later.append(sys.exc_info())
     for exc_type, exc_value, exc_tb in raise_later:
       raise exc_value.with_traceback(exc_tb)
-
 
 def copyfileobj(sfp, dfp, size=None, chunksize=4096):
   """

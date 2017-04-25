@@ -55,7 +55,6 @@ def set_colorize_enabled(enabled):
     _colorama_initalized = True
   reset = termcolor.RESET if (termcolor and _enable_color) else ''
 
-
 def terminal_size(default=(120, 30)):
   """
   Determines the size of the terminal. If the size can not be obtained, returns
@@ -90,7 +89,6 @@ def terminal_size(default=(120, 30)):
     h, w, hp, wp = struct.unpack('HHHH', data)
     return w, h
 
-
 def clear_line():
   """
   Clears out the current line in the terminal completely and resets the
@@ -98,7 +96,6 @@ def clear_line():
   """
 
   print('\r\33[K', end='')
-
 
 def colored(text, color=None, on_color=None, attrs=None):
   """
@@ -115,7 +112,6 @@ def colored(text, color=None, on_color=None, attrs=None):
   if on_color:
     on_color = 'on_' + on_color
   return termcolor.colored(text, color, on_color, attrs)
-
 
 def compile(color=None, on_color=None, attrs=None):
   """
@@ -142,7 +138,6 @@ def compile(color=None, on_color=None, attrs=None):
     res += fmt_str % termcolor.COLORS[color]
 
   return res
-
 
 def format(value, *args, **kwargs):
   """
