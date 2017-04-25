@@ -160,6 +160,10 @@ def product(name, type, meta=None, **data):
   return product
 
 def resolve_target(name):
+  if name.startswith(':'):
+    name = get_current_namespace() + name
+  elif name.startswith('//'):
+    name = name[2:]
   if name not in targets:
     raise ResolveError('target {!r} does not exist'.format(name))
   return targets[name]
@@ -173,6 +177,11 @@ def resolve_product(name):
   Currently, only the special `pkg-config:<libname>` names are supported for
   dynamic product creation.
   """
+
+  if name.startswith(':'):
+    name = get_current_namespace() + name
+  elif name.startswith('//'):
+    name = name[2:]
 
   if name in products:
     return products[name]
@@ -231,13 +240,22 @@ def pkg_config(pkg_name, static=False):
 
   return product
 
-def unique_rule_name(prefix):
+def grn(name, prefix):
   """
   This function can be used in functions that generate build targets if no
   rule name has been specified to retrieve a unique rule name, assuming that
   no call to #rule() follows before the rule with the returned name has been
   created.
+
+  If *name* is specified, it will be returned as-is, unless it does not
+  contain a `:` character, in in which case it is concatenated with the
+  currently executed module's `namespace` variable.
   """
+
+  if name:
+    if ':' not in name:
+      name = get_current_namespace() + ':' + name
+    return name
 
   index = 0
   while True:
@@ -246,6 +264,20 @@ def unique_rule_name(prefix):
       break
     index += 1
   return name
+
+def get_current_namespace():
+  """
+  Returns the value of the `namespace` variable that is specified in the
+  currently executed module, or raises a #RuntimeError if it is not
+  specified.
+  """
+
+  if 'namespace' not in vars(require.current.namespace):
+    raise RuntimeError("Relative target name specified, but currently "
+        "executed module '{}' does not provide a 'namespace' variable.\n"
+        "Please put 'namespace = \"mynamespace\"' at the beginning of "
+        "your Craftr build script.".format(require.current.filename))
+  return require.current.namespace.namespace
 
 def load_cache(builddir=None):
   """
@@ -589,15 +621,15 @@ def split_input_list(inputs):
   products = []
   for item in inputs:
     if isinstance(item, str):
-      if item.startswith('//'):
+      if item.startswith('//') or item.startswith(':'):
         # Product existence is optional for inputs.
         try:
-          product = resolve_product(item[2:])
+          product = resolve_product(item)
         except ResolveError: pass
         else:
           products.append(product)
         # Target existence however is mandatory.
-        target = resolve_target(item[2:])
+        target = resolve_target(item)
         files += target.outputs
       else:
         files.append(item)

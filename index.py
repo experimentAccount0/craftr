@@ -138,6 +138,7 @@ main()
 
 @atexit.register
 def finalize_action():
+  # TODO: Don't execute on exception.
   if craftr.action in ('export', 'reexport'):
     craftr.export()
     craftr.save_cache()
