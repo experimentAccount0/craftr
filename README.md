@@ -28,8 +28,11 @@ installed version into the dependencies).
     $ pip3 --user install node.py
     $ cd myproject/
     $ ppym install craftr --save-dev
+
+It is also recommended to add `nodepy_modules/.bin` to your `PATH`.
+
     $ cat Craftrfile
-    namespace = 'myjavaproject'
+    namespace = 'myproject'
     craftr = require('craftr')
     java = require('craftr/lang/java')
     java.compile(name='classes', src_dir='src')

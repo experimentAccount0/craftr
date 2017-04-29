@@ -245,6 +245,18 @@ def clean(options, builddir):
 
   return build(list(options) + ['--builddir', builddir, '--clean'])
 
+@main.command()
+@click.argument('builddir')
+def switch(builddir):
+  """
+  Updates build directory in the Craftr project cache file.
+  """
+
+  load_build_cache(builddir, error=True)
+  craftr.cache = load_project_cache()
+  craftr.cache['builddir'] = builddir
+  save_project_cache()
+
 if require.main == module:
   try:
     main()
