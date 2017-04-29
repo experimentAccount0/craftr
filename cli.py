@@ -11,99 +11,77 @@ path = require('./path')
 shell = require('./shell')
 logger = require('./logger')
 
-import argparse
+import click
+import json
 import os
 import sys
 import textwrap
 
-def main():
+def load_project_cache():
   """
-  Craftr is a general purpose build-system built on Node.py.
-
-      https://github.com/craftr-build/craftr
-
-  If ACTION is specified, it must be one of the following values:
-
-    \b
-    * build: switch to the build directory and run the build process)
-    * clean: switch to the build directory and clean all or the
-      specified targets.
-    * export: proceed to execute the build script and export the
-      build data.
-    * reexport: similar to `export`, but takes all build options specified
-      during the previous export into account.
-    * run: the default action if none is specified, only run the build
-      script without exporting build information.
-
-  One or more TARGET parameters can only be specified for the `build`
-  and `clean` actions. They must be the names of targets to build or
-  clean.
-
-  KEY=VALUE pairs can always be specified and will be copied into the
-  #craftr.options dictionary. If the =VALUE part is omitted, the value of
-  the specified KEY will be set to the string "true". If only the VALUE
-  part is omitted (thus, the format is KEY= ), the option will be
-  removed from the #craftr.options dictionary.
+  Loads the `.CraftrProjectCache` and returns it.
   """
 
-  prog = path.base(sys.argv[0])
-  usage = '{} [ACTION] [TARGET ...] [KEY=VALUE ...]'.format(prog)
+  if path.isfile('.CraftrProjectCache'):
+    logger.debug('loading project cache ...')
+    with open('.CraftrProjectCache') as fp:
+      return json.load(fp)
+  else:
+    logger.debug('project cache does not exist')
+  return {}
 
-  help_text = textwrap.dedent(main.__doc__)
-  if require.main.namespace.__doc__:
-    help_text = '{}\n\n{}\n\n{}'.format(require.main.namespace.__doc__, '='*60, help_text)
-  help_text = textwrap.indent(help_text, '  ')
+def save_project_cache():
+  """
+  Saves the #craftr.cache dictionary into the `.CraftrProjectCache` file.
+  """
 
-  parser = argparse.ArgumentParser(description=help_text, usage=usage,
-      formatter_class=argparse.RawTextHelpFormatter)
-  parser.add_argument('-b', '--builddir')
-  parser.add_argument('-B', '--backend')
-  parser.add_argument('-t', '--buildtype')
-  parser.add_argument('options', nargs='*')
-  args = parser.parse_args()
+  with open('.CraftrProjectCache', 'w') as fp:
+    logger.debug('saving project cache ...')
+    json.dump(craftr.cache, fp)
 
-  # If the first argument is not a KEY=VALUE pair.
-  action = 'run'
-  if args.options and '=' not in args.options[0]:
-    action = args.options.pop(0)
-  if action not in ('run', 'export', 'reexport', 'build', 'clean'):
-    craftr.error('ACTION must be one of run, export, reexport, build or clean')
+def load_build_cache(builddir, error=False):
+  """
+  Loads the `.CraftrBuildCache` from the specified *builddir*.
+  """
 
-  # Propagate the specified action and build directory and load the cache.
-  craftr.action = action
-  if args.builddir:
-    craftr.builddir = args.builddir
-  craftr.load_cache()
+  filename = path.join(builddir, '.CraftrBuildCache')
+  if os.path.isfile(filename):
+    logger.debug('loading build cache ...')
+    with open(filename) as fp:
+      return json.load(fp)
+  else:
+    if error:
+      craftr.error('"{}" does not exist'.format(filename))
+    logger.debug('build cache does not exist')
+  return {}
 
-  # Re-use the options of the previous export when using 'reexport'.
-  if action == 'reexport':
-    if 'options' in craftr.cache:
-      logger.info('reusing previous build options:')
-      for key, value in craftr.cache['options'].items():
-        logger.info('  {}={}'.format(key, value))
-      craftr.options.update(craftr.cache['options'])
-    if not args.backend and 'backend' in craftr.cache:
-      args.backend = craftr.cache['backend']
-      logger.info('reusing previous backend: {}'.format(args.backend))
-    if not args.buildtype and 'buildtype' in craftr.cache:
-      args.buildtype = craftr.cache['buildtype']
-      logger.info('reusing previous buildtype: {}'.format(args.buildtype))
+def save_build_cache(builddir):
+  """
+  Saves the #craftr.backend, #craftr.buildtype and #craftr.options into the
+  specified *builddir*.
+  """
 
-  if not args.buildtype:
-    args.buildtype = 'develop'
+  cache = {
+    'backend': craftr.backend,
+    'buildtype': craftr.buildtype,
+    'options': craftr.options
+  }
+  filename = path.join(builddir, '.CraftrBuildCache')
+  path.makedirs(path.dir(filename))
+  with open(filename, 'w') as fp:
+    logger.debug('saving build cache ...')
+    json.dump(cache, fp)
 
-  # Propagate the backend now (after eventually re-using the option from
-  # the previous export).
-  if args.backend:
-    craftr.backend = args.backend
-  if args.buildtype:
-    if args.buildtype not in ('debug', 'develop', 'release'):
-      craftr.error('invalid buildtype: {!r}'.format(args.buildtype))
-    craftr.buildtype = args.buildtype
+def parse_options(options, error_remainders=True):
+  """
+  Given a list of command-line arguments that represent build options,
+  parses them into #craftr.options. If *error_remainders* is #True, any
+  arguments that are not in option format will cause a #craftr.Error to be
+  raised, otherwise they will be returned in a list.
+  """
 
-  # Parse all other arguments into options and target names.
-  targets = []
-  for option in args.options:
+  remainders = []
+  for option in options:
     if option in ('-h', '--help'):
       parser.print_help()
       return sys.exit(0)
@@ -118,26 +96,158 @@ def main():
       else:
         craftr.options[key] = value
     else:
-      targets.append(option)
+      if error_remainders:
+        craftr.error('not an option value: "{}"'.format(option))
+      remainders.append(option)
 
-  if action in ('build', 'clean'):
-    os.chdir(craftr.builddir)
-    args = ['ninja']
-    if action == 'clean':
-      args += ['-t', 'clean']
-    args += targets
-    ret = shell.run(args, check=False).returncode
-    sys.exit(ret)
+  return remainders
 
-  if targets:
-    craftr.error('action {!r} does not expected targets: {}'.format(action, targets))
+@click.group()
+def main():
+  """
+  Craftr is a general purpose build-system built on Node.py.
 
+      https://github.com/craftr-build/craftr
+  """
+
+  pass
+
+@main.command()
+@click.argument('options', nargs=-1)
+@click.option('-t', '--buildtype', type=click.Choice(craftr.buildtypes))
+@click.option('-f', '--file', help='The build script to execute. Defaults to ./Craftrfile')
+def run(options, buildtype, file):
+  """
+  Run the build script without exporting build information.
+  """
+
+  craftr.cache = load_project_cache()
+  craftr.action = 'run'
+  parse_options(options)
+  if buildtype:
+    craftr.buildtype = buildtype
   craftr.register_nodepy_extension()
-  require.exec_main('./Craftrfile', current_dir=os.getcwd())
+  try:
+    require.exec_main(file or './Craftrfile', current_dir=os.getcwd())
+  finally:
+    save_project_cache()
 
-  if craftr.action in ('export', 'reexport'):
-    craftr.export()
-    craftr.save_cache()
+@main.command()
+@click.argument('options', nargs=-1)
+@click.option('-b', '--builddir', help='Alternate build directory.')
+@click.option('-B', '--backend', help='Choose the build backend (defaults to ninja)')
+@click.option('-t', '--buildtype', type=click.Choice(craftr.buildtypes))
+@click.option('-f', '--file', help='The build script to execute. Defaults to ./Craftrfile')
+@click.option('-r', '--reexport', is_flag=True, help='Load the options from the previous '
+              'export step. Note that you can use the `reexport` command as a shortcut.')
+def export(options, builddir, backend, buildtype, file, reexport):
+  """
+  Export build information.
+
+  Executes the Craftr build script and export the project to the build
+  directory. The information of the last exported build will be saved
+  in a `.craftr` file in the current working directory.
+  """
+
+  craftr.action = 'export'
+  craftr.cache = load_project_cache()
+
+  if reexport and not builddir:
+    builddir = craftr.cache.get('builddir')
+  if not builddir:
+    builddir = craftr.builddir
+
+  if reexport:
+    cache = load_build_cache(builddir)
+    if cache['options']:
+      logger.info('reusing previous build options:')
+      for key, value in cache['options'].items():
+        logger.info('  {}={}'.format(key, value))
+      craftr.options.update(cache['options'])
+    if not backend:
+      backend = cache['backend']
+      logger.info('reusing previous backend: {}'.format(backend))
+    if not buildtype:
+      buildtype = cache['buildtype']
+      logger.info('reusing previous buildtype: {}'.format(buildtype))
+
+  parse_options(options)
+  if builddir:
+    craftr.builddir = builddir
+  if backend:
+    craftr.backend = backend
+  if buildtype:
+    craftr.buildtype = buildtype
+
+  file = file or './Craftrfile'
+  logger.info('running build script: "{}"'.format(file))
+  craftr.register_nodepy_extension()
+  try:
+    require.exec_main(file or './Craftrfile', current_dir=os.getcwd())
+  finally:
+    save_project_cache()
+    save_build_cache(craftr.builddir)
+  craftr.export()
+
+@main.command()
+@click.argument('options', nargs=-1)
+@click.option('-b', '--builddir', help='Alternate build directory.')
+@click.option('-B', '--backend', help='Choose the build backend (defaults to ninja)')
+@click.option('-t', '--buildtype', type=click.Choice(craftr.buildtypes))
+@click.option('-f', '--file', help='The build script to execute. Defaults to ./Craftrfile')
+def reexport(options, builddir, backend, buildtype, file):
+  """
+  Export build information, taking previous build options into account.
+  """
+
+  return export(list(options) + ['--builddir', builddir, '--backend', backend,
+      '--buildtype', buildtype, '--file', file, '--reexport'])
+
+@main.command()
+@click.argument('options', nargs=-1)
+@click.option('-b', '--builddir', help='Alternate build directory. By default, '
+              'the build directory previously exported to will be used.')
+@click.option('-c', '--clean', is_flag=True, help='Clean the specified targets '
+              'instead of building them. If no targets are specified, all '
+              'targets are cleaned. Note that the `clean` subcommand is an '
+              'alias for this flag.')
+def build(options, builddir, clean):
+  """
+  Invoke the build process.
+
+  You can specify zero, one or more targets that will be built explicitly.
+  If none are specified, all default targets will be built.
+  """
+
+  craftr.action = 'clean' if clean else 'build'
+  craftr.cache = load_project_cache()
+  if not builddir:
+    builddir = craftr.cache.get('builddir', craftr.builddir)
+  if not os.path.isdir(builddir):
+    craftr.error('build directory {!r} does not exist'.format(builddir))
+
+  cache = load_build_cache(builddir, error=True)
+  craftr.options.update(cache['options'])
+  targets = parse_options(options, error_remainders=False)
+  if clean:
+    sys.exit(craftr.clean(builddir, targets))
+  else:
+    sys.exit(craftr.build(builddir, targets))
+
+@main.command()
+@click.argument('options', nargs=-1)
+@click.option('-b', '--builddir', help='Alternate build directory. By default, '
+              'the build directory previously exported to will be used.')
+def clean(options, builddir):
+  """
+  Clean build products.
+  """
+
+  return build(list(options) + ['--builddir', builddir, '--clean'])
 
 if require.main == module:
-  main()
+  try:
+    main()
+  except craftr.Error as exc:
+    logger.error(str(exc))
+    sys.exit(exc.code)

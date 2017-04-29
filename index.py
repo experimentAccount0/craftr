@@ -3,7 +3,6 @@
 
 from collections import Mapping, Sequence
 from operator import itemgetter
-import json
 import textwrap
 import sys
 argschema = require('ppym/lib/argschema')
@@ -16,12 +15,27 @@ shell = require('./shell')
 action = 'run'
 builddir = 'build'
 backend = './backend/ninja'
-buildtype = 'develop'  #: choices are 'develop', 'debug' and 'release'
-options = {}
+buildtype = 'develop'
+buildtypes = ['develop', 'debug', 'release']
 rules = {}
 targets = {}
 products = {}
 pools = {}
+
+#: A dictionary of options that are used by various Craftr components,
+#: backends and build-scripts when using the #option() function. Keys are
+#: usually lowercase and namespaced as `scope:key`. Every export directory
+#: will have a `.CraftrBuildCache` file that will contain the options used
+#: to export the build information as well as other information such as the
+#: #backend and #buildtype.
+options = {}
+
+#: The cache is stored in the project's root directory (the directory from
+#: which `craftr export` is run). It contains project wide information that
+#: might be generated from export to export but needs to stay consistent.
+#: For example, the download location of external files is stored here since
+#: this cached information is valid throughout multiple sessions.
+#: The project cache is stored in a `.CraftrProjectCache` file.
 cache = {}
 
 def option(name, type=str, default=NotImplemented, inherit=True):
@@ -159,11 +173,20 @@ def product(name, type, meta=None, **data):
   products[name] = product
   return product
 
+def isref(name):
+  """
+  Returns #True if *name* is a reference string. Every string that begins
+  with two slashes like `//...` is a reference string.
+  """
+
+  return name.startswith('//')
+
 def resolve_target(name):
+  if not isref(name):
+    raise RuntimeError('not a reference string: "{}"'.format(name))
+  name = name[2:]
   if name.startswith(':'):
     name = get_current_namespace() + name
-  elif name.startswith('//'):
-    name = name[2:]
   if name not in targets:
     raise ResolveError('target {!r} does not exist'.format(name))
   return targets[name]
@@ -178,10 +201,11 @@ def resolve_product(name):
   dynamic product creation.
   """
 
+  if not isref(name):
+    raise RuntimeError('not a reference string: "{}"'.format(name))
+  name = name[2:]
   if name.startswith(':'):
     name = get_current_namespace() + name
-  elif name.startswith('//'):
-    name = name[2:]
 
   if name in products:
     return products[name]
@@ -279,33 +303,6 @@ def get_current_namespace():
         "your Craftr build script.".format(require.current.filename))
   return require.current.namespace.namespace
 
-def load_cache(builddir=None):
-  """
-  Loads the last cache from the specified *builddir* or alternatively the
-  `builddir` option into the #cache dictionary.
-  """
-
-  builddir = builddir or globals()['builddir']
-  cachefile = path.join(builddir, '.craftr_cache')
-  if not path.isfile(cachefile):
-    return
-  with open(cachefile, 'r') as fp:
-    cache.update(json.load(fp))
-
-def save_cache(builddir=None):
-  """
-  Saves the #cache dictionary in JSON format to the `.craftr_cache` file in
-  the specified *builddir*.
-  """
-
-  builddir = builddir or globals()['builddir']
-  cachefile = path.join(builddir, '.craftr_cache')
-  path.makedirs(builddir)
-  cache['backend'] = backend
-  cache['options'] = options
-  with open(cachefile, 'w') as fp:
-    json.dump(cache, fp)
-
 def export(file=None, backend=None):
   """
   Exports a build manifest to *file* using the specified *backend*. If the
@@ -322,6 +319,28 @@ def export(file=None, backend=None):
   if isinstance(backend, str):
     backend = require(backend)
   return backend.export(module.namespace, file)
+
+def build(builddir=None, targets=(), backend=None):
+  """
+  Invokes the `build()` function of the configured backend.
+  """
+
+  if backend is None:
+    backend = globals()['backend']
+  if isinstance(backend, str):
+    backend = require(backend)
+  return backend.build(builddir, targets)
+
+def clean(builddir=None, targets=(), backend=None):
+  """
+  Invokes the `clean()` function of the configured backend.
+  """
+
+  if backend is None:
+    backend = globals()['backend']
+  if isinstance(backend, str):
+    backend = require(backend)
+  return backend.clean(builddir, targets)
 
 def error(*objects, code=1):
   """
@@ -621,7 +640,7 @@ def split_input_list(inputs):
   products = []
   for item in inputs:
     if isinstance(item, str):
-      if item.startswith('//') or item.startswith(':'):
+      if isref(item):
         # Product existence is optional for inputs.
         try:
           product = resolve_product(item)

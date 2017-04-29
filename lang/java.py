@@ -134,6 +134,9 @@ class JavaCompiler:
       output += '.jar'
     inputs, deps = craftr.split_input_list(classfiles)
     if not classdir:
+      if not deps:
+        raise ValueError('no "classdir" specified, pass a Product of type '
+                         '`java` or specify "classdir" explicitly')
       classdir = deps[0].meta['out_dir']
 
     product = craftr.product(name, 'java', {'jar': output},

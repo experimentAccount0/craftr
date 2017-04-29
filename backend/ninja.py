@@ -115,3 +115,13 @@ def prep_commands(commandsdir, commands, rule_name, cwd=None, env=None):
     command = ['cmd', '/c', 'cd', cwd, shell.safe('&&')] + command
 
   return [], command
+
+def build(builddir, targets):
+  args = ['ninja'] + targets
+  logger.debug('running $ ' + shell.join(args))
+  return shell.run(args, cwd=builddir).returncode
+
+def clean(builddir, targets):
+  args = ['ninja', '-t', 'clean'] + targets
+  logger.debug('running $ ' + shell.join(args))
+  return shell.run(args, cwd=builddir).returncode
