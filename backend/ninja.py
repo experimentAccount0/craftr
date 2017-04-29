@@ -70,7 +70,7 @@ class Exporter(object):
         writer.build([outf], rule, [inf], implicit=target.implicit,
             order_only=target.order_only)
     else:
-      writer.build(target.outputs or [self.name], rule, target.inputs,
+      writer.build(target.outputs or [target.name], rule, target.inputs,
           implicit=target.implicit, order_only=target.order_only)
     if target.name and target.outputs and target.name not in target.outputs:
       writer.build(target.name, 'phony', target.outputs)
