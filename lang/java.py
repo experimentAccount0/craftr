@@ -109,7 +109,7 @@ class JavaCompiler:
     craftr.target(name, craftr.rule(name, [command]), srcs, outputs, implicit=implicit)
     return product
 
-  def jar(self, name, classfiles, output=None, classdir=None, entry_point=None):
+  def jar(self, name, classfiles, output=None, classroot=None, entry_point=None):
     """
     Create a JAR file at *output* from the specified *classfiles*. If
     *output* is omitted, it is derived from the target *name*.
@@ -119,7 +119,7 @@ class JavaCompiler:
     classfiles (list of str): A list of class files to include in the JAR
         archive.
     output (str): The name of the output JAR archive (including suffix).
-    classdir (str): The name of the parent directory to take as the root
+    classroot (str): The name of the parent directory to take as the root
         when combining the *classfiles* into a JAR. If not specified, the
         *classfiles* must be a #Product generated with #compile() to take
         the #Product.meta `out_dir` key from.
@@ -133,11 +133,11 @@ class JavaCompiler:
     if not output.endswith('.jar'):
       output += '.jar'
     inputs, deps = craftr.split_input_list(classfiles)
-    if not classdir:
+    if not classroot:
       if not deps:
-        raise ValueError('no "classdir" specified, pass a Product of type '
-                         '`java` or specify "classdir" explicitly')
-      classdir = deps[0].meta['out_dir']
+        raise ValueError('no "classroot" specified, pass a Product of type '
+                         '`java` or specify "classroot" explicitly')
+      classroot = deps[0].meta['out_dir']
 
     product = craftr.product(name, 'java', {'jar': output},
         deps=deps, classpath=[output])
@@ -149,7 +149,7 @@ class JavaCompiler:
     if entry_point:
       command += [entry_point]
     for ifn in inputs:
-      command += ['-C', classdir, path.rel(ifn, classdir)]
+      command += ['-C', classroot, path.rel(ifn, classroot)]
 
     craftr.target(name, craftr.rule(name, [command]), inputs, [output])
     return product
