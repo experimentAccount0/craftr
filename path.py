@@ -46,8 +46,11 @@ def ispar(path):
 
 def norm(path, parent=None):
   path = os.path.normpath(abs(path, parent))
-  if os.name == 'nt':
-    path = path.lower()
+  # Leads to problems eg. with the Java JAR creation because of filenames
+  # that are lowercase even though the original .java source and class name
+  # contain uppercase characters.
+  #if os.name == 'nt':
+  #  path = path.lower()
   return path
 
 def addprefix(subject, prefix):

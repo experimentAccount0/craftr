@@ -3,7 +3,7 @@
 
 import functools
 import re
-craftr = require('../api')
+craftr = require('..')
 path = require('../path')
 
 def get_class_files(sources, source_dir, output_dir):

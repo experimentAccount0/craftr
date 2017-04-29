@@ -5,6 +5,7 @@ from subprocess import PIPE, STDOUT
 import os
 import shlex
 import subprocess
+import re
 import sys
 path = require('./path')
 
