@@ -14,6 +14,7 @@ shell = require('./shell')
 
 action = 'run'
 builddir = 'build'
+datadir = '.CraftrProjectData'
 backend = './backend/ninja'
 buildtype = 'develop'
 buildtypes = ['develop', 'debug', 'release']

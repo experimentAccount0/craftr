@@ -103,14 +103,18 @@ def parse_options(options, error_remainders=True):
   return remainders
 
 @click.group()
-def main():
+@click.option('-v/-q', '--verbose/--quiet', is_flag=True, default=None)
+def main(verbose):
   """
   Craftr is a general purpose build-system built on Node.py.
 
       https://github.com/craftr-build/craftr
   """
 
-  pass
+  if verbose is True:
+    logger.setLevel(logger.DEBUG)
+  elif verbose is False:
+    logger.setLevel(logger.WARNING)
 
 @main.command()
 @click.argument('options', nargs=-1)

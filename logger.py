@@ -35,6 +35,12 @@ class Formatter(logging.Formatter):
 
 class LoggerAdapter(logging.LoggerAdapter):
 
+  DEBUG = logging.DEBUG
+  INFO = logging.INFO
+  WARNING = logging.WARNING
+  ERROR = logging.ERROR
+  CRITICAL = logging.CRITICAL
+
   indentation = 0
 
   @contextlib.contextmanager
@@ -51,6 +57,7 @@ def init_logger():
   logger.addHandler(handler)
 
   logger = LoggerAdapter(logger, {})
+  logger.setLevel(logger.INFO)
   handler.setFormatter(Formatter(logger, prefix='==> '))
   return logger
 
