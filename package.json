@@ -2,6 +2,9 @@
   "name": "craftr",
   "version": "0.0.1",
   "description": "A Pythonic modular build system.",
+  "bin": {
+    "craftr": "cli"
+  },
   "dependencies": {
     "ppym": "*"
   },

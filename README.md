@@ -17,13 +17,6 @@ originally created with, thus enabling very reproducible builds.
 ppym install craftr --save-dev
 ```
 
-Every Craftr build script automatically inherits the command-line interface
-simply by doing
-
-```python
-craftr = require('craftr')
-```
-
 ## Getting Started
 
 You first need to install [Node.py] into a Python 3.4+ version available on
@@ -36,12 +29,10 @@ installed version into the dependencies).
     $ cd myproject/
     $ ppym install craftr --save-dev
     $ cat Craftrfile
-    #!/usr/bin/enb nodepy -L.py
+    namespace = 'myjavaproject'
     craftr = require('craftr')
-    java = require('craftr/lang/cxx')
-
+    java = require('craftr/lang/java')
     java.compile(name='classes', src_dir='src')
-
     java.jar(name='jar', classfiles=':classes', entry_point='Main')
-    $ ./Craftrfile export
-    $ ./Craftrfile build
+    $ craftr export
+    $ craftr build
