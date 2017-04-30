@@ -41,7 +41,7 @@ class Exporter(object):
       if key.startswith('ninja:') and key != 'ninja:width':
         writer.variable(key[6:], value)
     writer.newline()
-    for rule in self.craftr.rules.values():
+    for rule in self.craftr.build_container.rules.values():
       self.write_rule(rule, writer)
 
   def write_rule(self, rule, writer):
@@ -59,7 +59,7 @@ class Exporter(object):
       outputs.extend(target.outputs)
     # Create a phony target for the whole rule if there is not already
     # a target that has the same name.
-    if rule.name not in self.craftr.targets:
+    if rule.name not in self.craftr.build_container.targets:
       writer.build(rule.name, 'phony', outputs)
 
   def write_target(self, target, writer):

@@ -55,14 +55,14 @@ def load_build_cache(builddir, error=False):
     logger.debug('build cache does not exist')
   return {}
 
-def save_build_cache(builddir):
+def save_build_cache(builddir, backend):
   """
   Saves the #craftr.backend, #craftr.buildtype and #craftr.options into the
   specified *builddir*.
   """
 
   cache = {
-    'backend': craftr.backend,
+    'backend': backend,
     'buildtype': craftr.buildtype,
     'options': craftr.options
   }
@@ -118,7 +118,7 @@ def main(verbose):
 
 @main.command()
 @click.argument('options', nargs=-1)
-@click.option('-t', '--buildtype', type=click.Choice(craftr.buildtypes))
+@click.option('-t', '--buildtype', type=click.Choice(['develop', 'debug', 'release']))
 @click.option('-f', '--file', help='The build script to execute. Defaults to ./Craftrfile')
 def run(options, buildtype, file):
   """
@@ -139,9 +139,9 @@ def run(options, buildtype, file):
 @main.command()
 @click.argument('options', nargs=-1)
 @click.option('-b', '--builddir', help='Alternate build directory.')
-@click.option('-B', '--backend', help='Choose the build backend (defaults to ninja)')
-@click.option('-t', '--buildtype', type=click.Choice(craftr.buildtypes))
-@click.option('-f', '--file', help='The build script to execute. Defaults to ./Craftrfile')
+@click.option('-B', '--backend', help='Choose the build backend (defaults to ninja)', default='./backend/ninja')
+@click.option('-t', '--buildtype', type=click.Choice(['develop', 'debug', 'release']))
+@click.option('-f', '--file', help='The build script to execute. Defaults to ./Craftrfile', default='./Craftrfile')
 @click.option('-r', '--reexport', is_flag=True, help='Load the options from the previous '
               'export step. Note that you can use the `reexport` command as a shortcut.')
 def export(options, builddir, backend, buildtype, file, reexport):
@@ -178,26 +178,24 @@ def export(options, builddir, backend, buildtype, file, reexport):
   parse_options(options)
   if builddir:
     craftr.builddir = builddir
-  if backend:
-    craftr.backend = backend
   if buildtype:
     craftr.buildtype = buildtype
+  craftr.backend = require(backend)
 
-  file = file or './Craftrfile'
   logger.info('running build script: "{}"'.format(file))
   craftr.register_nodepy_extension()
   try:
     require.exec_main(file or './Craftrfile', current_dir=os.getcwd())
   finally:
     save_project_cache()
-    save_build_cache(craftr.builddir)
+    save_build_cache(craftr.builddir, backend)
   craftr.export()
 
 @main.command()
 @click.argument('options', nargs=-1)
 @click.option('-b', '--builddir', help='Alternate build directory.')
 @click.option('-B', '--backend', help='Choose the build backend (defaults to ninja)')
-@click.option('-t', '--buildtype', type=click.Choice(craftr.buildtypes))
+@click.option('-t', '--buildtype', type=click.Choice(['develop', 'debug', 'release']))
 @click.option('-f', '--file', help='The build script to execute. Defaults to ./Craftrfile')
 def reexport(options, builddir, backend, buildtype, file):
   """
@@ -231,6 +229,7 @@ def build(options, builddir, clean):
     craftr.error('build directory {!r} does not exist'.format(builddir))
 
   cache = load_build_cache(builddir, error=True)
+  craftr.backend = require(cache['backend'])
   craftr.options.update(cache['options'])
   targets = parse_options(options, error_remainders=False)
   if clean:

@@ -5,6 +5,7 @@ import functools
 import re
 craftr = require('..')
 path = require('../path')
+pyutils = require('../pyutils')
 
 def get_class_files(sources, source_dir, output_dir):
   """
@@ -25,6 +26,11 @@ def get_class_files(sources, source_dir, output_dir):
     classes.append(path.join(output_dir, path.rel(fn, source_dir)))
   return [path.setsuffix(x, '.class') for x in classes]
 
+def get_classpath(*products):
+  if isinstance(product, str):
+    product = craftr.resolve_product(product)
+  return craftr.Merge(products).getlist('classpath')
+
 class JavaCompiler:
   """
   High-level interface for compiling Java source files using `javac`
@@ -32,6 +38,7 @@ class JavaCompiler:
   """
 
   def __init__(self, javac=None, jar=None):
+    self.java = javac or craftr.option('java') or 'java'
     self.javac = javac or craftr.option('javac') or 'javac'
     self.jar_ = jar or craftr.option('jar') or 'jar'
 
@@ -89,7 +96,7 @@ class JavaCompiler:
       srcs = path.glob('**/*.java', src_dir)
       deps = []
     else:
-      srcs, deps = craftr.split_input_list(srcs)
+      srcs, deps = craftr.split_input_list_combined(srcs)
 
     product = craftr.product(name, 'java', {'out_dir': out_dir}, **kwargs)
     options = craftr.Merge([product] + deps, recursive_keys=['deps'])
@@ -132,15 +139,15 @@ class JavaCompiler:
     output = craftr.buildlocal(output or name)
     if not output.endswith('.jar'):
       output += '.jar'
-    inputs, deps = craftr.split_input_list(classfiles)
+    inputs = craftr.Inputs(classfiles)
     if not classroot:
-      if not deps:
+      if not inputs.products:
         raise ValueError('no "classroot" specified, pass a Product of type '
                          '`java` or specify "classroot" explicitly')
-      classroot = deps[0].meta['out_dir']
+      classroot = inputs.products[0].meta['out_dir']
 
     product = craftr.product(name, 'java', {'jar': output},
-        deps=deps, classpath=[output])
+        deps=inputs.products, classpath=[output])
 
     flags = 'cvf'
     if entry_point:
@@ -148,11 +155,41 @@ class JavaCompiler:
     command = [self.jar_, flags, output]
     if entry_point:
       command += [entry_point]
-    for ifn in inputs:
-      command += ['-C', classroot, path.rel(ifn, classroot)]
+    for fn in inputs:
+      command += ['-C', classroot, path.rel(fn, classroot)]
 
-    craftr.target(name, craftr.rule(name, [command]), inputs, [output])
+    craftr.target(name, craftr.rule(name, [command]), list(inputs), [output])
     return product
+
+  def run(self, name, jar=None, classpath=None, entry_point=None, explicit=True):
+    """
+    Create a target that runs a class or JAR.
+    """
+
+    name = craftr.grn(name, 'java_run')
+
+    if jar is not None:
+      if classpath is not None:
+        raise ValueError('"jar" and "classpath" can not be combined')
+      if entry_point is not None:
+        raise ValueError('"jar" and "entry_point" can not be combined')
+      args = ['-jar', jar]
+      inputs = [jar]
+    else:
+      if classpath is None:
+        raise ValueError('need either "jar" or "classpath"')
+      if entry_point is None:
+        raise ValueError('need "entry_point" with "classpath"')
+      inputs = craftr.Inputs(classpath)
+      args = ['-cp', path.pathsep.join(inputs), entry_point]
+
+    print(">>", inputs)
+
+    args.insert(0, self.java)
+    return craftr.target(name, craftr.rule(name, [args]), inputs.getoutputs(), [], explicit=explicit)
+
+  get_classpath = staticmethod(get_classpath)
+  get_class_files = staticmethod(get_class_files)
 
 exports = JavaCompiler()
 craftr.logger.info('Java compiler {!r} version {!r}', *exports.version)
