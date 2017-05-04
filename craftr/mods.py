@@ -14,4 +14,32 @@
 # You should have received a copy of the GNU General Public License
 # along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
-exports = require('./cygwin')
+class _Explicit(object):
+  """
+  Modifier that takes a target or a list of targets as input and marks them
+  as explicit.
+
+  # Example
+
+  ```python
+  from craftr.mods import explicit
+  cxx = load('craftr.lang.cxx')
+
+  test = explicit << cxx.executable(
+    output = 'test',
+    inputs = explicit << cxx.compile_c(sources = glob('src/*.c'))
+  )
+  """
+
+  def __lshift__(self, targets):
+    if isinstance(targets, Target):
+      targets.explicit = True
+    else:
+      for target in targets:
+        target.explicit = True
+    return targets
+
+  __call__ = __lshift__
+
+
+explicit = _Explicit()

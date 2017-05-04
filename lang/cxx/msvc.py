@@ -14,9 +14,9 @@
 # You should have received a copy of the GNU General Public License
 # along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
-from craftr.platform import win32 as platform
-from craftr.utils import pyutils
-from craftr.utils.singleton import Default
+platform = require('../craftr/platform/win32')
+pyutils = require('../craftr/utils/pyutils')
+
 from nr.types.recordclass import recordclass
 from operator import itemgetter
 

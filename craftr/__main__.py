@@ -14,11 +14,19 @@
 # You should have received a copy of the GNU General Public License
 # along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
-from craftr import core
-from craftr.core.config import read_config_file, InvalidConfigError
-from craftr.core.logging import logger
-from craftr.core.session import session, Session, Module, MANIFEST_FILENAMES
-from craftr.utils import path, shell, tty, cson
+core = require('./core')
+read_config_file = core.config.read_config_file
+InvalidConfigError = core.config.InvalidConfigError
+
+logger = require('./core/logging').logger
+require.symbols('./core/session', 'session Session Module MANIFEST_FILENAMES')
+path = require('./utils/path')
+shell = require('./utils/shell')
+tty = require('./utils/tty')
+cson = require('./utils/cson')
+defaults = require('./defaults')
+targetbuilder = require('./targetbuilder')
+
 from operator import attrgetter
 from nr.types.version import Version, VersionCriteria
 
@@ -27,8 +35,6 @@ import argparse
 import atexit
 import collections
 import configparser
-import craftr.defaults
-import craftr.targetbuilder
 import functools
 import json
 import os
@@ -309,8 +315,8 @@ class BuildCommand(BaseCommand):
       if not args.name:
         help('craftr')
         return 0
-      if args.name in vars(craftr.defaults):
-        help(getattr(craftr.defaults, args.name))
+      if args.name in vars(defaults):
+        help(getattr(defaults, args.name))
         return 0
       # Check if we have an absolute symbol reference.
       if ':' in args.name:
@@ -402,7 +408,7 @@ class BuildCommand(BaseCommand):
       for error in exc.format_errors():
         logger.error(error)
       return 1
-    except craftr.defaults.ModuleError as exc:
+    except defaults.ModuleError as exc:
       logger.error('error:', exc)
       return 1
     finally:
@@ -598,7 +604,7 @@ class BuildCommand(BaseCommand):
       if not version:
         version = max(available_modules[module_name].keys())
 
-      target_name = craftr.targetbuilder.get_full_name(
+      target_name = targetbuilder.get_full_name(
           target_name, module_name=module_name, version=version)
       if target_name not in available_targets:
         logger.error('no such target: {}'.format(target_name))

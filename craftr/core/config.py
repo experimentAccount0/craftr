@@ -14,8 +14,8 @@
 # You should have received a copy of the GNU General Public License
 # along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
-from craftr.core.logging import logger
-from craftr.utils import path
+logger = require('./logging').logger
+path = require('../utils/path')
 
 import configparser
 import re

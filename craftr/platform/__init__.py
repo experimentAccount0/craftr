@@ -16,9 +16,9 @@
 
 import sys
 
-from . import cygwin as _cygwin
+_cygwin = require('./cygwin')
 if _cygwin.name is not None:
-  from .cygwin import *
+  exports = _cygwin
 else:
-  # I shall burn in hell for this.
-  exec('from .' + sys.platform + ' import *', globals(), locals())
+  exports = require('./' + sys.platform)
+

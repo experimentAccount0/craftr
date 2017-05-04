@@ -16,8 +16,9 @@
 
 __all__ = ['external_file', 'external_archive']
 
-from craftr.defaults import buildlocal, gtn, logger, session, Framework, path, shell
-from craftr.utils import httputils, pyutils
+require.symbols('./defaults', 'gtn logger session Framework path shell')
+httputils = require('./utils/httputils')
+pyutils = require('./utils/pyutils')
 
 import nr.misc.archive
 

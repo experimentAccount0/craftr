@@ -20,10 +20,12 @@
 Provides the :class:`TargetBuilder` and :class:`Framework` classes.
 """
 
-from craftr.core import build
-from craftr.core.logging import logger
-from craftr.core.session import session
-from craftr.utils import argspec, pyutils
+build = require('./core/build')
+logging = require('./core/logging').logger
+session = require('./core/session').session
+argspec = require('./utils/argspec')
+pyutils = require('./utils/pyutils')
+
 from nr.py.bytecode import get_assigned_name
 from nr.types.version import Version
 

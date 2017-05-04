@@ -14,8 +14,9 @@
 # You should have received a copy of the GNU General Public License
 # along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
-from craftr.utils import argspec
-from craftr.utils import path
+argspec = require('./argspec')
+path = require('./path')
+
 from urllib.error import URLError, HTTPError
 
 import cgi

@@ -20,12 +20,13 @@
 This module provides all the API to generate a Ninja build manifest.
 """
 
-from craftr import platform
-from craftr.utils import argspec
-from craftr.utils import path
-from craftr.utils import pyutils
-from craftr.utils import shell
-from craftr.utils.singleton import Default
+platform = require('../platform')
+argspec = require('../utils/argspec')
+path = require('../utils/path')
+pyutils = require('../utils/pyutils')
+shell = require('../utils/shell')
+Default = require('../utils/singleton').Default
+
 from ninja_syntax import Writer as NinjaWriter
 
 import abc

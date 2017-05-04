@@ -41,10 +41,11 @@ Example manifest:
   }
 """
 
-from craftr.core.logging import logger
-from craftr.utils import httputils
-from craftr.utils import path
-from craftr.utils import pyutils
+logger = require('./logging').logger
+httputils = require('../utils/httputils')
+path = require('../utils/path')
+pyutils = require('../utils/pyutils')
+
 from nr.types.recordclass import recordclass
 from nr.types.version import Version, VersionCriteria
 
@@ -295,14 +296,9 @@ class Manifest(recordclass):
       if isinstance(value, str):
         value = {"type": value}
       type_name = value.pop('type')
-      if '.' not in type_name:
-        type_name = __name__ + '._aliases.' + type_name
-      try:
-        option_type = pyutils.import_(type_name)
-      except ImportError:
-        option_type = None
-      if not isinstance(option_type, type) or not issubclass(option_type, BaseOption):
+      if not hasattr(_aliases, type_name):
         raise Manifest.Invalid('invalid option type: {!r}'.format(type_name))
+      option_type = getattr(_aliases, type_name)
       try:
         data['options'][key] = option_type(key, **value)
       except TypeError as exc:

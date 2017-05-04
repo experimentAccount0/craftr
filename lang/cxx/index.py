@@ -14,25 +14,27 @@
 # You should have received a copy of the GNU General Public License
 # along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
+require.symbols('../craftr/defaults')
+
 if options.toolkit.startswith('msvc') or options.toolkit.startswith('clang-cl'):
-  module = 'craftr.lang.cxx.msvc'
+  module = './msvc'
 elif options.toolkit.startswith('llvm') or options.toolkit.startswith('gcc') \
     or options.toolkit.startswith('clang'):
-  module = 'craftr.lang.cxx.common'
+  module = './common'
 elif options.toolkit.startswith('craftr:'):
   module = options.toolkit[7:]
 elif options.toolkit:
   raise EnvironmentError('unsupported toolkit: {}'.format(options.toolkit))
 elif platform.name == 'win':
-  module = 'craftr.lang.cxx.msvc'
+  module = './msvc'
 else:
-  module = 'craftr.lang.cxx.common'
+  module = './common'
 
 session.options.setdefault('{}.toolkit'.format(module), options.toolkit)
 
 logger.info('Loading CXX Toolkit "{0}" (with {0}.toolkit="{1}")'.format(module, options.toolkit))
 with logger.indent():
-  cxc = load(module).cxc
+  cxc = require(module).cxc
   logger.info('cxc.name="{}"'.format(cxc.name))
   logger.info('cxc.target_arch="{}"'.format(cxc.target_arch))
   logger.info('cxc.version="{}"'.format(cxc.version))

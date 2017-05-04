@@ -1,0 +1,2 @@
+nodepy_modules\craftr\.nodepy-link
+nodepy_modules/.bin\craftr.exe

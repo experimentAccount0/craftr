@@ -1,5 +1,12 @@
 # v2.0.1 (development)
 
+Changes
+
+- Craftr now uses [Node.py] and installations via Pip now install Node.py,
+  and then install Craftr via PPYM
+
+[Node.py]: https://github,com/nodepy/nodepy
+
 Bugfixes
 
 - Fix #177: German MSVC Tools can not be detected

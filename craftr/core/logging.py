@@ -14,7 +14,7 @@
 # You should have received a copy of the GNU General Public License
 # along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
-from craftr.utils import tty
+tty = require('../utils/tty')
 
 import abc
 import contextlib
@@ -103,7 +103,7 @@ class DefaultLogger(BaseLogger):
     self._last_module_name = None
 
   def log(self, level, *objects, sep=' ', end='\n', indent=0):
-    from craftr.core.session import session
+    session = require('./session').session
     module = session.module if session else None
     if level < self._level:
       return

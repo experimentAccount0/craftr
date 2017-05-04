@@ -22,10 +22,14 @@ process of Craftr modules and contains all the important root datastructures
 for the meta build process (such as a :class:`craftr.core.build.Graph`).
 """
 
-from craftr.core import build, manifest, renames
-from craftr.core.logging import logger
-from craftr.core.manifest import Manifest
-from craftr.utils import argspec, path
+build = require('./build')
+logger = require('./logging').logger
+manifest = require('./manifest')
+Manifest = manifest.Manifest
+renames = require('./renames')
+argspec = require('../utils/argspec')
+path = require('../utils/path')
+
 from nr.types.version import Version, VersionCriteria
 
 import json
@@ -227,115 +231,6 @@ class Session(object):
       logger.debug('created temporary directory:', self._tempdir)
     return self._tempdir
 
-  def parse_manifest(self, filename):
-    """
-    Parse a manifest by filename and add register the module to the module
-    cache. Returns the :class:`Module` object. If the manifest has already
-    been parsed, it will not be re-parsed.
-
-    :raise Manifest.Invalid: If the manifest is invalid.
-    :return: :const:`None` if the manifest is a duplicate of an already
-      parsed manifest (determined by name and version), otherwise the
-      :class:`Module` object for the manifest's module.
-    """
-
-    filename = path.norm(path.abs(filename))
-    if filename in self._manifest_cache:
-      manifest = self._manifest_cache[filename]
-      return self.find_module(manifest.name, manifest.version)
-
-    manifest = Manifest.parse(filename)
-    self._manifest_cache[filename] = manifest
-    versions = self.modules.setdefault(manifest.name, {})
-    if manifest.version in versions:
-      other = versions[manifest.version].manifest.filename
-      logger.debug('multiple occurences of "{}-{}" found\n'
-          '  - {}\n  - {}'.format(manifest.name, manifest.version, filename, other))
-      module = None
-    else:
-      logger.debug('parsed manifest: {}-{} ({})'.format(
-          manifest.name, manifest.version, filename))
-      module = Module(path.dirname(filename), manifest)
-      versions[manifest.version] = module
-
-    return module
-
-  def update_manifest_cache(self, force=False):
-    if not self._refresh_cache and not force:
-      return
-    self._refresh_cache = False
-
-    for directory in self.path:
-      choices = []
-      choices.extend([path.join(directory, x) for x in MANIFEST_FILENAMES])
-      for item in path.easy_listdir(directory):
-        choices.extend([path.join(directory, item, x) for x in MANIFEST_FILENAMES])
-        choices.extend([path.join(directory, item, 'craftr', x) for x in MANIFEST_FILENAMES])
-
-      for filename in map(path.norm, choices):
-        if filename in self._manifest_cache:
-          continue  # don't parse a manifest that we already parsed
-        if not path.isfile(filename):
-          continue
-        try:
-          self.parse_manifest(filename)
-        except Manifest.Invalid as exc:
-          logger.warn('invalid manifest found:', filename)
-          logger.warn(exc, indent=1)
-
-  def find_module(self, name, version, resolve_preferred_version=True):
-    """
-    Finds a module in the :attr:`path` matching the specified *name* and
-    *version*.
-
-    :param name: The name of the module.
-    :param version: A :class:`VersionCriteria`, :class:`Version` or string
-      in a VersionCritiera format.
-    :param resolve_preferred_version: If this parameter is True (default)
-      and a preferred version is specified in :attr:`preferred_versions`,
-      that preferred version is loaded or :class:`ModuleNotFound` is raised.
-    :raise ModuleNotFound: If the module can not be found.
-    :return: :class:`Module`
-    """
-
-    argspec.validate('name', name, {'type': str})
-    argspec.validate('version', version, {'type': [str, Version, VersionCriteria]})
-
-    if name in renames.renames:
-      logger.warn('"{}" is deprecated, use "{}" instead'.format(
-          name, renames.renames[name]))
-      name = renames.renames[name]
-
-    if isinstance(version, str):
-      try:
-        version = Version(version)
-      except ValueError as exc:
-        version = VersionCriteria(version)
-
-    if session.module and resolve_preferred_version:
-      data = self.preferred_versions.get(session.module.manifest.name)
-      if data is not None:
-        versions = data.get(str(session.module.manifest.version))
-        if versions is not None:
-          preferred_version = versions.get(name)
-          if preferred_version is not None:
-            version = Version(preferred_version)
-            logger.debug('note: loading preferred version {} of module "{}" '
-              'requested by module "{}"'.format(version, name, session.module.ident))
-
-    self.update_manifest_cache()
-    if name in self.modules:
-      if isinstance(version, Version):
-        if version in self.modules[name]:
-          return self.modules[name][version]
-        raise ModuleNotFound(name, version)
-      for module in sorted(self.modules[name].values(),
-          key=lambda x: x.manifest.version, reverse=True):
-        if version(module.manifest.version):
-          return module
-
-    raise ModuleNotFound(name, version)
-
 
 class Module(object):
   """
@@ -480,7 +375,7 @@ class Module(object):
     self.dependent_files.append(self.manifest.filename)
     self.dependent_files.append(script_fn)
 
-    from craftr.defaults import ModuleReturn
+    ModuleReturn = require('../defaults').ModuleReturn
 
     vars(self.namespace).update(self.get_init_globals())
     self.namespace.__file__ = script_fn
@@ -500,7 +395,7 @@ class Module(object):
     build script.
     """
 
-    from craftr import defaults
+    defaults = require('../defaults')
     result = {}
     for key, value in vars(defaults).items():
       if not key.startswith('_'):

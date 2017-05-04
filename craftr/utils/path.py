@@ -14,7 +14,7 @@
 # You should have received a copy of the GNU General Public License
 # along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
-from craftr.utils import argspec
+argspec = require('./argspec')
 from os import sep, pathsep, curdir, pardir, getcwd
 from os.path import exists, isdir, isfile, isabs, abspath as abs
 from os.path import join, split, dirname, basename, expanduser

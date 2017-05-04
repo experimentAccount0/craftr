@@ -21,13 +21,15 @@ This module provides the default global namespace for Craftr modules. Names
 starting with an underscore will be ignored.
 """
 
-from craftr.core import build as _build
-from craftr.core.logging import logger
-from craftr.core.manifest import Namespace
-from craftr.core.session import session, ModuleNotFound
-from craftr.utils import path, shell
-from craftr.targetbuilder import gtn, TargetBuilder, Framework
-from craftr import platform
+_build = require('./core/build')
+logger = require('./core/logging').logger
+Namespace = require('./core/manifest').Namespace
+require.symbols('./core/session', 'session ModuleNotFound')
+path = require('./utils/path')
+shell = require('./utils/shell')
+require.symbols('./targetbuilder', 'gtn TargetBuilder Framework')
+platform = require('./platform')
+
 from nr.types.singleton import Default
 
 import builtins as _builtins
@@ -434,7 +436,7 @@ def append_PATH(*paths):
   return result
 
 
-from craftr.loaders import pkg_config, external_file, external_archive
+require.symbols('./loaders', 'pkg_config external_file external_archive')
 
 
 # Backwards compatibility < 2.0.0dev6

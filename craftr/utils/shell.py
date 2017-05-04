@@ -14,14 +14,16 @@
 # You should have received a copy of the GNU General Public License
 # along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
+path = require('./path')
+
+from subprocess import PIPE, STDOUT
+
 import os
 import re
 import shlex
 import subprocess
 import sys
 
-from . import path
-from subprocess import PIPE, STDOUT
 
 class safe(str):
   """

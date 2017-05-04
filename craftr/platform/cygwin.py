@@ -17,7 +17,7 @@
 Platform MSYS2 and Cygwin.
 """
 
-from craftr.utils import path
+path = require('../utils/path')
 
 import os
 import sys
