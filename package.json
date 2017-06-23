@@ -1,0 +1,11 @@
+{
+  "name": "craftr",
+  "version": "3.0.0",
+  "description": "Language-agnostic build system based on Ninja and Python.",
+  "author": "Niklas Rosenstein <rosensteinniklas@gmail.com>",
+  "license": "MIT",
+  "main": "main",
+  "extensions": [
+    "!require-import-syntax"
+  ]
+}
