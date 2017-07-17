@@ -30,7 +30,7 @@ def main(ctx, version, install_ninja):
 @click.pass_context
 def gen(ctx, file):
   """
-  Generate the build manifest needed to build.
+  Generate the build manifest.
   """
 
   ninja_version = ninja.get_version()

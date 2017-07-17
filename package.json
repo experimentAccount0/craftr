@@ -14,5 +14,8 @@
   "python-dependencies": {
     "click": ">=6.7",
     "requests": ">=2.18.1"
+  },
+  "dev-dependencies": {
+    "@NiklasRosenstein/yassg": "git+https://github.com/NiklasRosenstein/yassg.git"
   }
 }
