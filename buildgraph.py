@@ -43,6 +43,13 @@ class TargetReference:
       left = left[2:]
     return cls(left or None, right)
 
+  @classmethod
+  def accept_param(cls, value, param_name):
+    if isinstance(value, str):
+      return TargetReference.from_string(value)
+    elif not isinstance(value, cls):
+      raise ValueError('{} expected str or TargetReference'.format(param_name))
+
   def __init__(self, scope, name):
     if not isinstance(scope, str) and scope is not None:
       raise TypeError('TargetReference.scope must be str or None')
@@ -70,6 +77,9 @@ class TargetReference:
       return (other.scope, other.name) == (self.scope, self.name)
     return False
 
+  def __hash__(self):
+    return hash(self.scope, self.name)
+
 
 class Target:
   """
@@ -78,9 +88,48 @@ class Target:
   be subclassed so they can implement #generate_actions().
 
   # Members
-  name (TargetReference): The full-qualified name of the target as a
-    #TargetReference object.
+  name (TargetReference)
+  deps (list of TargetReference)
+  visible_deps (None, list of TargetReference)
   """
 
-  def __init__(self, name, deps):
-    pass
+  def __init__(self, name, deps, visible_deps=None):
+    """
+    # Parameters
+    name (str, TargetReference)
+    deps (list of (str, TargetReference))
+    visible_deps (None, list of (str, TargetReference))
+    """
+
+    self.name = TargetReference.accept_param(name, 'Target.name')
+    self.deps = []
+    for dep in deps:
+      self.deps.append(TargetReference.accept_param(dep, 'Target.deps[i]'))
+
+    if visible_deps is None:
+      self.visible_deps = None
+    else:
+      self.visible_deps = []
+      for dep in visible_deps:
+        self.visible_deps.append(TargetReference.accept_param(dep, 'Target.visible_deps[i]'))
+
+  def get_visible_deps(self):
+    """
+    Returns the actual visible dependencies of the target. This is the same
+    as #visible_deps, but falls back to #deps if #visible_deps is #None.
+    """
+
+    if self.visible_deps is None:
+      return self.deps
+    else:
+      return self.visible_deps
+
+  def generate_actions(self, target_graph, action_graph):
+    """
+    This function must be implemented by #Target subclasses to generate
+    one or more #Action#s for this target and place it into the
+    *action_graph*. This graph can then be turned into an executable
+    build graph.
+    """
+
+    raise NotImplementedError

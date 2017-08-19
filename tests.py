@@ -19,7 +19,7 @@
 # SOFTWARE.
 
 from nose.tools import *
-import {TargetReference} from './buildgraph'
+import {Target, TargetReference} from './buildgraph'
 
 
 def test_TargetReference_from_string():
@@ -38,6 +38,9 @@ def test_TargetReference_from_string():
 def test_TargetReference___str__():
   assert_equals(str(TargetReference(None, 'hello')), ':hello')
   assert_equals(str(TargetReference('scopename', 'hello')), '//scopename:hello')
+
+
+def test_TargetReference___init__():
   with assert_raises(TypeError):
     TargetReference('scopename', None)
   with assert_raises(ValueError):
@@ -48,3 +51,11 @@ def test_TargetReference___str__():
     TargetReference('', '')
   with assert_raises(TypeError):
     TargetReference(None, None)
+  TargetReference(None, 'hello')
+  TargetReference('thescope', 'hello')
+
+
+def test_Target___init__():
+  target = Target('//myscope/foobar:targetname', ['//libs/curl:curl'])
+  assert_equals(target.name, TargetReference('myscope/foobar', 'targetname'))
+  assert_equals(target.deps[0], TargetReference('libs/curl', 'curl'))
