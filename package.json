@@ -8,6 +8,6 @@
     "!require-import-syntax"
   ],
   "dev-dependencies": {
-    "@nodepy/nose": "~0.0.2"
+    "@nodepy/nose": "~0.0.3"
   }
 }

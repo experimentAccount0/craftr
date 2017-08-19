@@ -18,7 +18,6 @@
 # OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
 # SOFTWARE.
 
-
 class TargetReference:
   """
   Represents a reference to another target in the build graph. Usually it is
@@ -102,6 +101,9 @@ class Target:
     """
 
     self.name = TargetReference.accept_param(name, 'Target.name')
+    if not self.name.scope:
+      raise ValueError('Target.name must have a scope')
+
     self.deps = []
     for dep in deps:
       self.deps.append(TargetReference.accept_param(dep, 'Target.deps[i]'))
