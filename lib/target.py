@@ -90,9 +90,10 @@ class Target:
   name (TargetReference)
   deps (list of TargetReference)
   visible_deps (None, list of TargetReference)
+  translator (None, GraphTranslator)
   """
 
-  def __init__(self, name, deps, visible_deps=None):
+  def __init__(self, name, deps=(), visible_deps=None):
     """
     # Parameters
     name (str, TargetReference)
@@ -115,6 +116,8 @@ class Target:
       for dep in visible_deps:
         self.visible_deps.append(TargetReference.accept_param(dep, 'Target.visible_deps[i]'))
 
+    self.translator = None
+
   def get_visible_deps(self):
     """
     Returns the actual visible dependencies of the target. This is the same
@@ -126,7 +129,16 @@ class Target:
     else:
       return self.visible_deps
 
-  def generate_actions(self, target_graph, action_graph):
+  def prepare_translation(self, translator):
+    """
+    Called to initialize the translation of targets to actions. A
+    #GraphTranslator instance is passed to this #Target to be owned
+    by it.
+    """
+
+    self.translator = translator
+
+  def generate_actions(self, graph):
     """
     This function must be implemented by #Target subclasses to generate
     one or more #Action#s for this target and place it into the
@@ -134,4 +146,16 @@ class Target:
     build graph.
     """
 
+    deps = graph.evaluate_deps(self)
+    for dep in deps:
+      if isinstance(dep, CxxLibrary):
+        libs.append(dep.filename)
+      # ...
+
+    action = graph.new_action(
+
     raise NotImplementedError
+
+
+__all__ = ['TargetReference', 'Target']
+import {Action} from './action'

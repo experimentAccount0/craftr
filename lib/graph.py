@@ -18,44 +18,11 @@
 # OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
 # SOFTWARE.
 
-class Action:
+class GraphTranslator:
   """
-  """
-
-  def __init__(self, source, name, deps=()):
-    """
-    # Parameters
-    source (Target)
-    name (None, str)
-    deps (list of Action)
-    """
-
-    if not isinstance(source, Target):
-      raise TypeError('Action.source must be a Target')
-    self.source = source
-
-    if not isinstance(name, str):
-      raise TypeError('ACtion.name must be a string')
-    self.name = name
-
-    self.deps = list(deps)
-    for dep in self.deps:
-      if not isinstance(dep, Action):
-        raise TypeError('Action.deps[i] must be an Action')
-
-  def __repr__(self):
-    return '<{} "{}::{}">'.format(type(self).__name__, self.source.name, self.name)
-
-
-class CommandAction(Action):
-  """
-  This action describes one or a series of system commands.
+  This class represents the target and action graph and is used mainly during
+  the translation from targets to actions.
   """
 
-  pass
-
-
-
-
-__all__ = ['Action']
-import {Target} from './target'
+  def __init__(self):
+    self.targets = {}
