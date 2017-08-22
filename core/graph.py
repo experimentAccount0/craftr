@@ -49,9 +49,28 @@ class Scope:
     self.name = name
     self.directory = directory
     self.targets = {}
+    self.pools = {}
 
   def __repr__(self):
     return '<Scope {!r}>'.format(self.name)
+
+  def new_target(self, target_type: typing.Type['Target'], **kwargs) -> 'Target':
+    target = target_type(scope=self, **kwargs)
+    assert target.scope() is self
+    if target.name in self.targets:
+      msg = 'target {!r} already in scope {!r}'.format(target.name, self.name)
+      raise ValueError(msg)
+    self.targets[target.name] = target
+    return target
+
+  def new_pool(self, name: str, depth: int) -> 'Pool':
+    pool = Pool(scope=self, name=name, depth=depth)
+    assert pool.scope() is self
+    if pool.name in self.pools:
+      msg = 'pool {!r} already in scope {!r}'.format(pool.name, self.name)
+      raise ValueError(msg)
+    self.pools[pool.name] = pool
+    return pool
 
 
 class Pool:
@@ -100,16 +119,27 @@ class Target(metaclass=abc.ABCMeta):
 
   def __init__(self, scope: Scope, name: str, deps: typing.List['Target'],
                      visible_deps: typing.Optional[typing.List['Target']],
-                     pool: typing.Optional['Pool'] = None):
+                     pool: typing.Optional['Pool'] = None, **kwargs):
     self.scope = reqref(scope)
     self.name = name
     self.deps = deps[:]
     self.visible_deps = self.deps if visible_deps is None else visible_deps[:]
     self.actions = {}
+    self.init_target(**kwargs)
 
   def __repr__(self) -> str:
-    ref = TargetRef(self.scope, self.name)
-    return '<{} "{}">'.format(type(self).__name__, ref)
+    return '<{} "{}">'.format(type(self).__name__, self.ref)
+
+  @property
+  def ref(self) -> TargetRef:
+    return TargetRef(self.scope().name, self.name)
+
+  @abc.abstractmethod
+  def init_target(self, **kwargs):
+    """
+    The additional keyword parameters passed to the target constructor will be
+    passed to this method from #__init__().
+    """
 
   @abc.abstractmethod
   def translate(self, session: 'Session') -> None:
@@ -237,6 +267,10 @@ class ScopeMismatchError(RuntimeError):
     return '{}: {!r} <==> {!r}'.format(self.scope_name, self.dir_a, self.dir_b)
 
 
+class NoSuchTargetError(Exception):
+  pass
+
+
 class Session:
   """
   The Session is the central object that manages the build process and all of
@@ -251,7 +285,7 @@ class Session:
     self.scopestack = []
 
   def __repr__(self) -> str:
-    return '<Session target:{}>'.format(self.target)
+    return '<Session target={!r}>'.format(self.target)
 
   def compute_action_key(self, action: Action) -> str:
     """
@@ -325,3 +359,43 @@ class Session:
   @property
   def current_scope(self):
     return self.scopestack[-1] if self.scopestack else None
+
+  def find_target(self, ref: typing.Union[str, TargetRef]) -> Target:
+    """
+    Finds a target by a target reference string or #TargetRef object. If the
+    target does not exist, a #NoSuchTargetError is raised. Relative references
+    will be resolved relative to the current scope.
+    """
+
+    if isinstance(ref, str):
+      ref = TargetRef.from_str(ref)
+
+    if not ref.scope:
+      ref.scope = self.current_scope.name
+    if ref.scope not in self.scopes:
+      raise NoSuchTargetError(ref)
+    scope = self.scopes[ref.scope]
+    try:
+      return scope.targets[ref.name]
+    except KeyError:
+      raise NoSuchTargetError(ref)
+
+  def find_pool(self, ref: typing.Union[str, TargetRef]) -> Pool:
+    """
+    Finds a pool by a target reference string or #TargetRef object. If the
+    target does not exist, a #NoSuchTargetError is raised. Relative references
+    will be resolved relative to the current scope.
+    """
+
+    if isinstance(ref, str):
+      ref = TargetRef.from_str(ref)
+
+    if not ref.scope:
+      ref.scope = self.current_scope.name
+    if ref.scope not in self.scopes:
+      raise NoSuchTargetError(ref)
+    scope = self.scopes[ref.scope]
+    try:
+      return scope.pools[ref.name]
+    except KeyError:
+      raise NoSuchTargetError(ref)

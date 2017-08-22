@@ -65,6 +65,8 @@ class TargetRef:
       raise ValueError('parameter "name" can not be empty')
     if not scope and scope is not None:
       raise ValueError('parameter "scope" must be None or non-empty string')
+    if scope and not isinstance(scope, str):
+      raise TypeError('parameter "scope" must be str or None')
     self.scope = scope
     self.name = name
 
