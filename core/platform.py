@@ -18,38 +18,17 @@
 # OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
 # SOFTWARE.
 
-from nose.tools import *
-import {TargetRef, Target} from '../core/target'
+import sys
 
+WINDOWS = 'windows'
+MACOS = 'macos'
+LINUX = 'linux'
 
-def test_TargetRef_from_str():
-  with assert_raises(ValueError):
-    TargetRef.from_str('hello')
-  with assert_raises(ValueError):
-    TargetRef.from_str('//scopename')
-  with assert_raises(ValueError):
-    TargetRef.from_str('scopename:hello')
-  assert_equals(TargetRef.from_str(':hello'),
-    TargetRef(None, 'hello'))
-  assert_equals(TargetRef.from_str('//scopename:hello'),
-    TargetRef('scopename', 'hello'))
-
-
-def test_TargetRef___str__():
-  assert_equals(str(TargetRef(None, 'hello')), ':hello')
-  assert_equals(str(TargetRef('scopename', 'hello')), '//scopename:hello')
-
-
-def test_TargetRef___init__():
-  with assert_raises(TypeError):
-    TargetRef('scopename', None)
-  with assert_raises(ValueError):
-    TargetRef('scopename', '')
-  with assert_raises(ValueError):
-    TargetRef('', 'hello')
-  with assert_raises(ValueError):
-    TargetRef('', '')
-  with assert_raises(TypeError):
-    TargetRef(None, None)
-  TargetRef(None, 'hello')
-  TargetRef('thescope', 'hello')
+if sys.platform.startswith('win32'):
+  name = WINDOWS
+elif sys.platform.startswith('darwin'):
+  name = MACOS
+elif sys.platform.startswith('linux'):
+  name = LINUX
+else:
+  raise EnvironmentError('Unsupported platform: {}'.format(sys.platform))

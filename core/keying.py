@@ -18,44 +18,45 @@
 # OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
 # SOFTWARE.
 
-class Action:
+import abc
+
+
+class Component(metaclass=abc.ABCMeta):
   """
-  """
-
-  def __init__(self, source, name, deps=()):
-    """
-    # Parameters
-    source (Target)
-    name (None, str)
-    deps (list of Action)
-    """
-
-    if not isinstance(source, Target):
-      raise TypeError('Action.source must be a Target')
-    self.source = source
-
-    if not isinstance(name, str):
-      raise TypeError('ACtion.name must be a string')
-    self.name = name
-
-    self.deps = list(deps)
-    for dep in self.deps:
-      if not isinstance(dep, Action):
-        raise TypeError('Action.deps[i] must be an Action')
-
-  def __repr__(self):
-    return '<{} "{}::{}">'.format(type(self).__name__, self.source.name, self.name)
-
-
-class CommandAction(Action):
-  """
-  This action describes one or a series of system commands.
+  Base class for components.
   """
 
-  pass
+
+class File(Component):
+  """
+  Represents an input or output file that should be taken into consideration
+  for the generation of the action key.
+  """
+
+  Input = 'input'
+  Output = 'output'
+
+  def __init__(self, filename: str, type: str):
+    if type not in (File.Input, File.Output):
+      raise ValueError('invalid type: {!r}'.format(type))
+    self.filename = filename
+    self.type = type
+
+  def __repr__(self) -> str:
+    return '<keying.File {!r} ({})>'.format(self.filename, self.type)
 
 
+class Bytes(Component):
+  """
+  A byte string that represents some arbitrary information on the context of a
+  build action and which should be taken into account for the action key
+  generation.
+  """
 
+  def __init__(self, data: bytes):
+    assert isinstance(data, bytes)
+    self.data = data
 
-__all__ = ['Action']
-import {Target} from './target'
+  def __repr__(self) -> str:
+    # TODO: Shorten representation if it exceeds ~50 characters
+    return '<String {!r}>'.format(self.data)

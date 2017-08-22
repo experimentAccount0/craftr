@@ -18,11 +18,7 @@
 # OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
 # SOFTWARE.
 
-class GraphTranslator:
-  """
-  This class represents the target and action graph and is used mainly during
-  the translation from targets to actions.
-  """
+from werkzeug.local import Local as _Local, LocalManager as _LocalManager
 
-  def __init__(self):
-    self.targets = {}
+_local = _Local()
+session = _local('session')

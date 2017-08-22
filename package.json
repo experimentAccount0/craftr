@@ -1,13 +1,21 @@
 {
   "name": "craftr",
-  "version": "0.1.0",
+  "version": "3.0.0",
   "description": "Craftr meta build system.",
   "author": "Niklas Rosenstein <rosensteinniklas@gmail.com>",
   "license": "MIT",
+  "main": "./core/api.py",
+  "bin": {
+    "craftr": "./cli.py"
+  },
   "extensions": [
     "!require-import-syntax"
   ],
   "dev-dependencies": {
     "@nodepy/nose": "~0.0.3"
+  },
+  "python-dependencies": {
+    "click": ">=6.7",
+    "glob2": ">=0.6"
   }
 }
