@@ -18,7 +18,20 @@
 # OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
 # SOFTWARE.
 
-from werkzeug.local import Local as _Local, LocalManager as _LocalManager
+__all__ = ['session', 'target', 'platform']
+import werkzeug.local as _local
 
-_local = _Local()
-session = _local('session')
+local = _local.Local()
+
+#: The current session.
+session = local('session')
+
+#: A string that represents the current build target. For debug and production
+#: builds, this string is either "release" or "debug". Other names can be used,
+#: in which case most build targets will omitt translating to the action graph
+#: completely (eg. "docs", and only targets that are used to build documentation
+#: files are translated into actions).
+target = _local.LocalProxy(lambda: session.target)
+
+#: The name of the current platform.
+import {name as platform} from './platform'

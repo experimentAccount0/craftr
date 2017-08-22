@@ -32,16 +32,23 @@ import {VERSION, Session} from './core/graph'
   Craftr v{}
   """.format(VERSION)
 )
-@click.option(
-  '-f', '--file', metavar='FILENAME', default='Craftrfile.py',
+@click.option('-f', '--file', metavar='FILENAME', default='Craftrfile.py',
   help='The build script to execute.')
-@click.option(
-  '-c', '--config', metavar='FILENAME', default='.craftrconfig',
+@click.option('-c', '--config', metavar='FILENAME', default='.craftrconfig',
   help='The Craftr configuration file.')
-def main(file, config):
+@click.option('--debug', is_flag=True, help='Short form of --target=debug')
+@click.option('--release', is_flag=True, help='Short form of --target=release')
+@click.option('--target', metavar='TARGET', default='debug',
+  help='The build target (usually "debug" or "release").')
+def main(file, config, debug, release, target):
+  if debug:
+    target = 'debug'
+  elif release:
+    target = 'release'
+
   # Create a new session object and expose it to the Craftr API.
-  session = Session()
-  api._local.session = session
+  session = Session(target)
+  api.local.session = session
 
   # Parse the configuration file.
   filename = path.expanduser('~/.craftrconfig')

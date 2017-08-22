@@ -243,11 +243,15 @@ class Session:
   the associated data and routines.
   """
 
-  def __init__(self, stashes: StashServer = None):
+  def __init__(self, target: str = 'debug', stashes: StashServer = None):
     self.config = Configuration()
+    self.target = target
     self.stashes = stashes
     self.scopes = {}
     self.scopestack = []
+
+  def __repr__(self) -> str:
+    return '<Session target:{}>'.format(self.target)
 
   def compute_action_key(self, action: Action) -> str:
     """
