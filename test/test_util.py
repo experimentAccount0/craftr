@@ -19,37 +19,19 @@
 # SOFTWARE.
 
 from nose.tools import *
-import {TargetRef, Target} from '../core/target'
+import {reqref} from 'craftr/core/util'
+
+# A class for which we can create weak references.
+class Obj: pass
 
 
-def test_TargetRef_from_str():
-  with assert_raises(ValueError):
-    TargetRef.from_str('hello')
-  with assert_raises(ValueError):
-    TargetRef.from_str('//scopename')
-  with assert_raises(ValueError):
-    TargetRef.from_str('scopename:hello')
-  assert_equals(TargetRef.from_str(':hello'),
-    TargetRef(None, 'hello'))
-  assert_equals(TargetRef.from_str('//scopename:hello'),
-    TargetRef('scopename', 'hello'))
+def test_reqref():
+  obj = Obj()
+  ref = reqref(obj)
+  assert_equals(ref(), obj)
+  del obj
+  with assert_raises(RuntimeError):
+    ref()
 
-
-def test_TargetRef___str__():
-  assert_equals(str(TargetRef(None, 'hello')), ':hello')
-  assert_equals(str(TargetRef('scopename', 'hello')), '//scopename:hello')
-
-
-def test_TargetRef___init__():
-  with assert_raises(TypeError):
-    TargetRef('scopename', None)
-  with assert_raises(ValueError):
-    TargetRef('scopename', '')
-  with assert_raises(ValueError):
-    TargetRef('', 'hello')
-  with assert_raises(ValueError):
-    TargetRef('', '')
-  with assert_raises(TypeError):
-    TargetRef(None, None)
-  TargetRef(None, 'hello')
-  TargetRef('thescope', 'hello')
+  ref = reqref(None)
+  assert_equals(ref(), None)

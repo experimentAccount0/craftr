@@ -18,45 +18,21 @@
 # OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
 # SOFTWARE.
 
-import abc
+from nose.tools import *
+import {Graph} from 'craftr/core/graph'
 
 
-class Component(metaclass=abc.ABCMeta):
-  """
-  Base class for components.
-  """
+def test_graph():
+  g = Graph()
+  g['//libcurl:compile'] = ['main.cpp']
+  g['//libcurl:curl'] = ['libcurl.a']
+  g.edge('//libcurl:compile', '//libcurl:curl')
 
+  assert_equals(list(g.inputs('//libcurl:compile')), [])
+  assert_equals(list(g.inputs('//libcurl:curl')), ['//libcurl:compile'])
+  assert_equals(list(g.outputs('//libcurl:compile')), ['//libcurl:curl'])
+  assert_equals(list(g.outputs('//libcurl:curl')), [])
+  assert g.has_edge('//libcurl:compile', '//libcurl:curl')
+  assert ('//libcurl:compile', '//libcurl:curl') in g
 
-class File(Component):
-  """
-  Represents an input or output file that should be taken into consideration
-  for the generation of the action key.
-  """
-
-  Input = 'input'
-  Output = 'output'
-
-  def __init__(self, filename: str, type: str):
-    if type not in (File.Input, File.Output):
-      raise ValueError('invalid type: {!r}'.format(type))
-    self.filename = filename
-    self.type = type
-
-  def __repr__(self) -> str:
-    return '<keying.File {!r} ({})>'.format(self.filename, self.type)
-
-
-class Bytes(Component):
-  """
-  A byte string that represents some arbitrary information on the context of a
-  build action and which should be taken into account for the action key
-  generation.
-  """
-
-  def __init__(self, data: bytes):
-    assert isinstance(data, bytes)
-    self.data = data
-
-  def __repr__(self) -> str:
-    # TODO: Shorten representation if it exceeds ~50 characters
-    return '<String {!r}>'.format(self.data)
+  print(g.nodes)

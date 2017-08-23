@@ -18,17 +18,37 @@
 # OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
 # SOFTWARE.
 
-import sys
+import typing as t
+import weakref
 
-WINDOWS = 'windows'
-MACOS = 'macos'
-LINUX = 'linux'
+T = t.TypeVar('T')
 
-if sys.platform.startswith('win32'):
-  name = WINDOWS
-elif sys.platform.startswith('darwin'):
-  name = MACOS
-elif sys.platform.startswith('linux'):
-  name = LINUX
-else:
-  raise EnvironmentError('Unsupported platform: {}'.format(sys.platform))
+
+class ReferenceLostError(RuntimeError):
+  pass
+
+
+class reqref(t.Generic[T]):
+  """
+  A "required weakref" is similar to a normal weakref, but dereferencing it
+  and loosing its object raises a #ReferenceLostError.
+  """
+
+  _type: T
+  _ref: t.Optional[weakref.ref]
+
+  def __init__(self, obj: T):
+    self._type = type(obj)
+    self._ref = weakref.ref(obj) if obj is not None else None
+
+  def __call__(self) -> T:
+    if self._ref is None:
+      return None
+    obj = self._ref()
+    if obj is None:
+      msg = 'lost reference to {} object'.format(self._type.__name__)
+      raise ReferenceLostError(msg)
+    return obj
+
+  def __repr__(self):
+    return '<reqref of {}>'.format(self._type.__name__)
