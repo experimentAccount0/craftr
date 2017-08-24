@@ -40,11 +40,14 @@ VERSION = module.package.json['version']
 @click.option('--release', is_flag=True, help='Short form of --target=release')
 @click.option('--target', metavar='TARGET', default='debug',
   help='The build target (usually "debug" or "release").')
+@click.option('--backend', metavar='BACKEND',
+  help='Name of the build backend. Defaults to "python"')
 @click.option('--dotviz-targets', metavar='FILENAME',
   help='Generate a DOT visualizaton of the target graph.')
 @click.option('--dotviz-actions', metavar='FILENAME',
   help='Generate a DOT visualizaton of the action graph.')
-def main(file, config, debug, release, target, dotviz_targets, dotviz_actions):
+def main(file, config, debug, release, target, backend,
+         dotviz_targets, dotviz_actions):
   if debug:
     target = 'debug'
   elif release:
@@ -60,6 +63,14 @@ def main(file, config, debug, release, target, dotviz_targets, dotviz_actions):
     session.config.read(filename)
   if path.isfile(config):
     session.config.read(config)
+
+  # Load the backend.
+  if not backend:
+    backend = session.config.get('build.backend', 'python')
+  try:
+    backend_class = require(backend)
+  except require.ResolveError:
+    backend_class = require('./backends/' + backend)
 
   # Make sure that Node.py modules with a 'Craftrfile' can be loaded
   # using `require()` or `import ... from '...'`.
@@ -101,6 +112,9 @@ def main(file, config, debug, release, target, dotviz_targets, dotviz_actions):
     do_visualize(dest=dotviz_actions, graph=session.action_graph, text_of=text_of)
   if dotviz_targets or dotviz_actions:
     return
+
+  backend = backend_class(session)
+  backend.build([])
 
 
 def do_visualize(dest: str, graph: Graph, text_of = None) -> None:
