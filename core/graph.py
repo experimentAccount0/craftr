@@ -109,6 +109,12 @@ class Graph(t.Generic[K, V]):
   def nodes(self) -> t.Iterable[Node]:
     return self.__nodes.values()
 
+  def roots(self) -> t.Iterable[Node]:
+    return (node for node in self.__nodes.values() if not node.inputs)
+
+  def leafs(self) -> t.Iterable[Node]:
+    return (node for node in self.__nodes.values() if not node.outputs)
+
 
 def dotviz(fp: t.IO[str], graph: Graph[K, V], graph_name: str = None,
            text_of: t.Callable[[V], str] = str) -> None:
@@ -128,3 +134,32 @@ def dotviz(fp: t.IO[str], graph: Graph[K, V], graph_name: str = None,
       fp.write('\t\t{} -> {};\n'.format(id(other), id(node)))
 
   fp.write('}\n')
+
+
+def topological_sort(graph: Graph[K, V]) -> t.List[Node]:
+  """
+  Topologically sort the graph using the Khan (1962) algorithm.
+  """
+
+  result = []
+  roots = set(graph.roots())
+  marked_edges = set()
+  edge_count = {}
+
+  while roots:
+    node = roots.pop()
+    result.append(node)
+    for other in (noderef() for noderef in node.outputs):
+      count = edge_count.get(other.key, len(other.inputs))
+      edge = (node.key, other.key)
+      if edge not in marked_edges:
+        assert count > 0
+        marked_edges.add(edge)
+        count -= 1
+        edge_count[other.key] = count
+      if count == 0:
+        roots.add(other)
+
+  if any(c > 0 for c in edge_count.values()):
+    raise RuntimeError('graph has at least one cycle')
+  return result
