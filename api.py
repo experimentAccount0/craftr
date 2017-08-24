@@ -59,13 +59,23 @@ def target(type: t.Type[Target], *,
   current #Session and scope (or the specified scope).
   """
 
-  if scope is None:
-    scope = session.current_scope
+  current_scope = session.current_scope
+  scope = scope or current_scope
+
+  # Make sure all dependencies are absolute references.
+  if deps is not None:
+    deps = [str(TargetRef.parse(x, current_scope.name)) for x in deps]
+  if visible_deps is not None:
+    visible_deps = [str(TargetRef.parse(x, current_scope.name))
+                    for x in visible_deps]
+
   target = type(name=name, scope=scope, visible_deps=visible_deps, **kwargs)
   session.add_target(target)
 
+  # Link the dependencies in the target. We only link the invisible deps.
+  # If an actual dependency is also exposed to the visible dependencies,
+  # it must be done so explicitly.
   for ref in (deps or ()):
-    ref = str(TargetRef.parse(ref, session.current_scope.name))
     session.target_graph.edge(ref, target.identifier)
 
   return target
