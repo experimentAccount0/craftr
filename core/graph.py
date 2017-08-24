@@ -66,45 +66,65 @@ class Graph(t.Generic[K, V]):
   Represents a directed graph. Graphs
   """
 
-  nodes: t.Dict[K, Node[K, V]]
+  __nodes: t.Dict[K, Node[K, V]]
   reassignable: bool
 
   def __init__(self, reassignable: bool = True):
-    self.nodes = {}
+    self.__nodes = {}
     self.reassignable = bool(reassignable)
 
   def __getitem__(self, key: K) -> V:
-    return self.nodes[key].data
+    return self.__nodes[key].data
 
   def __setitem__(self, key: K, data: V) -> None:
-    if not self.reassignable and key in self.nodes:
+    if not self.reassignable and key in self.__nodes:
       raise NotReassignableError(key)
     node = Node(key, data)
-    self.nodes[key] = node
+    self.__nodes[key] = node
     return node
 
   def __contains__(self, key: t.Union[EdgeKey, K]) -> bool:
     if isinstance(key, tuple):
       return self.has_edge(*key)
-    return key in self.nodes
+    return key in self.__nodes
 
   def edge(self, origin: K, dest: K) -> None:
-    self.nodes[dest].edge_to(self.nodes[origin])
+    self.__nodes[dest].edge_to(self.__nodes[origin])
 
   def has_edge(self, origin: K, dest: K) -> bool:
     return origin in self.inputs(dest)
 
   def inputs(self, key: K) -> t.Iterable[K]:
-    return (noderef().key for noderef in self.nodes[key].inputs)
+    return (noderef().key for noderef in self.__nodes[key].inputs)
 
   def outputs(self, key: K) -> t.Iterable[K]:
-    return (noderef().key for noderef in self.nodes[key].outputs)
+    return (noderef().key for noderef in self.__nodes[key].outputs)
 
   def keys(self) -> t.Iterable[K]:
-    return self.nodes.keys()
+    return self.__nodes.keys()
 
   def values(self) -> t.Iterable[V]:
-    return (node.data for node in self.nodes.values())
+    return (node.data for node in self.__nodes.values())
 
   def nodes(self) -> t.Iterable[Node]:
-    return self.nodes.values()
+    return self.__nodes.values()
+
+
+def dotviz(fp: t.IO[str], graph: Graph[K, V], graph_name: str = None,
+           text_of: t.Callable[[V], str] = str) -> None:
+  """
+  Convert the *graph* into dotviz format.
+  """
+
+  if graph_name is None:
+    graph_name = type(graph).__name__
+
+  fp.write('digraph "{}" {{\n'.format(graph_name))
+  for node in graph.nodes():
+    text = text_of(node.data).replace('"', '\\"')
+    fp.write('\t{} [label="{}"];\n'.format(id(node), text))
+
+    for other in (noderef() for noderef in node.inputs):
+      fp.write('\t\t{} -> {};\n'.format(id(other), id(node)))
+
+  fp.write('}\n')
