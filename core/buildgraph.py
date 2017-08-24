@@ -38,13 +38,20 @@ class Scope:
 
   name: str
   directory: str
+  targets: t.Dict[str, 'Target']
 
   def __init__(self, name: str, directory: str):
     self.name = name
     self.directory = directory
+    self.targets = {}
 
   def __repr__(self):
     return '<Scope "{}" @ "{}">'.format(self.name, self.directory)
+
+  def add_target(self, target: 'Target') -> None:
+    if target.name in self.targets:
+      raise RuntimeError('target {!r} already exists'.format(target.name))
+    self.targets[target.name] = target
 
 
 class Target(metaclass=abc.ABCMeta):
@@ -60,17 +67,18 @@ class Target(metaclass=abc.ABCMeta):
   scope: reqref[Scope]
   name: str
 
-  def __init__(self, session: 'Session', scope: Scope, name: str):
-    self.session = reqref[Session](session)
+  def __init__(self, scope: Scope, name: str):
+    self.session = None
     self.scope = reqref[Scope](scope)
     self.name = name
 
   def __repr__(self):
-    return '<Target "{}">'.format(self.name)
+    typename = type(self).__name__
+    return '<{} "{}">'.format(typename, self.identifier)
 
   @property
   def identifier(self):
-    return '//{}:{}'.format(self.scope.name, self.name)
+    return '//{}:{}'.format(self.scope().name, self.name)
 
   @abc.abstractmethod
   def translate(self):
@@ -137,8 +145,11 @@ class Session:
   The session manages scopes and the target and action graph.
   """
 
+  target: str
   target_graph: Graph[str, Target]
   action_graph: Graph[str, Action]
+  scopes: t.Dict[str, Scope]
+  scopestack: t.List[Scope]
 
   def __init__(self, target: str = 'debug'):
     self.target = target
@@ -146,6 +157,10 @@ class Session:
     self.action_graph = Graph()
     self.scopes = {}
     self.scopestack = []
+
+  @property
+  def current_scope(self) -> Scope:
+    return self.scopestack[-1]
 
   def scope(self, name: str) -> Scope:
     return self.scopes[name]
@@ -163,6 +178,15 @@ class Session:
 
   def leave_scope(self, name: str) -> None:
     assert self.scopestack.pop().name == name
+
+  def add_target(self, target: Target):
+    """
+    Adds a target to the graph and its scope.
+    """
+
+    target.session = reqref(self)
+    target.scope().add_target(target)
+    self.target_graph[target.identifier] = target
 
 
 def compute_action_key(action: Action):
