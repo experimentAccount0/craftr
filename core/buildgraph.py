@@ -22,6 +22,7 @@ __all__ = ['Scope', 'Target', 'Action', 'Session', 'compute_action_key']
 
 import abc
 import hashlib
+import sys
 import typing as t
 import hashing from './hashing'
 import path from './path'
@@ -194,8 +195,63 @@ class Action(metaclass=abc.ABCMeta):
       yield hashing.FileComponent(filename, False)
 
   @abc.abstractmethod
-  def execute(self):  # TODO
+  def execute(self) -> 'ActionProcess':
     pass
+
+
+class ActionProcess(metaclass=abc.ABCMeta):
+  """
+  The #ActionProcess represents state information for an action that is
+  executed in another thread or even another process. It is generally
+  reccommended to implement actions in a separate process since Python does
+  not support true parallelism.
+  """
+
+  @abc.abstractmethod
+  def display_text(self) -> str:
+    """
+    Returns a status message for the current state of the process.
+    """
+
+  @abc.abstractmethod
+  def is_running(self) -> bool:
+    """
+    Returns #True while the action is still in progress.
+    """
+
+  @abc.abstractmethod
+  def wait(self, timeout: float = None) -> None:
+    """
+    Wait until the process completed, or at max *timeout* seconds.
+    """
+
+  @abc.abstractmethod
+  def poll(self) -> t.Optional[int]:
+    """
+    Return a status-code for the action. A status code of zero indicates
+    success, any other value indicates failure. If the process is still
+    running, #None is returned.
+    """
+
+  @abc.abstractmethod
+  def stdout(self) -> t.Union[str, bytes]:
+    """
+    Returns the output of the process. Some actions might be implemented as
+    having direct access to the build process' standard in- and output. In
+    this case, the function should simply return an empty string.
+    """
+
+  def print_stdout(self) -> None:
+    """
+    Retrieves the output of this process from #stdout() and prints it to this
+    process' standard output.
+    """
+
+    data = self.stdout()
+    if isinstance(data, bytes):
+      sys.stdout.buffer.write(data)
+    else:
+      std.stdout.write(data)
 
 
 class Session:

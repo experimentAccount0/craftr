@@ -18,6 +18,7 @@
 # OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
 # SOFTWARE.
 
+import sys
 import typing as t
 import {Backend} from '../core/backend'
 import {Session, Target} from '../core/buildgraph'
@@ -31,10 +32,17 @@ class PythonBackend(Backend):
 
   def build(self, targets: t.List[Target]):
     for node in topological_sort(self.session.action_graph):
-      node.data.execute()
+      process = node.data.execute()
+      process.wait()
+      code = process.poll()
+      if code != 0:
+        print('*** craftr error: action {} exited with non-zero status code {}'
+          .format(node.key, code), file=sys.stderr)
+        process.print_stdout()
+        sys.exit(code)
 
   def clean(self, targets: t.List[Target]):
-    pass
+    raise NotImplementedError
 
 
 exports = PythonBackend
