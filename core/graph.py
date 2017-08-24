@@ -19,6 +19,7 @@
 # SOFTWARE.
 
 __all__ = ['Node', 'Graph']
+import operator
 import typing as t
 import {reqref} from './util'
 
@@ -142,7 +143,7 @@ def topological_sort(graph: Graph[K, V]) -> t.List[Node]:
   """
 
   result = []
-  roots = set(graph.roots())
+  roots = sorted(graph.roots(), key=operator.attrgetter('key'), reverse=True)
   marked_edges = set()
   edge_count = {}
 
@@ -158,7 +159,7 @@ def topological_sort(graph: Graph[K, V]) -> t.List[Node]:
         count -= 1
         edge_count[other.key] = count
       if count == 0:
-        roots.add(other)
+        roots.append(other)
 
   if any(c > 0 for c in edge_count.values()):
     raise RuntimeError('graph has at least one cycle')
