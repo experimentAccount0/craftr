@@ -18,49 +18,29 @@
 # OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
 # SOFTWARE.
 
-import typing as t
-import weakref
+__all__ = ['session', 'target', 'platform', 'pool']
+import werkzeug.local as _local
+import typing
+import sys
 
-T = t.TypeVar('T')
+local = _local.Local()
 
+#: The current session.
+session = local('session')
 
-class ReferenceLostError(RuntimeError):
-  pass
+#: A string that represents the current build target. For debug and production
+#: builds, this string is either "release" or "debug". Other names can be used,
+#: in which case most build targets will omitt translating to the action graph
+#: completely (eg. "docs", and only targets that are used to build documentation
+#: files are translated into actions).
+target = _local.LocalProxy(lambda: session.target)
 
-
-class reqref(t.Generic[T]):
-  """
-  A "required weakref" is similar to a normal weakref, but dereferencing it
-  and loosing its object raises a #ReferenceLostError.
-  """
-
-  _type: T
-  _ref: t.Optional[weakref.ref]
-
-  def __init__(self, obj: T):
-    self._type = type(obj)
-    self._ref = weakref.ref(obj) if obj is not None else None
-
-  def __call__(self) -> T:
-    if self._ref is None:
-      return None
-    obj = self._ref()
-    if obj is None:
-      msg = 'lost reference to {} object'.format(self._type.__name__)
-      raise ReferenceLostError(msg)
-    return obj
-
-  def __repr__(self):
-    return '<reqref of {}>'.format(self._type.__name__)
-
-
-def file_iter_chunks(fp: t.IO[T], chunksize: int = 4096) -> t.Iterable[T]:
-  """
-  Iterates over a file-like object in chunks and yields them.
-  """
-
-  while True:
-    data = fp.read(chunksize)
-    if not data:
-      break
-    yield data
+#: Determine the name of the current platform.
+if sys.platform.startswith('win32'):
+  name = 'windows'
+elif sys.platform.startswith('darwin'):
+  name = 'macos'
+elif sys.platform.startswith('linux'):
+  name = 'linux'
+else:
+  raise EnvironmentError('Unsupported platform: {}'.format(sys.platform))

@@ -21,17 +21,14 @@
 import click
 import configparser
 import nodepy
-import api from './core/api'
-import log from './core/log'
+import api from './api'
 import path from './core/path'
-import {VERSION, Session} from './core/graph'
+import {Session} from './core/buildgraph'
+
+VERSION = module.package.json['version']
 
 
-@click.command(
-  help="""
-  Craftr v{}
-  """.format(VERSION)
-)
+@click.command(help="Craftr v{}".format(VERSION))
 @click.option('-f', '--file', metavar='FILENAME', default='Craftrfile.py',
   help='The build script to execute.')
 @click.option('-c', '--config', metavar='FILENAME', default='.craftrconfig',
@@ -72,16 +69,17 @@ def main(file, config, debug, release, target):
         else:
           session.leave_scope(module.package.json['name'])
 
+  session.enter_scope('__main__', path.cwd())
   require.context.event_handlers.append(event_handler)
   try:
     # For the current project, the default scope is __main__. If the Craftrfile
     # is embedded in a Node.py package, that namespace will be automatically
     # obtained when the module is loaded (due to the event handler that we
     # just registered).
-    with session.enter_scope_ctx('__main__', path.cwd()):
-      require.exec_main(file)
+    require.exec_main(file)
   finally:
     require.context.event_handlers.remove(event_handler)
+    session.leave_scope('__main__')
 
 
 if require.main == module:

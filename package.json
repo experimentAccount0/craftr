@@ -4,7 +4,7 @@
   "description": "Craftr meta build system.",
   "author": "Niklas Rosenstein <rosensteinniklas@gmail.com>",
   "license": "MIT",
-  "main": "./core/api.py",
+  "main": "./api.py",
   "bin": {
     "craftr": "./cli.py"
   },
@@ -15,6 +15,7 @@
     "@nodepy/nose": "~0.0.3"
   },
   "python-dependencies": {
+    "Werkzeug": ">=0.12.2",
     "click": ">=6.7",
     "glob2": ">=0.6"
   }

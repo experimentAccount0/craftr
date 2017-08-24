@@ -18,49 +18,57 @@
 # OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
 # SOFTWARE.
 
+import os
 import typing as t
-import weakref
 
-T = t.TypeVar('T')
+from os import (
+  sep,
+  pathsep,
+  curdir,
+  pardir,
+  getcwd as cwd
+)
+from os.path import (
+  expanduser,
+  normpath as canonical,
+  isabs,
+  isfile,
+  isdir
+)
 
 
-class ReferenceLostError(RuntimeError):
-  pass
-
-
-class reqref(t.Generic[T]):
+def rel(path: str, parent: str = None, par: bool = False) -> str:
   """
-  A "required weakref" is similar to a normal weakref, but dereferencing it
-  and loosing its object raises a #ReferenceLostError.
-  """
+  Takes *path* and computes the relative path from *parent*. If *parent* is
+  omitted, the current working directory is used.
 
-  _type: T
-  _ref: t.Optional[weakref.ref]
-
-  def __init__(self, obj: T):
-    self._type = type(obj)
-    self._ref = weakref.ref(obj) if obj is not None else None
-
-  def __call__(self) -> T:
-    if self._ref is None:
-      return None
-    obj = self._ref()
-    if obj is None:
-      msg = 'lost reference to {} object'.format(self._type.__name__)
-      raise ReferenceLostError(msg)
-    return obj
-
-  def __repr__(self):
-    return '<reqref of {}>'.format(self._type.__name__)
-
-
-def file_iter_chunks(fp: t.IO[T], chunksize: int = 4096) -> t.Iterable[T]:
-  """
-  Iterates over a file-like object in chunks and yields them.
+  If *par* is #True, a relative path is always created when possible.
+  Otherwise, a relative path is only returned if *path* lives inside the
+  *parent* directory.
   """
 
-  while True:
-    data = fp.read(chunksize)
-    if not data:
-      break
-    yield data
+  try:
+    res = os.path.relpath(path, parent)
+  except ValueError:
+    # Raised eg. on Windows for differing drive letters.
+    if not par:
+      return abs(path)
+    raise
+  else:
+    if not issub(res):
+      return abs(path)
+    return res
+
+
+def issub(path: str) -> bool:
+  """
+  Returns #True if *path* is a relative path that does not point outside
+  of its parent directory or is equal to its parent directory (thus, this
+  function will also return False for a path like `./`).
+  """
+
+  if isabs(path):
+    return False
+  if path.startswith(curdir_sep) or path.startswith(pardir_sep):
+    return False
+  return True

@@ -19,48 +19,12 @@
 # SOFTWARE.
 
 import typing as t
-import weakref
-
-T = t.TypeVar('T')
 
 
-class ReferenceLostError(RuntimeError):
-  pass
+class FileComponent(t.NamedTuple):
+  filename: str
+  is_input: bool
 
 
-class reqref(t.Generic[T]):
-  """
-  A "required weakref" is similar to a normal weakref, but dereferencing it
-  and loosing its object raises a #ReferenceLostError.
-  """
-
-  _type: T
-  _ref: t.Optional[weakref.ref]
-
-  def __init__(self, obj: T):
-    self._type = type(obj)
-    self._ref = weakref.ref(obj) if obj is not None else None
-
-  def __call__(self) -> T:
-    if self._ref is None:
-      return None
-    obj = self._ref()
-    if obj is None:
-      msg = 'lost reference to {} object'.format(self._type.__name__)
-      raise ReferenceLostError(msg)
-    return obj
-
-  def __repr__(self):
-    return '<reqref of {}>'.format(self._type.__name__)
-
-
-def file_iter_chunks(fp: t.IO[T], chunksize: int = 4096) -> t.Iterable[T]:
-  """
-  Iterates over a file-like object in chunks and yields them.
-  """
-
-  while True:
-    data = fp.read(chunksize)
-    if not data:
-      break
-    yield data
+class DataComponent(t.NamedTuple):
+  data: bytes
