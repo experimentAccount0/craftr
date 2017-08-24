@@ -18,7 +18,7 @@
 # OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
 # SOFTWARE.
 
-import configparser
+import toml
 import typing as t
 
 
@@ -42,10 +42,14 @@ class Configuration:
   """
 
   def __init__(self):
-    self._parser = configparser.SafeConfigParser()
+    self._data = {}
 
   def read(self, filename: str) -> None:
-    self._parser.read([filename])
+    with open(filename, 'r') as fp:
+      # TODO: Catch possible ValueError (and others?) and transform them
+      #       into a proper exception for configuration parsing.
+      data = toml.load(fp)
+    self._data.update(data)
 
   def write(self, filename: str) -> None:
     with open(filename, 'w') as fp:
@@ -56,20 +60,20 @@ class Configuration:
       scope, name = OptionKey.parse(key)
     except ValueError:
       raise KeyError(key)
-    if not self._parser.has_section(scope):
+    if scope not in self._data:
       raise KeyError(key)
-    if not self._parser.has_option(scope, name):
+    if name not in self._data[scope]:
       raise KeyError(key)
-    return self._parser.get(scope, name)
+    return self._data[scope][name]
 
   def __setitem__(self, key: str, value: str):
     try:
       scope, name = OptionKey.parse(key)
     except ValueError:
       raise KeyError(key)
-    if not self._parser.has_section(scope):
-      self._parser.add_section(scope)
-    self._parser.set(scope, name, value)
+    if scope not in self._data:
+      self._data[scope] = {}
+    self._data[scope][name] = value
 
   def get(self, key: str, default: t.Any = None) -> t.Any:
     try:
@@ -78,17 +82,17 @@ class Configuration:
       return default
 
   def sections(self) -> t.List[str]:
-    return self._parser.sections()
+    return self._data.keys()
 
   def options(self, section: str = None) -> t.List[str]:
     if not section:
       options = []
-      for section in self._parser.sections():
+      for section in self._parser.keys():
         options.extend(self.options(section))
       return options
     else:
       prefix = section + '.'
       try:
-        return [prefix + opt for opt in self._parser.options(section)]
-      except configparser.NoSectionError:
+        return [prefix + opt for opt in self._data[section].keys()]
+      except KeyError:
         return []

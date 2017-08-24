@@ -18,6 +18,7 @@
   "python-dependencies": {
     "Werkzeug": ">=0.12.2",
     "click": ">=6.7",
-    "glob2": ">=0.6"
+    "glob2": ">=0.6",
+    "toml": ">=0.9.2"
   }
 }
