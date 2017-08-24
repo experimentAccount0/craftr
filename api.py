@@ -19,9 +19,10 @@
 # SOFTWARE.
 
 __all__ = ['session', 'target', 'platform', 'pool']
-import werkzeug.local as _local
-import typing as t
+import functools
 import sys
+import typing as t
+import werkzeug.local as _local
 import {Target, Scope} from './core/buildgraph'
 import {TargetRef} from './core/util'
 
@@ -80,3 +81,27 @@ def create_target(
     session.target_graph.edge(ref, target.identifier)
 
   return target
+
+
+def target_factory(cls: t.Type[Target]) -> t.Callable[..., Target]:
+  """
+  A decorator for #Target subclasses that wraps #create_target() with the
+  specified target *cls*. Example:
+
+  ```
+  class MyTarget(craftr.Target):
+    ...
+
+  my_target = craftr.target_factory(MyTarget)
+  ```
+
+  The returned callable has a `wrapped_target_type` argument that contains
+  the specified *cls* object.
+  """
+
+  @functools.wraps(cls)
+  def wrapper(*args, **kwargs):
+    return create_target(cls, *args, **kwargs)
+
+  wrapper.wrapped_target_type = cls
+  return wrapper
