@@ -78,7 +78,7 @@ class TargetRef(t.NamedTuple):
   target: str
 
   @classmethod
-  def parse(cls, s: str, default_scope: str = None):
+  def parse(cls, s: str, default_scope: str = None) -> 'TargetRef':
     if not s.startswith('//') and not s.startswith(':'):
       raise ValueError('invalid target-reference string: {!r}'.format(s))
     left, sep, right = s.partition(':')

@@ -25,6 +25,7 @@ import hashlib
 import typing as t
 import hashing from './hashing'
 import path from './path'
+import {Configuration} from './config'
 import {Graph} from './graph'
 import {reqref, file_iter_chunks} from './util'
 
@@ -177,6 +178,7 @@ class Session:
     self.action_graph = Graph()
     self.scopes = {}
     self.scopestack = []
+    self.config = Configuration()
 
   @property
   def current_scope(self) -> Scope:
