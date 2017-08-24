@@ -67,10 +67,11 @@ class Target(metaclass=abc.ABCMeta):
   scope: reqref[Scope]
   name: str
 
-  def __init__(self, scope: Scope, name: str):
+  def __init__(self, scope: Scope, name: str, visible_deps: t.List[str] = None):
     self.session = None
     self.scope = reqref[Scope](scope)
     self.name = name
+    self.visible_deps = visible_deps
 
   def __repr__(self):
     typename = type(self).__name__
@@ -79,6 +80,25 @@ class Target(metaclass=abc.ABCMeta):
   @property
   def identifier(self):
     return '//{}:{}'.format(self.scope().name, self.name)
+
+  def deps(self, visible=False) -> t.List['Target']:
+    """
+    Returns the target's dependencies. If *visible* is #True, only its
+    visible dependencies are returned (which are stored directly in the
+    target rather than in the target graph).
+
+    Can only be used with the #Target registered to a #Session. Raises
+    a #RuntimeError otherwise.
+    """
+
+    if not self.session:
+      raise RuntimeError('target not attached to a session')
+
+    graph = self.session().target_graph
+    if visible and self.visible_deps is not None:
+      return [graph[key] for key in self.visible_deps]
+    else:
+      return list(graph.inputs(self.identifier))
 
   @abc.abstractmethod
   def translate(self):
@@ -187,6 +207,14 @@ class Session:
     target.session = reqref(self)
     target.scope().add_target(target)
     self.target_graph[target.identifier] = target
+
+  def translate_targets(self):
+    """
+    Translate all targets to actions.
+    """
+
+    for target in self.target_graph.values():
+      target.translate()
 
 
 def compute_action_key(action: Action):

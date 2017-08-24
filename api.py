@@ -20,8 +20,10 @@
 
 __all__ = ['session', 'target', 'platform', 'pool']
 import werkzeug.local as _local
-import typing
+import typing as t
 import sys
+import {Target, Scope} from './core/buildgraph'
+import {TargetRef} from './core/util'
 
 local = _local.Local()
 
@@ -44,3 +46,26 @@ elif sys.platform.startswith('linux'):
   name = 'linux'
 else:
   raise EnvironmentError('Unsupported platform: {}'.format(sys.platform))
+
+
+def target(type: t.Type[Target], *,
+           name: str,
+           deps: t.List[str] = None,
+           visible_deps: t.List[str] = None,
+           scope: t.Union[str, Scope] = None,
+           **kwargs) -> Target:
+  """
+  Create a new target of the specified *type* and register it to the
+  current #Session and scope (or the specified scope).
+  """
+
+  if scope is None:
+    scope = session.current_scope
+  target = type(name=name, scope=scope, visible_deps=visible_deps, **kwargs)
+  session.add_target(target)
+
+  for ref in (deps or ()):
+    ref = str(TargetRef.parse(ref, session.current_scope.name))
+    session.target_graph.edge(ref, target.identifier)
+
+  return target

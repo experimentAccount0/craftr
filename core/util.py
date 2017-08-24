@@ -64,3 +64,33 @@ def file_iter_chunks(fp: t.IO[T], chunksize: int = 4096) -> t.Iterable[T]:
     if not data:
       break
     yield data
+
+
+class TargetRef(t.NamedTuple):
+  """
+  Represents a reference to a target. Target references can be parsed from
+  the following syntax:
+
+      [//scope]:target
+  """
+
+  scope: str
+  target: str
+
+  @classmethod
+  def parse(cls, s: str, default_scope: str = None):
+    if not s.startswith('//') and not s.startswith(':'):
+      raise ValueError('invalid target-reference string: {!r}'.format(s))
+    left, sep, right = s.partition(':')
+    if not sep:
+      raise ValueError('invalid target-reference string: {!r}'.format(s))
+    if left:
+      assert left.startswith('//')
+      left = left[2:]
+    return cls(left or default_scope, right)
+
+  def __str__(self):
+    res = ':' + self.target
+    if self.scope:
+      res = '//' + self.scope + res
+    return res
