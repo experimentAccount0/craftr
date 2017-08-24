@@ -27,9 +27,12 @@ class OptionKey(t.NamedTuple):
   name: str
 
   @classmethod
-  def parse(cls, s: str) -> 'OptionKey':
+  def parse(cls, s: str, allow_empty_name: bool = False) -> 'OptionKey':
     scope, sep, name = s.rpartition('.')
-    if not scope and not sep and not name:
+    if not scope and not sep:
+      scope, name = name, ''
+    valid = scope and ((sep and name) or allow_empty_name)
+    if not valid:
       raise ValueError('invalid option key: {!r}'.format(s))
     return cls(scope, name)
 
@@ -49,6 +52,7 @@ class Configuration:
       # TODO: Catch possible ValueError (and others?) and transform them
       #       into a proper exception for configuration parsing.
       data = toml.load(fp)
+    # TODO: Merge options inside sections.
     self._data.update(data)
 
   def write(self, filename: str) -> None:
@@ -74,6 +78,16 @@ class Configuration:
     if scope not in self._data:
       self._data[scope] = {}
     self._data[scope][name] = value
+
+  def __delitem__(self, key: str):
+    try:
+      scope, name = OptionKey.parse(key, allow_empty_name=True)
+    except ValueError:
+      raise KeyError(key)
+    if not name:
+      del self._data[scope]
+    else:
+      del self._data[scope][name]
 
   def get(self, key: str, default: t.Any = None) -> t.Any:
     try:
