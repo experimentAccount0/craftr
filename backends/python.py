@@ -40,6 +40,9 @@ class PythonBackend(Backend):
           .format(node.key, code), file=sys.stderr)
         process.print_stdout()
         sys.exit(code)
+      else:
+        process.print_stdout()
+        sys.stdout.flush()
 
   def clean(self, targets: t.List[Target]):
     raise NotImplementedError
