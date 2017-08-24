@@ -85,9 +85,18 @@ def main(file, config, debug, release, target, backend,
   if not backend:
     backend = session.config.get('build.backend', 'python')
   try:
-    backend_class = require(backend)
+    backend_class = require('./backends/build/' + backend)
   except require.ResolveError:
-    backend_class = require('./backends/' + backend)
+    backend_class = require(backend)
+
+  # Load the stash server.
+  stashes = session.config.get('stashes.backend', None)
+  if stashes:
+    try:
+      stashes_class = require('./backends/stashes/' + stashes)
+    except require.ResolveError:
+      stashes_class = require(stashes)
+    session.stashes = stashes_class(session)
 
   # Make sure that Node.py modules with a 'Craftrfile' can be loaded
   # using `require()` or `import ... from '...'`.

@@ -206,6 +206,11 @@ class StashServer(metaclass=abc.ABCMeta):
   from the #Stash can be used.
   """
 
+  session: 'Session'
+
+  def __init__(self, session):
+    self.session = session
+
   @abc.abstractmethod
   def can_create_new_stashes(self) -> bool:
     """

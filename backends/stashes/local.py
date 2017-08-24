@@ -17,35 +17,22 @@
 # LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
 # OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
 # SOFTWARE.
+"""
+An implementation of a local stash for build artifacts.
 
-import sys
-import typing as t
-import {Backend} from '../core/backend'
-import {Session, Target} from '../core/buildgraph'
-import {topological_sort} from '../core/graph'
+# Configuration
 
+location (str): The path to a directory where the stashes are stored. Defaults
+  to `~/.craftr/stashes`. For platform-dependent configuration, use either
+  the platform-matching features of Craftr's configuration files or use a
+  `.craftrconfig.py` instead.
+"""
 
-class PythonBackend(Backend):
-  """
-  The pure-python Craftr build backend.
-  """
-
-  def build(self, targets: t.List[Target]):
-    for node in topological_sort(self.session.action_graph):
-      process = node.data.execute()
-      process.wait()
-      code = process.poll()
-      if code != 0:
-        print('*** craftr error: action {} exited with non-zero status code {}'
-          .format(node.key, code), file=sys.stderr)
-        process.print_stdout()
-        sys.exit(code)
-      else:
-        process.print_stdout()
-        sys.stdout.flush()
-
-  def clean(self, targets: t.List[Target]):
-    raise NotImplementedError
+import base from '../../core/stash'
 
 
-exports = PythonBackend
+class LocalStashServer(base.StashServer):
+  ...
+
+
+exports = LocalStashServer
