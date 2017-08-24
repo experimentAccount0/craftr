@@ -131,7 +131,7 @@ class Target(metaclass=abc.ABCMeta):
     graph = self.session().action_graph
     for action in self.actions.values():
       for output in graph.outputs(action.identifier):
-        if output.source() is self:
+        if graph[output].source() is self:
           break
       else:
         yield action
