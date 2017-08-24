@@ -18,7 +18,7 @@
 # OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
 # SOFTWARE.
 
-__all__ = ['session', 'target', 'platform', 'pool']
+__all__ = ['session', 'target', 'platform']
 import functools
 import sys
 import typing as t
@@ -40,11 +40,11 @@ target = _local.LocalProxy(lambda: session.target)
 
 #: Determine the name of the current platform.
 if sys.platform.startswith('win32'):
-  name = 'windows'
+  platform = 'windows'
 elif sys.platform.startswith('darwin'):
-  name = 'macos'
+  platform = 'macos'
 elif sys.platform.startswith('linux'):
-  name = 'linux'
+  platform = 'linux'
 else:
   raise EnvironmentError('Unsupported platform: {}'.format(sys.platform))
 
