@@ -12,6 +12,7 @@
     "!require-import-syntax"
   ],
   "dev-dependencies": {
+    "@NiklasRosenstein/yassg": "~0.0.1",
     "@nodepy/nose": "~0.0.3"
   },
   "python-dependencies": {
