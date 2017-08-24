@@ -63,7 +63,7 @@ class SubprocessActionProcess(ThreadedActionProcess):
     ThreadedActionProcess.__init__(self)
     self.action = action
     self.commands = list(action.commands)  # acts as a queue
-    self.capture = action.capture
+    self.capture = action.buffer
     self.current_process = None
     self.current_command = None
     self.buffer = io.BytesIO()
@@ -127,14 +127,14 @@ class SubprocessAction(Action):
   commands: t.List[t.List[str]]
   environ: t.Dict[str, str]
   cwd: t.Optional[str]
-  capture: bool
+  buffer: bool
 
-  def __init__(self, *, commands, environ=None, cwd=None, capture=True, **kwargs):
+  def __init__(self, *, commands, environ=None, cwd=None, buffer=True, **kwargs):
     Action.__init__(self, **kwargs)
     self.commands = commands
     self.environ = {} if environ is None else environ
     self.cwd = cwd
-    self.capture = capture
+    self.buffer = buffer
 
   def execute(self):
     return SubprocessActionProcess(self).start()
