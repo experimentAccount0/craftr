@@ -48,12 +48,13 @@ else:
   raise EnvironmentError('Unsupported platform: {}'.format(sys.platform))
 
 
-def target(type: t.Type[Target], *,
-           name: str,
-           deps: t.List[str] = None,
-           visible_deps: t.List[str] = None,
-           scope: t.Union[str, Scope] = None,
-           **kwargs) -> Target:
+def create_target(
+      type: t.Type[Target], *,
+      name: str,
+      deps: t.List[str] = None,
+      visible_deps: t.List[str] = None,
+      scope: t.Union[str, Scope] = None,
+      **kwargs) -> Target:
   """
   Create a new target of the specified *type* and register it to the
   current #Session and scope (or the specified scope).
