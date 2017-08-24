@@ -21,10 +21,11 @@
 import click
 import configparser
 import nodepy
+import operator
 import sys
 import api from './api'
 import path from './core/path'
-import {Session} from './core/buildgraph'
+import {Session, compute_action_key} from './core/buildgraph'
 import {Graph, dotviz} from './core/graph'
 
 VERSION = module.package.json['version']
@@ -92,12 +93,20 @@ def main(file, config, debug, release, target, dotviz_targets, dotviz_actions):
   if dotviz_targets:
     do_visualize(dest=dotviz_targets, graph=session.target_graph)
   if dotviz_actions:
-    do_visualize(dest=dotviz_actions, graph=session.action_graph)
+    def text_of(action):
+      append = ''
+      if action.pure:
+        append = '\\n' + compute_action_key(action)[:10] + '...'
+      return action.identifier + append
+    do_visualize(dest=dotviz_actions, graph=session.action_graph, text_of=text_of)
   if dotviz_targets or dotviz_actions:
     return
 
 
-def do_visualize(dest: str, graph: Graph) -> None:
+def do_visualize(dest: str, graph: Graph, text_of = None) -> None:
+  if text_of is None:
+    text_of = operator.attrgetter('identifier')
+
   if dest in ('', '-'):
     dest = sys.stdout
     do_close = False
@@ -106,7 +115,7 @@ def do_visualize(dest: str, graph: Graph) -> None:
     do_close = True
 
   try:
-    dotviz(dest, graph, text_of = lambda d: d.identifier)
+    dotviz(dest, graph, text_of=text_of)
   finally:
     if do_close:
       dest.close()
