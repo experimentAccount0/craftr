@@ -21,9 +21,11 @@
 import click
 import configparser
 import nodepy
+import sys
 import api from './api'
 import path from './core/path'
 import {Session} from './core/buildgraph'
+import {Graph, dotviz} from './core/graph'
 
 VERSION = module.package.json['version']
 
@@ -37,7 +39,11 @@ VERSION = module.package.json['version']
 @click.option('--release', is_flag=True, help='Short form of --target=release')
 @click.option('--target', metavar='TARGET', default='debug',
   help='The build target (usually "debug" or "release").')
-def main(file, config, debug, release, target):
+@click.option('--dotviz-targets', metavar='FILENAME',
+  help='Generate a DOT visualizaton of the target graph.')
+@click.option('--dotviz-actions', metavar='FILENAME',
+  help='Generate a DOT visualizaton of the action graph.')
+def main(file, config, debug, release, target, dotviz_targets, dotviz_actions):
   if debug:
     target = 'debug'
   elif release:
@@ -80,6 +86,28 @@ def main(file, config, debug, release, target):
   finally:
     require.context.event_handlers.remove(event_handler)
     session.leave_scope('__main__')
+
+  if dotviz_targets:
+    do_visualize(dest=dotviz_targets, graph=session.target_graph)
+  if dotviz_actions:
+    do_visualize(dest=dotviz_actions, graph=session.action_graph)
+  if dotviz_targets or dotviz_actions:
+    return
+
+
+def do_visualize(dest: str, graph: Graph) -> None:
+  if dest in ('', '-'):
+    dest = sys.stdout
+    do_close = False
+  else:
+    dest = open(dest, 'w')
+    do_close = True
+
+  try:
+    dotviz(dest, graph, text_of = lambda d: d.identifier)
+  finally:
+    if do_close:
+      dest.close()
 
 
 if require.main == module:
