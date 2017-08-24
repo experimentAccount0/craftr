@@ -23,7 +23,7 @@ import functools
 import sys
 import typing as t
 import werkzeug.local as _local
-import {Target, Scope} from './core/buildgraph'
+import {Scope, Target, Action} from './core/buildgraph'
 import {TargetRef} from './core/util'
 
 local = _local.Local()
@@ -85,8 +85,8 @@ def create_target(
 
 def target_factory(cls: t.Type[Target]) -> t.Callable[..., Target]:
   """
-  A decorator for #Target subclasses that wraps #create_target() with the
-  specified target *cls*. Example:
+  Creates a wrapper for #Target subclasses that calls #create_target() with
+  the specified target *cls*. Example:
 
   ```
   class MyTarget(craftr.Target):
@@ -104,4 +104,65 @@ def target_factory(cls: t.Type[Target]) -> t.Callable[..., Target]:
     return create_target(cls, *args, **kwargs)
 
   wrapper.wrapped_target_type = cls
+  return wrapper
+
+
+def create_action(
+      cls: t.Type[Action],
+      source: Target,
+      *,
+      name: str,
+      pure: bool = True,
+      deps: t.List[t.Union[Action, Target]] = None,
+      inputs: t.List[str] = None,
+      outputs: t.List[str] = None,
+      **kwargs) -> Action:
+  """
+  Create a new action for *target* of the specified *cls*. The action will be
+  immediately registered to the target and the action graph.
+  """
+
+  action_deps = []
+  for dep in (deps or ()):
+    if isinstance(dep, Target):
+      action_deps.extend(dep.leaf_actions())
+    elif isinstance(dep, Action):
+      action_deps.append(dep)
+    else:
+      raise TypeError('deps[i] must be Target/Action, got {}'.format(
+        type(dep).__name__))
+
+  action = cls(source=source, name=name, pure=pure, inputs=inputs,
+               outputs=outputs, **kwargs)
+  session.add_action(source, action, deps=action_deps)
+  return action
+
+
+def action_factory(cls: t.Type[Action]) -> t.Callable[..., Action]:
+  """
+  Creates a wrapper for #Action subclasses that accepts a #Target as first
+  parameter (for the source) and then any additional arguments for the
+  constructor for *cls*. The action will be added to target specified to the
+  first argument immediately. Example:
+
+  ```
+  class MyAction(craftr.Action):
+    ...
+
+  my_action = action_factory(MyAction)
+
+  class MyTarget(craftr.Target):
+
+    def translate(self):
+      my_action(self, 'action-name', deps=self.deps())
+  ```
+
+  The returned callable has a `wrapped_action_type` argument that contains
+  the specified *cls* object.
+  """
+
+  @functools.wraps(cls)
+  def wrapper(*args, **kwargs) -> cls:
+    return create_action(cls, *args, **kwargs)
+
   return wrapper

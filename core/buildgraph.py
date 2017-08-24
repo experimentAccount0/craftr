@@ -50,6 +50,7 @@ class Scope:
     return '<Scope "{}" @ "{}">'.format(self.name, self.directory)
 
   def add_target(self, target: 'Target') -> None:
+    assert target.scope() is self
     if target.name in self.targets:
       raise RuntimeError('target {!r} already exists'.format(target.name))
     self.targets[target.name] = target
@@ -67,12 +68,14 @@ class Target(metaclass=abc.ABCMeta):
   session: reqref['Session']
   scope: reqref[Scope]
   name: str
+  actions: t.Dict[str, 'Action']
 
   def __init__(self, scope: Scope, name: str, visible_deps: t.List[str] = None):
     self.session = None
     self.scope = reqref[Scope](scope)
     self.name = name
     self.visible_deps = visible_deps
+    self.actions = {}
 
   def __repr__(self):
     typename = type(self).__name__
@@ -97,9 +100,41 @@ class Target(metaclass=abc.ABCMeta):
 
     graph = self.session().target_graph
     if visible and self.visible_deps is not None:
-      return [graph[key] for key in self.visible_deps]
+      keys = [graph[key] for key in self.visible_deps]
     else:
-      return list(graph.inputs(self.identifier))
+      keys = list(graph.inputs(self.identifier))
+
+    return [graph[k] for k in keys]
+
+  def add_action(self, action: 'Action') -> None:
+    """
+    Adds an action to the #Target.
+    """
+
+    assert action.source() is self
+    if action.name in self.actions:
+      raise RuntimeError('action {!r} already exists'.format(action.name))
+    self.actions[action.name] = action
+
+  def leaf_actions(self) -> t.Iterable['Action']:
+    """
+    Returns a list of all the actions in this target that do not serve as an
+    input to another action inside the same target. These actions are
+    considered "leaf actions" and are used by default when a Target is passed
+    to the dependencies of an action when using #api.create_action() or
+    #api.action_factory().
+    """
+
+    if not self.session:
+      raise RuntimeError('target not attached to a session')
+
+    graph = self.session().action_graph
+    for action in self.actions.values():
+      for output in graph.outputs(action.identifier):
+        if output.source() is self:
+          break
+      else:
+        yield action
 
   @abc.abstractmethod
   def translate(self):
@@ -139,18 +174,20 @@ class Action(metaclass=abc.ABCMeta):
   inputs: t.List[str]
   outputs: t.List[str]
 
-  def __init__(self, source: Target, name: str):
+  def __init__(self, source: Target, name: str, pure: bool = True,
+               inputs: t.List[str] = None, outputs: t.List[str] = None):
     self.source = reqref[Target](source)
     self.name = name
-    self.pure = True
-    self.inputs = []
-    self.outputs = []
+    self.pure = pure
+    self.inputs = [] if inputs is None else inputs
+    self.outputs = [] if outputs is None else outputs
 
   @property
   def identifier(self):
-    return '{}:{}'.format(self.source.identifier, self.name)
+    return '{}/{}'.format(self.source().identifier, self.name)
 
   def get_hash_components(self) -> t.Iterable:
+    yield hashing.DataComponent(self.identifier.encode('utf8'))
     for filename in self.inputs:
       yield hashing.FileComponent(filename, True)
     for filename in self.outputs:
@@ -209,6 +246,22 @@ class Session:
     target.session = reqref(self)
     target.scope().add_target(target)
     self.target_graph[target.identifier] = target
+
+  def add_action(self, target: Target, action: Action,
+                 deps: t.List[Action] = None):
+    """
+    Adds an action to the specified *target* and into the action graph. If
+    specified, *deps* can be used to specify temporal dependencies to the
+    action.
+    """
+
+    assert target.session() is self
+    target.add_action(action)
+
+    ident = action.identifier
+    self.action_graph[ident] = action
+    for dep in (deps or ()):
+      self.action_graph.edge(dep.identifier, ident)
 
   def translate_targets(self):
     """

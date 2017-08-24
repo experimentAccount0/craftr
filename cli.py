@@ -87,6 +87,8 @@ def main(file, config, debug, release, target, dotviz_targets, dotviz_actions):
     require.context.event_handlers.remove(event_handler)
     session.leave_scope('__main__')
 
+  session.translate_targets()
+
   if dotviz_targets:
     do_visualize(dest=dotviz_targets, graph=session.target_graph)
   if dotviz_actions:
