@@ -204,3 +204,19 @@ class MyStashServer(base.StashServer):
 
 exports = MyStashServer
 ```
+
+## Configuration
+
+Craftr uses TOML or Python configuration files. The configuration files are
+loaded in the following order:
+
+* `~/.craftr/config`
+* `~/.craftr/config.py`
+* `./.craftrconfig`
+* `./.craftrconfig.py`
+
+Craftr modules can read arbitrary configuration values from the
+`Session.config` object. Section names are combined with option names.
+Eg. to read the `[build] backend = "python"` configuration, you can use
+
+    value = session.config.get('build.backend', default_value)

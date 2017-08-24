@@ -31,6 +31,24 @@ import {Graph, dotviz} from './core/graph'
 VERSION = module.package.json['version']
 
 
+def load_config(filename, format):
+  """
+  Loads a configuration file. *format* can be either `'toml'` or `'python'`.
+  """
+
+  if format == 'toml':
+    if path.isfile(filename):
+      api.session.config.read(filename)
+  elif format == 'python':
+    try:
+      require(filename)
+    except require.ResolveError as e:
+      if e.request.name != filename:
+        raise
+  else:
+    raise ValueError('invalid format: {!r}'.format(format))
+
+
 @click.command(help="Craftr v{}".format(VERSION))
 @click.option('-f', '--file', metavar='FILENAME', default='Craftrfile.py',
   help='The build script to execute.')
@@ -57,12 +75,11 @@ def main(file, config, debug, release, target, backend,
   session = Session(target)
   api.local.session = session
 
-  # Parse the configuration file.
-  filename = path.expanduser('~/.craftrconfig')
-  if path.isfile(filename):
-    session.config.read(filename)
-  if path.isfile(config):
-    session.config.read(config)
+  # Load the configuration files.
+  load_config(path.expanduser('~/.craftr/config'), format='toml')
+  load_config(path.expanduser('~/.craftr/config.py'), format='python')
+  load_config('./.craftrconfig', format='toml')
+  load_config('./.craftrconfig.py', format='python')
 
   # Load the backend.
   if not backend:
