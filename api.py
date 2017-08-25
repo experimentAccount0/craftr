@@ -82,10 +82,10 @@ def create_target(
   target = type(name=name, scope=scope, visible_deps=visible_deps, **kwargs)
   session.add_target(target)
 
-  # Link the dependencies in the target. We only link the invisible deps.
-  # If an actual dependency is also exposed to the visible dependencies,
-  # it must be done so explicitly.
+  # Link the dependencies of the target.
   for ref in (deps or ()):
+    session.target_graph.edge(ref, target.identifier)
+  for ref in (visible_deps or ()):
     session.target_graph.edge(ref, target.identifier)
 
   return target
