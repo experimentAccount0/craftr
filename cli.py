@@ -220,4 +220,7 @@ def dotviz(session, targets, actions, output):
 
 
 if require.main == module:
-  main()
+  try:
+    main(standalone_mode=False)
+  except click.Abort:
+    sys.exit(127)

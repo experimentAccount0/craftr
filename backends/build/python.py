@@ -19,6 +19,7 @@
 # SOFTWARE.
 
 import sys
+import time
 import typing as t
 import {Backend} from '../../core/backend'
 import {Session, Target} from '../../core/buildgraph'
@@ -31,18 +32,60 @@ class PythonBackend(Backend):
   """
 
   def build(self, targets: t.List[Target]):
-    for node in topological_sort(self.session.action_graph):
-      process = node.data.execute()
-      process.wait()
+    graph = self.session.action_graph
+    completed_actions = set()
+    actions = [n.data for n in topological_sort(graph)]
+
+    def can_run(action):
+      for dep in graph.inputs(action.identifier):
+        if dep not in completed_actions:
+          return False
+      return True
+
+    class BuildError:
+      pass
+
+    # A list of all running actions and processes.
+    processes = []
+    def check_process(process):
+      action, process = process
       code = process.poll()
+      if code is None: return
+      processes.remove((action, processes))
+      process.print_stdout()
+      sys.stdout.flush()
       if code != 0:
         print('*** craftr error: action {} exited with non-zero status code {}'
-          .format(node.key, code), file=sys.stderr)
-        process.print_stdout()
+          .format(action.identifier, code), file=sys.stderr)
         sys.exit(code)
-      else:
-        process.print_stdout()
-        sys.stdout.flush()
+
+    try:
+      for action in actions:
+        while True:
+          if can_run(action):
+            processes.append((action, action.execute()))
+            break
+
+          # Check the status of all currently running processes.
+          for process in processes[:]:
+            check_process(process)
+
+          time.sleep(0.25)
+
+      while processes:
+        for process in processes[:]:
+          check_process(process)
+        time.sleep(0.25)
+
+    except BaseException as e:
+      for action, process in processes:
+        if process.poll() is None:
+          process.terminate()
+      for action, process in processes:
+        process.wait()
+
+      print('*** craftr error: keyboard interrupt', file=sys.stderr)
+      raise
 
   def clean(self, targets: t.List[Target]):
     raise NotImplementedError

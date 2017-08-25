@@ -221,6 +221,12 @@ class ActionProcess(metaclass=abc.ABCMeta):
     """
 
   @abc.abstractmethod
+  def terminate(self) -> None:
+    """
+    Terminate the process.
+    """
+
+  @abc.abstractmethod
   def wait(self, timeout: float = None) -> None:
     """
     Wait until the process completed, or at max *timeout* seconds.

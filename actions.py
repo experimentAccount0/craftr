@@ -66,6 +66,7 @@ class SubprocessActionProcess(ThreadedActionProcess):
     self.capture = action.buffer
     self.current_process = None
     self.current_command = None
+    self.terminated = False
     self.buffer = io.BytesIO()
 
   def display_text(self) -> str:
@@ -73,8 +74,19 @@ class SubprocessActionProcess(ThreadedActionProcess):
       return '$ ' + ' '.join(shlex.quote(x) for x in self.current_command)
     return 'SubprocessActionProcess'
 
+  def terminate(self):
+    with self.lock:
+      if self.current_process:
+        self.current_process.terminate()
+      self.commands = []
+      self.terminated = True
+
   def poll(self):
     with self.lock:
+      if self.terminated:
+        if self.current_process:
+          return self.current_process.poll()
+        return 127
       if self.current_process:
         code = self.current_process.poll()
         if code is None:
@@ -112,11 +124,11 @@ class SubprocessActionProcess(ThreadedActionProcess):
           shell=False, stdout=stdout, stderr=stderr, stdin=stdin,
           universal_newlines=False, env=env, cwd=cwd)
 
-        result = self.current_process.communicate()
-        if self.capture:
-          self.buffer.write(result[0])
-        if self.current_process.returncode != 0:
-          break
+      result = self.current_process.communicate()
+      if self.capture:
+        self.buffer.write(result[0])
+      if self.current_process.returncode != 0:
+        break
 
 
 class SubprocessAction(Action):
