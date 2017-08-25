@@ -53,9 +53,10 @@ class PythonBackend(Backend):
       if code is None: return
       processes.remove((action, process))
       completed_actions.add(action.identifier)
-      process.print_stdout()
+      process.print_stdout(prefix='[{}]: {}\n'.format(action.identifier, process.display_text()))
       sys.stdout.flush()
       if code != 0:
+        print(file=sys.stderr)
         print('*** craftr error: action {} exited with non-zero status code {}'
           .format(action.identifier, code), file=sys.stderr)
         sys.exit(code)
@@ -65,6 +66,7 @@ class PythonBackend(Backend):
         while True:
           if can_run(action):
             processes.append((action, action.execute()))
+            print(processes[-1][1].display_text())
             break
 
           # Check the status of all currently running processes.
@@ -85,8 +87,12 @@ class PythonBackend(Backend):
       for action, process in processes:
         process.wait()
 
-      print('*** craftr error: keyboard interrupt', file=sys.stderr)
-      raise
+      time.sleep(0.25)
+      if isinstance(e, KeyboardInterrupt):
+        print(file=sys.stderr)
+        print('*** craftr error: keyboard interrupt', file=sys.stderr)
+      else:
+        raise
 
   def clean(self, targets: t.List[Target]):
     raise NotImplementedError

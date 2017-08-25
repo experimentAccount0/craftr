@@ -46,6 +46,9 @@ target = _local.LocalProxy(lambda: session.target)
 #: The build output directory. Defaults to target/<arch>-<target>.
 builddir = _local.LocalProxy(lambda: session.build_directory)
 
+#: The sessions configuration object.
+config = _local.LocalProxy(lambda: session.config)
+
 
 def create_target(
       type: t.Type[Target], *,

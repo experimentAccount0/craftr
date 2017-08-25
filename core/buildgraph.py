@@ -248,13 +248,17 @@ class ActionProcess(metaclass=abc.ABCMeta):
     this case, the function should simply return an empty string.
     """
 
-  def print_stdout(self) -> None:
+  def print_stdout(self, prefix=None) -> None:
     """
     Retrieves the output of this process from #stdout() and prints it to this
     process' standard output.
     """
 
     data = self.stdout()
+    if not data:
+      return
+    if prefix:
+      sys.stdout.write(prefix)
     if isinstance(data, bytes):
       sys.stdout.buffer.write(data)
     else:
