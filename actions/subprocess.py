@@ -20,16 +20,14 @@ class SubprocessActionProcess(ThreadedActionProcess):
   """
 
   def __init__(self, action: 'SubprocessAction'):
-    ThreadedActionProcess.__init__(self)
+    ThreadedActionProcess.__init__(self, capture_output=action.buffer)
     self.action = action
     self.commands = list(action.commands)  # acts as a queue
-    self.capture = action.buffer
     self.current_process = None
     self.current_command = None
     self.terminated = False
     self.error_code = None
     self.done = False
-    self.buffer = io.BytesIO()
 
   def display_text(self) -> str:
     if self.current_command is not None:
@@ -66,9 +64,6 @@ class SubprocessActionProcess(ThreadedActionProcess):
         return None
       return 0  # no commands, nothing to do
 
-  def stdout(self) -> bytes:
-    return self.buffer.getvalue()
-
   def run(self):
     while True:
       with self.lock:
@@ -76,7 +71,7 @@ class SubprocessActionProcess(ThreadedActionProcess):
           break
         self.current_command = self.commands.pop(0)
 
-        if self.capture:
+        if self.capture_output:
           stdout = _subp.PIPE
           stderr = _subp.STDOUT
           stdin  = _subp.PIPE
@@ -92,18 +87,13 @@ class SubprocessActionProcess(ThreadedActionProcess):
             shell=False, stdout=stdout, stderr=stderr, stdin=stdin,
             universal_newlines=False, env=env, cwd=cwd)
         except OSError as exc:
-          msg = str(exc)
-          if self.capture:
-            self.buffer.write(msg.encode('utf8'))
-            self.buffer.write(b'\n')  # TODO: system newline
-          else:
-            print(exc)
+          self.print(exc, err=True)
           self.exit_code = exc.errno
           self.done = True
           break
 
       result = self.current_process.communicate()
-      if self.capture:
+      if self.capture_output:
         self.buffer.write(result[0])
       if self.current_process.returncode != 0:
         break

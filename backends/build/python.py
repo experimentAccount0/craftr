@@ -49,8 +49,9 @@ class PythonBackend(Backend):
     processes = []
     def check_process(process):
       action, process = process
+      if process.is_running():
+        return
       code = process.poll()
-      if code is None: return
       processes.remove((action, process))
       completed_actions.add(action.identifier)
       process.print_stdout(prefix='[{}]: {}\n'.format(action.identifier, process.display_text()))

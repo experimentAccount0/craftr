@@ -18,6 +18,52 @@
 # OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
 # SOFTWARE.
 
-import * from './mkdir'
-import * from './null'
-import * from './subprocess'
+__all__ = ['mkdir', 'MkdirAction']
+
+import errno
+import os
+import api from '../api'
+import {ThreadedActionProcess} from './base'
+import {Action} from '../core/buildgraph'
+
+
+class MkdirActionProcess(ThreadedActionProcess):
+
+  def __init__(self, directory):
+    self.directory = directory
+    self.exit_code = None
+    super().__init__()
+
+  def display_text(self):
+    return 'mkdir: {}'.format(self.directory)
+
+  def terminate(self):
+    pass
+
+  def poll(self):
+    with self.lock:
+      return self.exit_code
+
+  def run(self):
+    exit_code = 0
+    try:
+      os.makedirs(self.directory)
+    except OSError as e:
+      if e.errno != errno.EEXIST:
+        exit_code = e.errno
+        self.print(e, err=True)
+    with self.lock:
+      self.exit_code = exit_code
+
+
+class MkdirAction(Action):
+
+  def __init__(self, *, directory: str, **kwargs):
+    super().__init__(**kwargs)
+    self.directory = directory
+
+  def execute(self):
+    return MkdirActionProcess(self.directory).start()
+
+
+mkdir = api.action_factory(MkdirAction)

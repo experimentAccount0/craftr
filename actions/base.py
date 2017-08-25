@@ -21,6 +21,7 @@
 __all__ = ['ThreadedActionProcess']
 
 import abc
+import io
 import threading
 import {ActionProcess} from '../core/buildgraph'
 
@@ -34,9 +35,18 @@ class ThreadedActionProcess(ActionProcess, threading.Thread):
 
   lock: threading.RLock
 
-  def __init__(self, target=None):
+  def __init__(self, target=None, capture_output=True):
     threading.Thread.__init__(self, target=target)
     self.lock = threading.RLock()
+    self.buffer = io.BytesIO()
+    self.capture_output = capture_output
+
+  def print(self, *objects, sep=' ', end='\n', err=False):
+    if self.capture_output:
+      msg = sep.join(map(str, objects)) + end
+      self.buffer.write(msg.encode('utf8'))
+    else:
+      print(msg, file=sys.stderr if err else sys.stdout)
 
   def start(self) -> 'ThreadedActionProcess':
     threading.Thread.start(self)
@@ -51,3 +61,6 @@ class ThreadedActionProcess(ActionProcess, threading.Thread):
 
   def wait(self, timeout: float = None) -> None:
     self.join(timeout)
+
+  def stdout(self) -> bytes:
+    return self.buffer.getvalue()

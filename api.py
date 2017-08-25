@@ -19,7 +19,7 @@
 # SOFTWARE.
 
 __all__ = ['session', 'target', 'platform', 'arch', 'builddir', 'scope',
-           'scope_builddir', 'config', 'glob', 'canonicalize']
+           'scope_builddir', 'config', 'glob', 'canonicalize', 'path']
 import functools
 import typing as t
 import werkzeug.local as _local
@@ -54,7 +54,7 @@ config = lambda: session.config
 scope = lambda: session.current_scope
 
 #: The build directory of the scope.
-scope_builddir = lambda: path.join(session.build_directory, scope().name)
+scope_builddir = lambda: path.join(session.build_directory, 'scopes', scope().name)
 
 
 def create_target(
