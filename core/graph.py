@@ -106,6 +106,9 @@ class Graph(t.Generic[K, V]):
   def values(self) -> t.Iterable[V]:
     return (node.data for node in self.__nodes.values())
 
+  def items(self) -> t.Iterable[t.Tuple[K, V]]:
+    return ((node.key, node.data) for node in self.__nodes.values())
+
   def nodes(self) -> t.Iterable[Node]:
     return self.__nodes.values()
 

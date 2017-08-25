@@ -146,7 +146,7 @@ def glob(patterns: t.Union[str, t.List[str]], parent: str = None,
       pattern = join(parent, pattern)
     result += glob2.glob(canonical(pattern))
 
-  for pattern in excludes:
+  for pattern in (excludes or ()):
     if not isabs(pattern):
       pattern = join(parent, pattern)
     pattern = canonical(pattern)
