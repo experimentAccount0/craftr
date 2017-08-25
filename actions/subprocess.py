@@ -9,6 +9,7 @@ import threading
 import typing as t
 
 import api from '../api'
+import hashing from '../core/hashing'
 import {ThreadedActionProcess} from './base'
 import {Action, ActionProcess} from '../core/buildgraph'
 
@@ -118,6 +119,11 @@ class SubprocessAction(Action):
     self.environ = {} if environ is None else environ
     self.cwd = cwd
     self.buffer = buffer
+
+  def get_hash_components(self):
+    yield from super().get_hash_components()
+    commands = ''.join(''.join(cmd) for cmd in self.commands)
+    yield hashing.DataComponent(commands.encode('utf8'))
 
   def execute(self):
     return SubprocessActionProcess(self).start()

@@ -53,6 +53,9 @@ class NullAction(Action):
   would be lost if no action would be generated.
   """
 
+  def skippable(self, build):
+    return True
+
   def execute(self):
     return NullActionProcess()
 
