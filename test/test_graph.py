@@ -34,5 +34,3 @@ def test_graph():
   assert_equals(list(g.outputs('//libcurl:curl')), [])
   assert g.has_edge('//libcurl:compile', '//libcurl:curl')
   assert ('//libcurl:compile', '//libcurl:curl') in g
-
-  print(g.nodes)
