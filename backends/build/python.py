@@ -51,7 +51,8 @@ class PythonBackend(Backend):
       action, process = process
       code = process.poll()
       if code is None: return
-      processes.remove((action, processes))
+      processes.remove((action, process))
+      completed_actions.add(action.identifier)
       process.print_stdout()
       sys.stdout.flush()
       if code != 0:
