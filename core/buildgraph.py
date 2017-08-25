@@ -260,13 +260,17 @@ class Session:
   The session manages scopes and the target and action graph.
   """
 
-  target: str
+  build: 'BuildBackend'
+  build_directory: str
+  stashes: 'StashServer'
   target_graph: Graph[str, Target]
   action_graph: Graph[str, Action]
   scopes: t.Dict[str, Scope]
   scopestack: t.List[Scope]
+  config: Configuration
 
   def __init__(self, target: str = 'debug', arch: str = None):
+    self.build = None
     self.build_directory = 'build'
     self.target_graph = Graph()
     self.action_graph = Graph()

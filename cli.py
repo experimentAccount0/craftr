@@ -20,13 +20,14 @@
 
 import click
 import configparser
+import functools
 import nodepy
 import operator
 import sys
 import api from './api'
 import path from './core/path'
 import {Session, compute_action_key} from './core/buildgraph'
-import {Graph, dotviz} from './core/graph'
+import _graph from './core/graph'
 
 VERSION = module.package.json['version']
 
@@ -49,9 +50,21 @@ def load_config(filename, format):
     raise ValueError('invalid format: {!r}'.format(format))
 
 
-@click.command(help="Craftr v{}".format(VERSION))
-@click.option('-b', '--build-directory', metavar='DIRECTORY',
-  help='The build directory. Defaults to target/<arch>-<target>.')
+def print_err(*args, **kwargs):
+  kwargs.setdefault('file', sys.stderr)
+
+
+def pass_session(f):
+  @click.pass_context
+  @functools.wraps(f)
+  def wrapper(ctx, *args, **kwargs):
+    return ctx.invoke(f, ctx.obj['session'], *args, **kwargs)
+  return wrapper
+
+
+@click.group()
+@click.option('-b', '--build-directory', metavar='DIRNAME',
+  help='The build directory.')
 @click.option('-f', '--file', metavar='FILENAME', default='Craftrfile.py',
   help='The build script to execute.')
 @click.option('-c', '--config', metavar='FILENAME', default='.craftrconfig',
@@ -64,12 +77,13 @@ def load_config(filename, format):
   help='The build target (usually "debug" or "release").')
 @click.option('--backend', metavar='BACKEND',
   help='Name of the build backend. Defaults to "python"')
-@click.option('--dotviz-targets', metavar='FILENAME',
-  help='Generate a DOT visualizaton of the target graph.')
-@click.option('--dotviz-actions', metavar='FILENAME',
-  help='Generate a DOT visualizaton of the action graph.')
-def main(build_directory, file, config, debug, release, target, arch, backend,
-         dotviz_targets, dotviz_actions):
+@click.pass_context
+def main(ctx, build_directory, file, config, debug, release, target,
+         arch, backend):
+  """
+  The Craftr build system.
+  """
+
   if debug:
     target = 'debug'
   elif release:
@@ -97,6 +111,7 @@ def main(build_directory, file, config, debug, release, target, arch, backend,
     backend_class = require('./backends/build/' + backend)
   except require.ResolveError:
     backend_class = require(backend)
+  session.build = backend_class(session)
 
   # Load the stash server.
   stashes = session.config.get('stashes.backend', None)
@@ -134,43 +149,71 @@ def main(build_directory, file, config, debug, release, target, arch, backend,
     require.context.event_handlers.remove(event_handler)
     session.leave_scope('__main__')
 
-  session.translate_targets()
+  ctx.obj = {'session': session}
 
-  # Output graph visualizations.
-  if dotviz_targets:
+
+@main.command()
+@pass_session
+def build(session):
+  """
+  Execute the build.
+  """
+
+  session.translate_targets()
+  session.build.build([])
+
+
+@main.command()
+@pass_session
+def clean(session):
+  """
+  Clean the build directory.
+  """
+
+  session.translate_targets()
+  session.build.clean([])
+
+
+@main.command()
+@click.option('--targets', is_flag=True, help='Visualize targets. This is the default')
+@click.option('--actions', is_flag=True, help='Visualiez actions.')
+@click.option('-o', '--output', metavar='FILENAME', help='Output filename.')
+@pass_session
+def dotviz(session, targets, actions, output):
+  """
+  Generate a DOT visualization.
+  """
+
+  if not targets and not actions:
+    targets = True
+  if targets and actions:
+    print_err('Error: --targets and --actions can not be combined')
+    sys.exit(1)
+  if targets:
     def text_of(target):
       lines = [type(target).__name__, target.identifier]
       return '\\n'.join(lines)
-    do_visualize(dotviz_targets, session.target_graph, text_of)
-  if dotviz_actions:
+    graph = session.target_graph
+  elif actions:
     def text_of(action):
       lines = [type(action).__name__, action.identifier]
       if action.pure:
         lines.append(compute_action_key(action)[:10] + '...')
       return '\\n'.join(lines)
-    do_visualize(dotviz_actions, session.action_graph, text_of)
+    session.translate_targets()
+    graph = session.action_graph
+  else:
+    raise RuntimeError
 
-  # Graph visualizations exit early, no build.
-  if dotviz_targets or dotviz_actions:
-    return
-
-  backend = backend_class(session)
-  backend.build([])
-
-
-def do_visualize(dest: str, graph: Graph, text_of = None) -> None:
-  if text_of is None:
-    text_of = operator.attrgetter('identifier')
-
-  if dest in ('', '-'):
+  if not output:
     dest = sys.stdout
     do_close = False
   else:
-    dest = open(dest, 'w')
+    dest = open(output, 'w')
     do_close = True
 
   try:
-    dotviz(dest, graph, text_of=text_of)
+    _graph.dotviz(dest, graph, text_of=text_of)
   finally:
     if do_close:
       dest.close()

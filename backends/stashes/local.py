@@ -28,11 +28,48 @@ location (str): The path to a directory where the stashes are stored. Defaults
   `.craftrconfig.py` instead.
 """
 
+import os
+import typing as t
+import path from '../../core/path'
 import base from '../../core/stash'
 
 
+class LocalFileInfo(base.FileInfo):
+  pass
+
+
+class LocalStash(base.Stash):
+  pass
+
+
+class LocalStashBuilder(base.StashBuilder):
+  pass
+
+
 class LocalStashServer(base.StashServer):
-  ...
+
+  def __init__(self, session):
+    base.StashServer.__init__(self, session)
+
+    location = session.config.get('stashes.location', None)
+    if not location:
+      location = path.expanduser('~/.craftr/stashes')
+    self._location = location
+
+  def can_create_new_stashes(self):
+    directory = self._location
+    while not path.exists(directory):
+      directory = path.dir(directory)
+    if not path.isdir(directory):
+      print('>> not a directory:', directory)
+      return False
+    return os.access(directory, os.W_OK)
+
+  def new_stash(self, key: str) -> LocalStashBuilder:
+    raise NotImplementedError
+
+  def find_stash(self, key: str) -> t.Optional[LocalStash]:
+    return None
 
 
 exports = LocalStashServer
