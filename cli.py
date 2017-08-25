@@ -42,7 +42,7 @@ def load_config(filename, format):
       api.session.config.read(filename)
   elif format == 'python':
     try:
-      require(filename)
+      require(filename, current_dir=path.cwd())
     except require.ResolveError as e:
       if e.request.name != filename:
         raise
@@ -110,7 +110,7 @@ def main(ctx, build_directory, file, config, debug, release, target,
   try:
     backend_class = require('./backends/build/' + backend)
   except require.ResolveError:
-    backend_class = require(backend)
+    backend_class = require(backend, current_dir=path.cwd())
   session.build = backend_class(session)
 
   # Load the stash server.
@@ -119,7 +119,7 @@ def main(ctx, build_directory, file, config, debug, release, target,
     try:
       stashes_class = require('./backends/stashes/' + stashes)
     except require.ResolveError:
-      stashes_class = require(stashes)
+      stashes_class = require(stashes, current_dir=path.cwd())
     session.stashes = stashes_class(session)
 
   # Make sure that Node.py modules with a 'Craftrfile' can be loaded
@@ -144,7 +144,7 @@ def main(ctx, build_directory, file, config, debug, release, target,
     # is embedded in a Node.py package, that namespace will be automatically
     # obtained when the module is loaded (due to the event handler that we
     # just registered).
-    require.exec_main(file)
+    require.exec_main(file, current_dir=path.cwd())
   finally:
     require.context.event_handlers.remove(event_handler)
     session.leave_scope('__main__')
