@@ -18,6 +18,11 @@
 # OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
 # SOFTWARE.
 
+import sys
+if sys.version < '3.6':
+  print('fatal: Craftr requires CPython 3.6 or higher')
+  sys.exit(1)
+
 import click
 import configparser
 import functools

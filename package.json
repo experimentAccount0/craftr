@@ -4,6 +4,9 @@
   "description": "Craftr meta build system.",
   "author": "Niklas Rosenstein <rosensteinniklas@gmail.com>",
   "license": "MIT",
+  "engines": {
+    "python": ">=3.6"
+  },
   "main": "./api.py",
   "bin": {
     "craftr": "./cli.py"

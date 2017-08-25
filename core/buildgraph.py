@@ -124,6 +124,12 @@ class Target(metaclass=abc.ABCMeta):
 
       result = self.deps('direct') + self.deps('visible')
       [recursion(dep) for dep in result]
+
+      # Create unique entries in the resulting list.
+      # NOTE: dicts being ordered is a 3.6 implementation detail. Since
+      #       Craftr will only run CPython 3.6+, that's fine for now. We
+      #       should check back in 3.7 if it stayed the same, though.
+      result = list(dict.fromkeys(result))
       return result
 
   def add_action(self, action: 'Action') -> None:
