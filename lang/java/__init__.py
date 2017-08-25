@@ -80,7 +80,7 @@ class JavaLibrary(craftr.AnnotatedTarget):
   jar_name:
     The name of the JAR file. Defaults to the target name.
 
-  entry_point:
+  main_class:
     A classname that serves as an entry point for the JAR archive. Note that
     you should prefer to use `java_binary()` to create a JAR binary that
     contains all its dependencies merged into one.
@@ -103,7 +103,7 @@ class JavaLibrary(craftr.AnnotatedTarget):
   class_dir: str = None
   jar_dir: str = None
   jar_name: str = None
-  entry_point: str = None
+  main_class: str = None
   javac: str = None
   javac_jar: str = None
   extra_arguments: t.List[str] = None
@@ -166,12 +166,12 @@ class JavaLibrary(craftr.AnnotatedTarget):
       javac = None
 
     flags = 'cvf'
-    if self.entry_point:
+    if self.main_class:
       flags += 'e'
 
     command = [self.javac_jar, flags, self.jar_filename]
-    if self.entry_point:
-      command.append(self.entry_point)
+    if self.main_class:
+      command.append(self.main_class)
     command.append('-C')
     command.append(self.class_dir)
     command.append('.')
@@ -201,7 +201,7 @@ class JavaBinary(craftr.AnnotatedTarget):
   jar_name:
     The name of the JAR file. Defaults to the target name.
 
-  entry_point:
+  main_class:
     The name of the main Java class.
 
   javac_jar:
@@ -211,7 +211,7 @@ class JavaBinary(craftr.AnnotatedTarget):
 
   jar_dir: str = None
   jar_name: str = None
-  entry_point: str
+  main_class: str
   javac_jar: str = None
 
   def __init__(self, **kwargs):
@@ -238,7 +238,7 @@ class JavaBinary(craftr.AnnotatedTarget):
 
     command = nodepy.proc_args + [require.resolve('./mergejar')]
     command += ['-o', self.jar_filename] + inputs
-    command += ['--main-class', self.entry_point]
+    command += ['--main-class', self.main_class]
 
     mkdir = actions.mkdir(self,
       name = 'jar_dir',
