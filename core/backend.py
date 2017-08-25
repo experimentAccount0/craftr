@@ -34,9 +34,23 @@ class Backend(metaclass=abc.ABCMeta):
     self.session = session
 
   @abc.abstractmethod
+  def get_cached_action_key(self, action: str) -> t.Optional[str]:
+    """
+    Return the previous hash key of the specified *action*. This only needs
+    to be implemented when the backend uses, for example, the
+    #Action.skippable() method.
+    """
+
+  @abc.abstractmethod
   def build(self, targets: t.List[Target]):
     pass
 
   @abc.abstractmethod
   def clean(self, targets: t.List[Target]):
     pass
+
+  @abc.abstractmethod
+  def finalize(self):
+    """
+    Called when the build process is about to exit successfully.
+    """

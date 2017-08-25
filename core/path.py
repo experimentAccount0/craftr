@@ -80,7 +80,7 @@ def issub(path: str) -> bool:
 
   if isabs(path):
     return False
-  if path.startswith(curdir_sep) or path.startswith(pardir_sep):
+  if path.startswith(curdir + sep) or path.startswith(pardir + sep):
     return False
   return True
 

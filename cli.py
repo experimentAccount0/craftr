@@ -161,6 +161,7 @@ def build(session):
 
   session.translate_targets()
   session.build.build([])
+  session.build.finalize()
 
 
 @main.command()
@@ -220,7 +221,7 @@ def dotviz(session, targets, actions, output):
 
 
 if require.main == module:
-  try:
-    main(standalone_mode=False)
-  except click.Abort:
-    sys.exit(127)
+  #try:
+  main(standalone_mode=False)
+  #except click.Abort:
+  #  sys.exit(127)

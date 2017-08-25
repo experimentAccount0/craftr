@@ -18,6 +18,8 @@
 # OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
 # SOFTWARE.
 
+import json
+import os
 import sys
 import time
 import typing as t
@@ -30,6 +32,22 @@ class PythonBackend(Backend):
   """
   The pure-python Craftr build backend.
   """
+
+  @property
+  def cache_filename(self):
+    return os.path.join(self.session.build_directory, 'cache.json')
+
+  def __init__(self, session):
+    super().__init__(session)
+    self._cache = {}
+
+    filename = self.cache_filename
+    if os.path.isfile(filename):
+      with open(filename, 'r') as fp:
+        self._cache = json.load(fp)
+
+  def get_cached_action_key(self, action: str) -> t.Optional[str]:
+    return self._cache.get('actions', {}).get(action, {}).get('key')
 
   def build(self, targets: t.List[Target]):
     graph = self.session.action_graph
@@ -64,6 +82,9 @@ class PythonBackend(Backend):
 
     try:
       for action in actions:
+        if action.skippable(self):
+          completed_actions.add(action.identifier)
+          continue
         while True:
           if can_run(action):
             processes.append((action, action.execute()))
@@ -92,11 +113,21 @@ class PythonBackend(Backend):
       if isinstance(e, KeyboardInterrupt):
         print(file=sys.stderr)
         print('*** craftr error: keyboard interrupt', file=sys.stderr)
+        raise
       else:
         raise
 
   def clean(self, targets: t.List[Target]):
     raise NotImplementedError
+
+  def finalize(self):
+    self._cache = {}
+    actions = self._cache.setdefault('actions', {})
+    for action in self.session.action_graph.values():
+      actions[action.identifier] = {'key': action.get_action_key()}
+
+    with open(self.cache_filename, 'w') as fp:
+      json.dump(self._cache, fp)
 
 
 exports = PythonBackend

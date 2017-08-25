@@ -183,17 +183,46 @@ class Action(metaclass=abc.ABCMeta):
     self.pure = pure
     self.inputs = [] if inputs is None else inputs
     self.outputs = [] if outputs is None else outputs
+    self._action_key = None
 
   @property
   def identifier(self):
     return '{}/{}'.format(self.source().identifier, self.name)
 
+  def get_action_key(self) -> str:
+    """
+    Returns the action hash key. Note that this key will be cached and not
+    be recomputed everytime it is requested. Once calculated, the action must
+    no longer be modified, as that would invalidate the cached hash key.
+    """
+
+    if self._action_key is None:
+      self._action_key = compute_action_key(self)
+    return self._action_key
+
   def get_hash_components(self) -> t.Iterable:
+    """
+    Yield data components that are to be included in this action's hash key.
+    By default, its identifier and input and output files are yielded.
+    """
+
     yield hashing.DataComponent(self.identifier.encode('utf8'))
     for filename in self.inputs:
       yield hashing.FileComponent(filename, True)
     for filename in self.outputs:
       yield hashing.FileComponent(filename, False)
+
+  def skippable(self, build: 'BuildBackend') -> bool:
+    """
+    Determine whether this action is skippable. The default implementation
+    checks the cashed action key provided by the build backend and the actual
+    action key.
+    """
+
+    cashed_key = build.get_cached_action_key(self.identifier)
+    if cashed_key is None or cashed_key != self.get_action_key():
+      return False
+    return True
 
   @abc.abstractmethod
   def execute(self) -> 'ActionProcess':
@@ -376,7 +405,7 @@ def compute_action_key(action: Action):
       # Find the canonical path relative to the build directory.
       directory = scope_directory if comp.is_input else build_directory
       filename = path.canonical(path.rel(comp.filename, directory))
-      hasher.update(filename)
+      hasher.update(filename.encode('utf8'))
 
       # Hashing the contents of input files is also necessary as the same
       # action with the same inputs and outputs etc. could be build with

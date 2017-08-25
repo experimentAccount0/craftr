@@ -62,6 +62,10 @@ class MkdirAction(Action):
     super().__init__(**kwargs)
     self.directory = directory
 
+  def skippable(self, build):
+    if os.path.isdir(self.directory):
+      return True
+
   def execute(self):
     return MkdirActionProcess(self.directory).start()
 
