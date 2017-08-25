@@ -6,7 +6,9 @@ title = "Java"
 import * from 'craftr/lang/java'
 ```
 
-## java_prebuilt()
+## Functions
+
+### java_prebuilt()
 
 Define a target that contains a prebuilt Java JAR library.
 
@@ -14,7 +16,7 @@ __Parameters__
 
 * `binary_jar`: The path to the prebuilt Java JAR file.
 
-## java_library()
+### java_library()
 
 Create a Java JAR library from a set of source files.
 
@@ -47,7 +49,7 @@ __Parameters__
 * `extra_arguments`: A list of additional arguments for the Java compiler.
   They will be appended to the ones specified in the configuration.
 
-## java_binary()
+### java_binary()
 
 Create an executable JAR archive from all the specified dependencies. All
 JAR archives will be merged into a single executable archive.
@@ -62,3 +64,27 @@ __Parameters__
 
 * `javac_jar`: The name of Java JAR command to use. If not specified, defaults
   to the value of the `java.javac_jar` option or simply "jar".
+
+## Example
+
+```python
+import * from 'craftr'
+import * from 'craftr/lang/java'
+
+java_prebuilt(
+  name = 'guava',
+  binary_jar = 'vendor/guava-22.0.jar'
+)
+
+java_library(
+  name = 'library',
+  srcs = glob(['**/*.java']),
+  deps = [':guava']
+)
+
+java_binary(
+  name = 'main',
+  deps = [':library'],
+  entry_point = 'Main'
+)
+```
