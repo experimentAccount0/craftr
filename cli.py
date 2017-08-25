@@ -197,7 +197,9 @@ def dotviz(session, targets, actions, output):
     graph = session.target_graph
   elif actions:
     def text_of(action):
-      lines = [type(action).__name__, action.identifier]
+      target = action.source()
+      lines = [type(target).__name__ + '({})'.format(target.identifier),
+               type(action).__name__ + '({})'.format(action.name)]
       if action.pure:
         lines.append(compute_action_key(action)[:10] + '...')
       return '\\n'.join(lines)
