@@ -181,6 +181,26 @@ def action_factory(cls: t.Type[Action]) -> t.Callable[..., Action]:
   return wrapper
 
 
+def inherit_annotations(*from_):
+  """
+  Decorator to inherit annotations from the object *from_*. If *from_* is
+  not specified, the decorator is supposed to be used on a class and the
+  parent class' annotations are inherited.
+  """
+
+  def wrapper(obj):
+    nonlocal from_
+    if not from_ and isinstance(obj, type):
+      from_ = obj.__bases__
+    for src in from_:
+      for key in src.__annotations__:
+        if key not in obj.__annotations__:
+          obj.__annotations__[key] = src.__annotations__[key]
+    return obj
+
+  return wrapper
+
+
 class AnnotatedTarget(Target):
   """
   A subclass of #Target which accepts keyword parameters as annotated on the
