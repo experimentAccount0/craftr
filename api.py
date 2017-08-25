@@ -80,9 +80,14 @@ def create_target(
   # Make sure all dependencies are absolute references.
   if deps is not None:
     deps = [str(TargetRef.parse(x, current_scope.name)) for x in deps]
-  if visible_deps is not None:
+  if visible_deps is None:
+    # The visible deps match the invisible deps, if they are not
+    # explicitly specified.
+    visible_deps = deps
+  else:
     visible_deps = [str(TargetRef.parse(x, current_scope.name))
                     for x in visible_deps]
+
 
   target = type(name=name, scope=scope, visible_deps=visible_deps, **kwargs)
   session.add_target(target)
