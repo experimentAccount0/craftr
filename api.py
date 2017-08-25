@@ -19,7 +19,8 @@
 # SOFTWARE.
 
 __all__ = ['session', 'target', 'platform', 'arch', 'builddir', 'scope',
-           'scope_builddir', 'config', 'glob', 'canonicalize', 'path']
+           'projectdir', 'projectbuilddir', 'config', 'glob', 'canonicalize',
+           'path']
 import functools
 import typing as t
 import werkzeug.local as _local
@@ -53,8 +54,12 @@ config = lambda: session.config
 #: The current scope.
 scope = lambda: session.current_scope
 
-#: The build directory of the scope.
-scope_builddir = lambda: path.join(session.build_directory, 'scopes', scope().name)
+#: Returns the directory of the currently executed module. This directory
+#: should be used when handling relative paths.
+projectdir = lambda: require.context.current_module.directory
+
+#: The build directory of the current project.
+projectbuilddir = lambda: path.join(session.build_directory, 'scopes', scope().name)
 
 
 def create_target(

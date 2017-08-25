@@ -71,6 +71,10 @@ def rel(path: str, parent: str = None, par: bool = False) -> str:
     return res
 
 
+def isrel(path: str) -> bool:
+  return not isabs(path)
+
+
 def issub(path: str) -> bool:
   """
   Returns #True if *path* is a relative path that does not point outside
@@ -161,3 +165,82 @@ def glob(patterns: t.Union[str, t.List[str]], parent: str = None,
             raise ValueError('{} ({})'.format(exc, pattern))
 
   return result
+
+
+
+def addprefix(subject, prefix):
+  """
+  Adds the specified *prefix* to the last path element in *subject*.
+  If *prefix* is a callable, it must accept exactly one argument, which
+  is the last path element, and return a modified value.
+  """
+
+  if not prefix:
+    return subject
+  dir_, base = split(subject)
+  if callable(prefix):
+    base = prefix(base)
+  else:
+    base = prefix + base
+  return join(dir_, base)
+
+
+def addsuffix(subject, suffix, replace=False):
+  """
+  Adds the specified *suffix* to the *subject*. If *replace* is True, the
+  old suffix will be removed first. If *suffix* is callable, it must accept
+  exactly one argument and return a modified value.
+  """
+
+  if not suffix and not replace:
+    return subject
+  if replace:
+    subject = rmvsuffix(subject)
+  if suffix and callable(suffix):
+    subject = suffix(subject)
+  elif suffix:
+    subject += suffix
+  return subject
+
+
+def setsuffix(subject, suffix):
+  """
+  Synonymous for passing the True for the *replace* parameter in #addsuffix().
+  """
+
+  return addsuffix(subject, suffix, replace=True)
+
+
+def rmvsuffix(subject):
+  """
+  Remove the suffix from *subject*.
+  """
+
+  index = subject.rfind('.')
+  if index > subject.replace('\\', '/').rfind('/'):
+    subject = subject[:index]
+  return subject
+
+
+def getsuffix(subject):
+  """
+  Returns the suffix of a filename. If the file has no suffix, returns None.
+  Can return an empty string if the filenam ends with a period.
+  """
+
+  index = subject.rfind('.')
+  if index > subject.replace('\\', '/').rfind('/'):
+    return subject[index+1:]
+  return None
+
+
+def makedirs(path):
+  """
+  Like #os.makedirs(), but this function does not raise an exception when the
+  directory at *path* already exists.
+  """
+
+  try:
+    os.makedirs(path)
+  except FileExistsError:
+    pass  # intentional
