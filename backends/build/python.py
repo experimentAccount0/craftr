@@ -46,17 +46,21 @@ class PythonBackend(Backend):
       with open(filename, 'r') as fp:
         self._cache = json.load(fp)
 
+  def _action_completed(self, action):
+    action.completed = True
+    data = self._cache.setdefault('actions', {}).setdefault(action.identifier, {})
+    data['key'] = action.compute_hash_key()
+
   def get_cached_action_key(self, action: str) -> t.Optional[str]:
     return self._cache.get('actions', {}).get(action, {}).get('key')
 
   def build(self, targets: t.List[Target]):
     graph = self.session.action_graph
-    completed_actions = set()
     actions = [n.data for n in topological_sort(graph)]
 
     def can_run(action):
-      for dep in graph.inputs(action.identifier):
-        if dep not in completed_actions:
+      for dep in action.deps():
+        if not dep.completed:
           return False
       return True
 
@@ -71,7 +75,6 @@ class PythonBackend(Backend):
         return
       code = process.poll()
       processes.remove((action, process))
-      completed_actions.add(action.identifier)
       process.print_stdout(prefix='[{}]: {}\n'.format(action.identifier, process.display_text()))
       sys.stdout.flush()
       if code != 0:
@@ -79,14 +82,17 @@ class PythonBackend(Backend):
         print('*** craftr error: action {} exited with non-zero status code {}'
           .format(action.identifier, code), file=sys.stderr)
         sys.exit(code)
+      else:
+        self._action_completed(action)
 
     try:
       for action in actions:
-        if action.skippable(self):
-          completed_actions.add(action.identifier)
-          continue
         while True:
           if can_run(action):
+            if action.skippable(self):
+              self._action_completed(action)
+              break
+            print('Running', action)
             processes.append((action, action.execute()))
             print(processes[-1][1].display_text())
             break
@@ -121,11 +127,6 @@ class PythonBackend(Backend):
     raise NotImplementedError
 
   def finalize(self):
-    self._cache = {}
-    actions = self._cache.setdefault('actions', {})
-    for action in self.session.action_graph.values():
-      actions[action.identifier] = {'key': action.get_action_key()}
-
     with open(self.cache_filename, 'w') as fp:
       json.dump(self._cache, fp)
 

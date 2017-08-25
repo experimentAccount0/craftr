@@ -31,7 +31,7 @@ import operator
 import sys
 import api from './api'
 import path from './core/path'
-import {Session, compute_action_key} from './core/buildgraph'
+import {Session} from './core/buildgraph'
 import _graph from './core/graph'
 
 VERSION = module.package.json['version']
@@ -165,8 +165,10 @@ def build(session):
   """
 
   session.translate_targets()
-  session.build.build([])
-  session.build.finalize()
+  try:
+    session.build.build([])
+  finally:
+    session.build.finalize()
 
 
 @main.command()
@@ -205,8 +207,6 @@ def dotviz(session, targets, actions, output):
       target = action.source()
       lines = [type(target).__name__ + '({})'.format(target.identifier),
                type(action).__name__ + '({})'.format(action.name)]
-      if action.pure:
-        lines.append(compute_action_key(action)[:10] + '...')
       return '\\n'.join(lines)
     session.translate_targets()
     graph = session.action_graph

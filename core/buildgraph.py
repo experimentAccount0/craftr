@@ -18,7 +18,7 @@
 # OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
 # SOFTWARE.
 
-__all__ = ['Scope', 'Target', 'Action', 'Session', 'compute_action_key']
+__all__ = ['Scope', 'Target', 'Action', 'Session']
 
 import abc
 import hashlib
@@ -199,6 +199,7 @@ class Action(metaclass=abc.ABCMeta):
   pure: bool
   inputs: t.List[str]
   outputs: t.List[str]
+  completed: bool
 
   def __init__(self, source: Target, name: str, pure: bool = True,
                inputs: t.List[str] = None, outputs: t.List[str] = None):
@@ -207,22 +208,19 @@ class Action(metaclass=abc.ABCMeta):
     self.pure = pure
     self.inputs = [] if inputs is None else inputs
     self.outputs = [] if outputs is None else outputs
+    self.completed = False
     self._action_key = None
+
+  def __repr__(self):
+    return '<{} "{}">'.format(type(self).__name__, self.identifier)
 
   @property
   def identifier(self):
     return '{}!{}'.format(self.source().identifier, self.name)
 
-  def get_action_key(self) -> str:
-    """
-    Returns the action hash key. Note that this key will be cached and not
-    be recomputed everytime it is requested. Once calculated, the action must
-    no longer be modified, as that would invalidate the cached hash key.
-    """
-
-    if self._action_key is None:
-      self._action_key = compute_action_key(self)
-    return self._action_key
+  def deps(self):
+    graph = self.source().session().action_graph
+    return [graph[k] for k in graph.inputs(self.identifier)]
 
   def get_hash_components(self) -> t.Iterable:
     """
@@ -236,16 +234,71 @@ class Action(metaclass=abc.ABCMeta):
     for filename in self.outputs:
       yield hashing.FileComponent(filename, False)
 
+  def compute_hash_key(self) -> str:
+    """
+    Computes the hash key of an action. This should only be used for "pure"
+    actions, as impure actions are not supposed to be hashed (since it they
+    are considered to yield different outputs for two equal invokations).
+
+    If the action key is calculated before the dependencies of the action
+    have completed, a #RuntimeError is raised.
+    """
+
+    if self._action_key is not None:
+      return self._action_key
+
+    # All dependent actions must be completed before the action key can
+    # be calculated.
+    for dep in self.deps():
+      if not dep.completed:
+        raise RuntimeError('can not calculate action key of "{}", dependency '
+          '"{}" is not completed.'.format(self.identifier, dep.identifier))
+
+    build_directory = self.source().session().build_directory
+    scope_directory = self.source().scope().directory
+    hasher = hashlib.sha1()
+
+    hasher.update(module.package.json['version'].encode('utf8'))
+    for comp in self.get_hash_components():
+      if isinstance(comp, hashing.DataComponent):
+        hasher.update(comp.data)
+      elif isinstance(comp, hashing.FileComponent):
+        # Find the canonical path relative to the build directory.
+        directory = scope_directory if comp.is_input else build_directory
+        filename = path.canonical(path.rel(comp.filename, directory))
+        hasher.update(filename.encode('utf8'))
+
+        # Hashing the contents of input files is also necessary as the same
+        # action with the same inputs and outputs etc. could be build with
+        # different contents in the input files.
+        if comp.is_input:
+          try:
+            with open(comp.filename, 'rb') as fp:
+              for chunk in file_iter_chunks(fp, 4096):
+                hasher.update(chunk)
+          except (FileNotFoundError, PermissionError):
+            pass
+
+    self._action_key = hasher.hexdigest()
+    return self._action_key
+
   def skippable(self, build: 'BuildBackend') -> bool:
     """
     Determine whether this action is skippable. The default implementation
     checks the cashed action key provided by the build backend and the actual
     action key.
+
+    Note that this function can make use of #compute_hash_key() and thus
+    should also only be called when the action's inputs are completed.
     """
 
     cashed_key = build.get_cached_action_key(self.identifier)
-    if cashed_key is None or cashed_key != self.get_action_key():
+    if cashed_key is None or cashed_key != self.compute_hash_key():
       return False
+
+    for filename in self.outputs:
+      if not path.exists(filename):
+        return False
     return True
 
   @abc.abstractmethod
@@ -408,38 +461,3 @@ class Session:
 
     for target in self.target_graph.values():
       target.translate()
-
-
-def compute_action_key(action: Action):
-  """
-  Computes the hash key of an action. This should only be used for "pure"
-  actions, as impure actions are not supposed to be hashed (since it they
-  are considered to yield different outputs for two equal invokations).
-  """
-
-  build_directory = action.source().session().build_directory
-  scope_directory = action.source().scope().directory
-  hasher = hashlib.sha1()
-
-  hasher.update(module.package.json['version'].encode('utf8'))
-  for comp in action.get_hash_components():
-    if isinstance(comp, hashing.DataComponent):
-      hasher.update(comp.data)
-    elif isinstance(comp, hashing.FileComponent):
-      # Find the canonical path relative to the build directory.
-      directory = scope_directory if comp.is_input else build_directory
-      filename = path.canonical(path.rel(comp.filename, directory))
-      hasher.update(filename.encode('utf8'))
-
-      # Hashing the contents of input files is also necessary as the same
-      # action with the same inputs and outputs etc. could be build with
-      # different contents in the input files.
-      if comp.is_input:
-        try:
-          with open(comp.filename, 'rb') as fp:
-            for chunk in file_iter_chunks(fp, 4096):
-              hasher.update(chunk)
-        except (FileNotFoundError, PermissionError):
-          pass
-
-  return hasher.hexdigest()
