@@ -18,7 +18,8 @@
 # OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
 # SOFTWARE.
 
-__all__ = ['session', 'target', 'platform', 'arch']
+__all__ = ['session', 'target', 'platform', 'arch', 'builddir', 'scope',
+           'scope_builddir', 'config', 'glob', 'canonicalize']
 import functools
 import typing as t
 import werkzeug.local as _local
@@ -32,22 +33,28 @@ local = _local.Local()
 #: The current session.
 session = local('session')
 
-#: A string that represents the target architecture. This can be an arbitrary
-#: string, but defaults to the current platform's architecture.
-arch = _local.LocalProxy(lambda: session.arch)
-
 #: A string that represents the current build target. For debug and production
 #: builds, this string is either "release" or "debug". Other names can be used,
 #: in which case most build targets will omitt translating to the action graph
 #: completely (eg. "docs", and only targets that are used to build documentation
 #: files are translated into actions).
-target = _local.LocalProxy(lambda: session.target)
+target = lambda: session.target
 
 #: The build output directory. Defaults to target/<arch>-<target>.
-builddir = _local.LocalProxy(lambda: session.build_directory)
+builddir = lambda: session.build_directory
+
+#: A string that represents the target architecture. This can be an arbitrary
+#: string, but defaults to the current platform's architecture.
+arch = lambda: session.arch
 
 #: The sessions configuration object.
-config = _local.LocalProxy(lambda: session.config)
+config = lambda: session.config
+
+#: The current scope.
+scope = lambda: session.current_scope
+
+#: The build directory of the scope.
+scope_builddir = lambda: path.join(session.build_directory, scope().name)
 
 
 def create_target(
@@ -200,13 +207,14 @@ def glob(patterns, parent=None, excludes=None):
   return path.glob(patterns, parent, excludes)
 
 
-def canonicalize(paths: t.Union[str, t.List[str]]) -> t.Union[str, t.List[str]]:
+def canonicalize(paths: t.Union[str, t.List[str]],
+                 parent: str = None) -> t.Union[str, t.List[str]]:
   """
   Canonicalize a path or a list of paths. Relative paths are converted to
   absolute paths from the currently executed module's directory.
   """
 
-  parent = require.context.current_module.directory
+  parent = parent or require.context.current_module.directory
   if isinstance(paths, str):
     return path.canonical(path.abs(paths, parent))
   else:
