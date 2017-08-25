@@ -56,6 +56,8 @@ def load_config(filename, format):
   help='The Craftr configuration file.')
 @click.option('--debug', is_flag=True, help='Short form of --target=debug')
 @click.option('--release', is_flag=True, help='Short form of --target=release')
+@click.option('--arch', metavar='ARCH', default=None,
+  help='The target architecture to build for.')
 @click.option('--target', metavar='TARGET', default='debug',
   help='The build target (usually "debug" or "release").')
 @click.option('--backend', metavar='BACKEND',
@@ -64,7 +66,7 @@ def load_config(filename, format):
   help='Generate a DOT visualizaton of the target graph.')
 @click.option('--dotviz-actions', metavar='FILENAME',
   help='Generate a DOT visualizaton of the action graph.')
-def main(file, config, debug, release, target, backend,
+def main(file, config, debug, release, target, arch, backend,
          dotviz_targets, dotviz_actions):
   if debug:
     target = 'debug'
@@ -72,7 +74,7 @@ def main(file, config, debug, release, target, backend,
     target = 'release'
 
   # Create a new session object and expose it to the Craftr API.
-  session = Session(target)
+  session = Session(target=target, arch=arch)
   api.local.session = session
 
   # Load the configuration files.
