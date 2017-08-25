@@ -211,7 +211,7 @@ class Action(metaclass=abc.ABCMeta):
 
   @property
   def identifier(self):
-    return '{}/{}'.format(self.source().identifier, self.name)
+    return '{}!{}'.format(self.source().identifier, self.name)
 
   def get_action_key(self) -> str:
     """
