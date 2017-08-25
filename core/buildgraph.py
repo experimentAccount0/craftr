@@ -87,26 +87,44 @@ class Target(metaclass=abc.ABCMeta):
   def identifier(self):
     return '//{}:{}'.format(self.scope().name, self.name)
 
-  def deps(self, visible=False) -> t.List['Target']:
+  def deps(self, mode='all') -> t.List['Target']:
     """
-    Returns the target's dependencies. If *visible* is #True, only its
-    visible dependencies are returned (which are stored directly in the
-    target rather than in the target graph).
+    Returns the target's dependencies. *mode* can be one of the following
+    values:
+
+    * all: Return all dependencies of this target AND THEIr visible
+      dependencies recursively. This is usually what you want to use during
+      #Target.translate() when doing special handling for dependencies, as it
+      allows you to include dependencies transitively.
+    * direct: Return all direct dependencies of this target (same as the
+      `deps` specified when the target is created).
+    * visible: Return only the visible dependencies of this target.
 
     Can only be used with the #Target registered to a #Session. Raises
     a #RuntimeError otherwise.
     """
 
+    if mode not in ('all', 'direct', 'visible'):
+      raise ValueError('invalid mode: {!r}'.format(mode))
     if not self.session:
       raise RuntimeError('target not attached to a session')
 
     graph = self.session().target_graph
-    if visible and self.visible_deps is not None:
-      keys = [graph[key] for key in self.visible_deps]
+    if mode == 'direct':
+      return [graph[key] for key in graph.inputs(self.identifier)]
+    elif mode == 'visible':
+      return [graph[key] for key in (self.visible_deps or ())]
     else:
-      keys = list(graph.inputs(self.identifier))
+      # Recursively collect the VISIBLE dependencies of the target and all
+      # of their VISIBLE dependencies.
+      def recursion(target):
+        deps = target.deps('visible')
+        result.extend(deps)
+        [recursion(dep) for dep in deps]
 
-    return [graph[k] for k in keys]
+      result = self.deps('direct') + self.deps('visible')
+      [recursion(dep) for dep in result]
+      return result
 
   def add_action(self, action: 'Action') -> None:
     """
