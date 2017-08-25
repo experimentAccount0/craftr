@@ -27,6 +27,8 @@ class SubprocessActionProcess(ThreadedActionProcess):
     self.current_process = None
     self.current_command = None
     self.terminated = False
+    self.error_code = None
+    self.done = False
     self.buffer = io.BytesIO()
 
   def display_text(self) -> str:
@@ -43,6 +45,10 @@ class SubprocessActionProcess(ThreadedActionProcess):
 
   def poll(self):
     with self.lock:
+      if not self.done:
+        return None
+      if self.error_code is not None:
+        return self.error_code
       if self.terminated:
         if self.current_process:
           return self.current_process.poll()
@@ -80,15 +86,30 @@ class SubprocessActionProcess(ThreadedActionProcess):
         cwd = self.action.cwd or os.getcwd()
         env = os.environ.copy()
         env.update(self.action.environ)
-        self.current_process = _subp.Popen(self.current_command,
-          shell=False, stdout=stdout, stderr=stderr, stdin=stdin,
-          universal_newlines=False, env=env, cwd=cwd)
+
+        try:
+          self.current_process = _subp.Popen(self.current_command,
+            shell=False, stdout=stdout, stderr=stderr, stdin=stdin,
+            universal_newlines=False, env=env, cwd=cwd)
+        except OSError as exc:
+          msg = str(exc)
+          if self.capture:
+            self.buffer.write(msg.encode('utf8'))
+            self.buffer.write(b'\n')  # TODO: system newline
+          else:
+            print(exc)
+          self.exit_code = exc.errno
+          self.done = True
+          break
 
       result = self.current_process.communicate()
       if self.capture:
         self.buffer.write(result[0])
       if self.current_process.returncode != 0:
         break
+
+    with self.lock:
+      self.done = True
 
 
 class SubprocessAction(Action):
