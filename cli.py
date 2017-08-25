@@ -50,6 +50,8 @@ def load_config(filename, format):
 
 
 @click.command(help="Craftr v{}".format(VERSION))
+@click.option('-b', '--build-directory', metavar='DIRECTORY',
+  help='The build directory. Defaults to target/<arch>-<target>.')
 @click.option('-f', '--file', metavar='FILENAME', default='Craftrfile.py',
   help='The build script to execute.')
 @click.option('-c', '--config', metavar='FILENAME', default='.craftrconfig',
@@ -66,7 +68,7 @@ def load_config(filename, format):
   help='Generate a DOT visualizaton of the target graph.')
 @click.option('--dotviz-actions', metavar='FILENAME',
   help='Generate a DOT visualizaton of the action graph.')
-def main(file, config, debug, release, target, arch, backend,
+def main(build_directory, file, config, debug, release, target, arch, backend,
          dotviz_targets, dotviz_actions):
   if debug:
     target = 'debug'
@@ -82,6 +84,11 @@ def main(file, config, debug, release, target, arch, backend,
   load_config(path.expanduser('~/.craftr/config.py'), format='python')
   load_config('./.craftrconfig.toml', format='toml')
   load_config('./.craftrconfig.py', format='python')
+
+  # Determine the build directory.
+  if not build_directory:
+    build_directory = 'target/{}-{}'.format(session.arch, session.target)
+  session.build_directory = build_directory
 
   # Load the backend.
   if not backend:

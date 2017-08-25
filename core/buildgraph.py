@@ -267,6 +267,7 @@ class Session:
   scopestack: t.List[Scope]
 
   def __init__(self, target: str = 'debug', arch: str = None):
+    self.build_directory = 'build'
     self.target_graph = Graph()
     self.action_graph = Graph()
     self.scopes = {}

@@ -24,12 +24,16 @@ import typing as t
 import werkzeug.local as _local
 import {Scope, Target, Action} from './core/buildgraph'
 import {TargetRef} from './core/util'
-import {name as platform, arch} from './core/platform'
+import {name as platform} from './core/platform'
 
 local = _local.Local()
 
 #: The current session.
 session = local('session')
+
+#: A string that represents the target architecture. This can be an arbitrary
+#: string, but defaults to the current platform's architecture.
+arch = _local.LocalProxy(lambda: session.arch)
 
 #: A string that represents the current build target. For debug and production
 #: builds, this string is either "release" or "debug". Other names can be used,
@@ -37,6 +41,9 @@ session = local('session')
 #: completely (eg. "docs", and only targets that are used to build documentation
 #: files are translated into actions).
 target = _local.LocalProxy(lambda: session.target)
+
+#: The build output directory. Defaults to target/<arch>-<target>.
+builddir = _local.LocalProxy(lambda: session.build_directory)
 
 
 def create_target(
