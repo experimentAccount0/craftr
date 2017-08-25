@@ -136,15 +136,21 @@ def main(build_directory, file, config, debug, release, target, arch, backend,
 
   session.translate_targets()
 
+  # Output graph visualizations.
   if dotviz_targets:
-    do_visualize(dest=dotviz_targets, graph=session.target_graph)
+    def text_of(target):
+      lines = [type(target).__name__, target.identifier]
+      return '\\n'.join(lines)
+    do_visualize(dotviz_targets, session.target_graph, text_of)
   if dotviz_actions:
     def text_of(action):
-      append = ''
+      lines = [type(action).__name__, action.identifier]
       if action.pure:
-        append = '\\n' + compute_action_key(action)[:10] + '...'
-      return action.identifier + append
-    do_visualize(dest=dotviz_actions, graph=session.action_graph, text_of=text_of)
+        lines.append(compute_action_key(action)[:10] + '...')
+      return '\\n'.join(lines)
+    do_visualize(dotviz_actions, session.action_graph, text_of)
+
+  # Graph visualizations exit early, no build.
   if dotviz_targets or dotviz_actions:
     return
 
