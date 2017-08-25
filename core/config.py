@@ -18,8 +18,27 @@
 # OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
 # SOFTWARE.
 
+import fnmatch
 import toml
 import typing as t
+
+
+def match(filter_type, filter_value, value):
+  """
+  Helper function that the #Configuration uses to match filters with property
+  values.
+  """
+
+  if filter_type in ('=', '=='):
+    return filter_value == value
+  elif filter_type == '!=':
+    return filter_value != value
+  elif filter_type == '%':
+    return filter_value in value
+  elif filter_type == '~':
+    return fnmatch.fnmatch(value, filter_value)
+  else:
+    raise ValueError('unsupported filter type: {!r}'.format(filter_type))
 
 
 class OptionKey(t.NamedTuple):
@@ -39,21 +58,64 @@ class OptionKey(t.NamedTuple):
 
 class Configuration:
   """
-  This class represents the contents of a Craftr build configuration file.
-  It is basically a cleaner interface for the #configparser.ConfigParser
-  class.
+  Parses TOML files and evaluates filters in section headers. The properties
+  that can be used for filtering can be specified in the #props member.
+
+  Example syntax:
+
+      ["gcc; clang; platform=windows; arch=amd64"]
+        options...
+
+  Available filters:
+
+    * =, ==
+    * !=
+    * ~
+    * %
   """
 
-  def __init__(self):
+  def __init__(self, props=None):
     self._data = {}
+    self.props = {} if props is None else props
+
+  def filter_section(self, section):
+    """
+    Parse the specified section name and return a list of section names that
+    this section represents. If the filters in this section do not apply to
+    the #props in this Configuration, #None is returned.
+    """
+
+    names = []
+    filters = ['=', '==', '!=', '~', '%']
+    for part in (x.strip() for x in section.split(';')):
+      f = next((f for f in filters if f in part), None)
+      if f:
+        prop, value = part.partition(f)[::2]
+        have_value = self.props.get(prop, '')
+        try:
+          matches = match(f, value, have_value)
+        except ValueError:
+          matches = False
+        if not matches:
+          return None
+      elif part:
+        names.append(part)
+    return names
 
   def read(self, filename: str) -> None:
     with open(filename, 'r') as fp:
       # TODO: Catch possible ValueError (and others?) and transform them
       #       into a proper exception for configuration parsing.
       data = toml.load(fp)
-    # TODO: Merge options inside sections.
-    self._data.update(data)
+
+    for key in list(data.keys()):
+      scopes = self.filter_section(key)
+      if not scopes: continue
+      options = data[key]
+      for scope in scopes:
+        if scope not in self._data:
+          self._data[scope] = {}
+        self._data[scope].update(options)
 
   def write(self, filename: str) -> None:
     with open(filename, 'w') as fp:

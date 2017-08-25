@@ -76,9 +76,9 @@ def main(file, config, debug, release, target, backend,
   api.local.session = session
 
   # Load the configuration files.
-  load_config(path.expanduser('~/.craftr/config'), format='toml')
+  load_config(path.expanduser('~/.craftr/config.toml'), format='toml')
   load_config(path.expanduser('~/.craftr/config.py'), format='python')
-  load_config('./.craftrconfig', format='toml')
+  load_config('./.craftrconfig.toml', format='toml')
   load_config('./.craftrconfig.py', format='python')
 
   # Load the backend.

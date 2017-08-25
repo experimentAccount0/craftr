@@ -18,13 +18,13 @@
 # OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
 # SOFTWARE.
 
-__all__ = ['session', 'target', 'platform']
+__all__ = ['session', 'target', 'platform', 'arch']
 import functools
-import sys
 import typing as t
 import werkzeug.local as _local
 import {Scope, Target, Action} from './core/buildgraph'
 import {TargetRef} from './core/util'
+import {name as platform, arch} from './core/platform'
 
 local = _local.Local()
 
@@ -37,16 +37,6 @@ session = local('session')
 #: completely (eg. "docs", and only targets that are used to build documentation
 #: files are translated into actions).
 target = _local.LocalProxy(lambda: session.target)
-
-#: Determine the name of the current platform.
-if sys.platform.startswith('win32'):
-  platform = 'windows'
-elif sys.platform.startswith('darwin'):
-  platform = 'macos'
-elif sys.platform.startswith('linux'):
-  platform = 'linux'
-else:
-  raise EnvironmentError('Unsupported platform: {}'.format(sys.platform))
 
 
 def create_target(

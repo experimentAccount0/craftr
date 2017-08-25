@@ -28,6 +28,7 @@ import hashing from './hashing'
 import path from './path'
 import {Configuration} from './config'
 import {Graph} from './graph'
+import platform from './platform'
 import {reqref, file_iter_chunks} from './util'
 
 
@@ -265,13 +266,26 @@ class Session:
   scopes: t.Dict[str, Scope]
   scopestack: t.List[Scope]
 
-  def __init__(self, target: str = 'debug'):
-    self.target = target
+  def __init__(self, target: str = 'debug', arch: str = None):
     self.target_graph = Graph()
     self.action_graph = Graph()
     self.scopes = {}
     self.scopestack = []
-    self.config = Configuration()
+    self.config = Configuration({
+      'arch': arch or platform.arch,
+      'platform': platform.name,
+      'target': target
+    })
+    self.config['build.arch'] = arch or platform.arch
+    self.config['build.target'] = target
+
+  @property
+  def arch(self):
+    return self.config['build.arch']
+
+  @property
+  def target(self):
+    return self.config['build.target']
 
   @property
   def current_scope(self) -> Scope:

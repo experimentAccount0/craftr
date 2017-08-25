@@ -210,13 +210,31 @@ exports = MyStashServer
 Craftr uses TOML or Python configuration files. The configuration files are
 loaded in the following order:
 
-* `~/.craftr/config`
+* `~/.craftr/config.toml`
 * `~/.craftr/config.py`
-* `./.craftrconfig`
+* `./.craftrconfig.toml`
 * `./.craftrconfig.py`
 
-Craftr modules can read arbitrary configuration values from the
-`Session.config` object. Section names are combined with option names.
-Eg. to read the `[build] backend = "python"` configuration, you can use
+TOML configuration files can make use of in sections, as well as specifying
+options for multiple sections. Filters can be used on the following properties:
 
-    value = session.config.get('build.backend', default_value)
+* arch
+* platform
+* target
+
+To apply a filter, add a semi-colon to a section name in the configuration
+file. These can be used multiple times in the same section to apply multiple
+filters. Additionally, if the part before the semi-colon is not a filter
+expression, it is considered as an additional section name. Example:
+
+```toml
+["gcc; clang; platform=windows; arch=amd64"]
+  options...
+```
+
+The following filter opertors are available:
+
+* `=`, `==` (equality)
+* `!=` (inequality)
+* `~` (glob matching)
+* `%` (contains)
