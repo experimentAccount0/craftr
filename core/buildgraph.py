@@ -350,7 +350,8 @@ def compute_action_key(action: Action):
   are considered to yield different outputs for two equal invokations).
   """
 
-  directory = action.source().scope().directory
+  build_directory = action.source().session().build_directory
+  scope_directory = action.source().scope().directory
   hasher = hashlib.sha1()
 
   hasher.update(module.package.json['version'].encode('utf8'))
@@ -358,8 +359,14 @@ def compute_action_key(action: Action):
     if isinstance(comp, hashing.DataComponent):
       hasher.update(comp.data)
     elif isinstance(comp, hashing.FileComponent):
+      # Find the canonical path relative to the build directory.
+      directory = scope_directory if comp.is_input else build_directory
       filename = path.canonical(path.rel(comp.filename, directory))
       hasher.update(filename)
+
+      # Hashing the contents of input files is also necessary as the same
+      # action with the same inputs and outputs etc. could be build with
+      # different contents in the input files.
       if comp.is_input:
         try:
           with open(comp.filename, 'rb') as fp:
