@@ -22,6 +22,7 @@ __all__ = ['session', 'target', 'platform', 'arch']
 import functools
 import typing as t
 import werkzeug.local as _local
+import path from './core/path'
 import {Scope, Target, Action} from './core/buildgraph'
 import {TargetRef} from './core/util'
 import {name as platform} from './core/platform'
@@ -163,3 +164,47 @@ def action_factory(cls: t.Type[Action]) -> t.Callable[..., Action]:
     return create_action(cls, *args, **kwargs)
 
   return wrapper
+
+
+class AnnotatedTarget(Target):
+  """
+  A subclass of #Target which accepts keyword parameters as annotated on the
+  class level and stores them.
+  """
+
+  def __init__(self, **kwargs):
+    for key in type(self).__annotations__.keys():
+      if hasattr(type(self), key):
+        value = kwargs.pop(key, getattr(type(self), key))
+      else:
+        try:
+          value = kwargs.pop(key)
+        except KeyError:
+          raise TypeError('missing keyword argument: {!r}'.format(key))
+      setattr(self, key, value)
+    Target.__init__(self, **kwargs)
+
+
+def glob(patterns, parent=None, excludes=None):
+  """
+  Same as #path.glob(), except that *parent* defaults to the parent directory
+  of the currently executed module (not always the same directory as the scope
+  base directory!).
+  """
+
+  if not parent:
+    parent = require.context.current_module.directory
+  return path.glob(patterns, parent, excludes)
+
+
+def canonicalize(paths: t.Union[str, t.List[str]]) -> t.Union[str, t.List[str]]:
+  """
+  Canonicalize a path or a list of paths. Relative paths are converted to
+  absolute paths from the currently executed module's directory.
+  """
+
+  parent = require.context.current_module.directory
+  if isinstance(paths, str):
+    return path.canonical(path.abs(paths, parent))
+  else:
+    return [path.canonical(path.abs(x, parent)) for x in paths]
