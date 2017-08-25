@@ -21,7 +21,6 @@
 __all__ = ['Node', 'Graph']
 import operator
 import typing as t
-import {reqref} from './util'
 
 K = t.TypeVar('K')
 V = t.TypeVar('V')
@@ -40,8 +39,8 @@ class NotReassignableError(ValueError):
 
 class Node(t.Generic[K, V]):
 
-  outputs: t.List[reqref['Node[K, V]']]
-  inputs: t.List[reqref['Node[K, V]']]
+  outputs: t.List['Node[K, V]']
+  inputs: t.List['Node[K, V]']
   key: K
   data: V
 
@@ -56,10 +55,10 @@ class Node(t.Generic[K, V]):
       self.key, len(self.inputs), len(self.outputs))
 
   def edge_to(self, node: 'Node[K, V]') -> None:
-    if node not in self.inputs:
-      self.inputs.append(reqref(node))
-    if self not in node.outputs:
-      node.outputs.append(reqref(self))
+    if node not in self.outputs:
+      self.outputs.append(node)
+    if self not in node.inputs:
+      node.inputs.append(self)
 
 
 class Graph(t.Generic[K, V]):
@@ -90,16 +89,16 @@ class Graph(t.Generic[K, V]):
     return key in self.__nodes
 
   def edge(self, origin: K, dest: K) -> None:
-    self.__nodes[dest].edge_to(self.__nodes[origin])
+    self.__nodes[origin].edge_to(self.__nodes[dest])
 
   def has_edge(self, origin: K, dest: K) -> bool:
     return origin in self.inputs(dest)
 
   def inputs(self, key: K) -> t.Iterable[K]:
-    return (noderef().key for noderef in self.__nodes[key].inputs)
+    return (node.key for node in self.__nodes[key].inputs)
 
   def outputs(self, key: K) -> t.Iterable[K]:
-    return (noderef().key for noderef in self.__nodes[key].outputs)
+    return (node.key for node in self.__nodes[key].outputs)
 
   def keys(self) -> t.Iterable[K]:
     return self.__nodes.keys()
@@ -131,7 +130,7 @@ def dotviz(fp: t.IO[str], graph: Graph[K, V], graph_name: str = None,
     text = text_of(node.data).replace('"', '\\"')
     fp.write('\t{} [label="{}"];\n'.format(id(node), text))
 
-    for other in (noderef() for noderef in node.inputs):
+    for other in node.inputs:
       fp.write('\t\t{} -> {};\n'.format(id(other), id(node)))
 
   fp.write('}\n')
@@ -150,7 +149,7 @@ def topological_sort(graph: Graph[K, V]) -> t.List[Node]:
   while roots:
     node = roots.pop()
     result.append(node)
-    for other in (noderef() for noderef in node.outputs):
+    for other in node.outputs:
       count = edge_count.get(other.key, len(other.inputs))
       edge = (node.key, other.key)
       if edge not in marked_edges:
