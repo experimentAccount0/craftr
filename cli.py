@@ -58,6 +58,7 @@ def load_config(filename, format):
 
 def print_err(*args, **kwargs):
   kwargs.setdefault('file', sys.stderr)
+  print(*args, **kwargs)
 
 
 def pass_session(f):
