@@ -112,14 +112,14 @@ class JavaLibrary(craftr.AnnotatedTarget):
     super().__init__(**kwargs)
     self.srcs = canonicalize(self.srcs)
     if self.src_roots is None:
-      self.src_roots = config().get('java.src_roots', ['src', 'java', 'javatest'])
+      self.src_roots = config.get('java.src_roots', ['src', 'java', 'javatest'])
     if self.src_roots:
       self.src_roots = canonicalize(self.src_roots, projectdir())
     self.class_dir = canonicalize(self.class_dir or 'classes/' + self.name, projectbuilddir())
     self.jar_dir = canonicalize(self.jar_dir or projectbuilddir())
     self.jar_name = self.jar_name or self.name
-    self.javac = self.javac or config().get('java.javac', 'javac')
-    self.javac_jar = self.javac_jar or config().get('java.javac_jar', 'jar')
+    self.javac = self.javac or config.get('java.javac', 'javac')
+    self.javac_jar = self.javac_jar or config.get('java.javac_jar', 'jar')
 
   @property
   def jar_filename(self) -> str:
@@ -127,7 +127,7 @@ class JavaLibrary(craftr.AnnotatedTarget):
 
   def translate(self):
     deps = self.deps()
-    extra_arguments = config().get('java.extra_arguments', []) + (self.extra_arguments or [])
+    extra_arguments = config.get('java.extra_arguments', []) + (self.extra_arguments or [])
     classpath = []
 
     for dep in deps:
@@ -218,7 +218,7 @@ class JavaBinary(craftr.AnnotatedTarget):
     super().__init__(**kwargs)
     self.jar_dir = canonicalize(self.jar_dir or projectbuilddir())
     self.jar_name = self.jar_name or self.name
-    self.javac_jar = self.javac_jar or config().get('java.javac_jar', 'jar')
+    self.javac_jar = self.javac_jar or config.get('java.javac_jar', 'jar')
 
   @property
   def jar_filename(self) -> str:

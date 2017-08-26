@@ -97,7 +97,7 @@ def main(ctx, build_directory, file, config, debug, release, target,
 
   # Create a new session object and expose it to the Craftr API.
   session = Session(target=target, arch=arch)
-  api.local.session = session
+  api.init(session)
 
   # Load the configuration files.
   load_config(path.expanduser('~/.craftr/config.toml'), format='toml')

@@ -24,33 +24,30 @@ __all__ = ['session', 'target', 'platform', 'arch', 'builddir', 'scope',
 
 import functools
 import typing as t
-import werkzeug.local as _local
 import path from './core/path'
 import {Scope, Target, Action} from './core/buildgraph'
 import {TargetRef} from './core/util'
 import {name as platform} from './core/platform'
 
-local = _local.Local()
-
 #: The current session.
-session = local('session')
+session = None
 
 #: A string that represents the current build target. For debug and production
 #: builds, this string is either "release" or "debug". Other names can be used,
 #: in which case most build targets will omitt translating to the action graph
 #: completely (eg. "docs", and only targets that are used to build documentation
 #: files are translated into actions).
-target = lambda: session.target
+target = None
 
 #: The build output directory. Defaults to target/<arch>-<target>.
-builddir = lambda: session.build_directory
+builddir = None
 
 #: A string that represents the target architecture. This can be an arbitrary
 #: string, but defaults to the current platform's architecture.
-arch = lambda: session.arch
+arch = None
 
 #: The sessions configuration object.
-config = lambda: session.config
+config = None
 
 #: The current scope.
 scope = lambda: session.current_scope
@@ -60,7 +57,23 @@ scope = lambda: session.current_scope
 projectdir = lambda: require.context.current_module.directory
 
 #: The build directory of the current project.
-projectbuilddir = lambda: path.join(session.build_directory, 'scopes', scope().name)
+projectbuilddir = lambda: path.join(builddir, 'scopes', scope().name)
+
+
+def init(session_):
+  """
+  Initialize the global members of this module from the specified *session_*
+  object. Before this method is called, no session related data can be
+  accessed.
+  """
+
+  global session, target, builddir, arch, config
+
+  session = session_
+  target = session.target
+  builddir = session.build_directory
+  arch = session.arch
+  config = session.config
 
 
 def create_target(
