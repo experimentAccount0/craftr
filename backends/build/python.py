@@ -126,6 +126,11 @@ class PythonBackend(Backend):
     raise NotImplementedError
 
   def finalize(self):
+    # We must only keep the hash keys for actions that are still in the graph.
+    actions = self._cache.setdefault('actions', {})
+    for key in list(actions.keys()):
+      if key not in self.session.action_graph:
+        del actions[key]
     with open(self.cache_filename, 'w') as fp:
       json.dump(self._cache, fp)
 
