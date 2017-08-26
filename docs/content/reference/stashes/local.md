@@ -4,7 +4,7 @@ title = "Local"
 
 (TODO)
 
-```
+```toml
 [stashes]
   backend = "local"
 ```

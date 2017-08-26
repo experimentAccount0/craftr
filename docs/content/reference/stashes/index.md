@@ -15,10 +15,12 @@ A stash backend can be created by implementing the `craftr/core/stash:StashBacke
 interface. Similar to custom build backends, the stash backend can be configured
 in the  `.craftrconfig`.
 
-    [stashes]
-      backend = "my-craftr-stash"
-      uploads = on    # Enable/disable upload of artifacts
-      downloads = on  # Enable/disable download of artifacts
+```toml
+[stashes]
+  backend = "my-craftr-stash"
+  uploads = on    # Enable/disable upload of artifacts
+  downloads = on  # Enable/disable download of artifacts
+```
 
 If further configuration is needed, arbitrary option sections and names may
 be used by the `StashBackend` implementation.

@@ -2,7 +2,7 @@
 title = "Python Backend"
 +++
 
-```
+```toml
 [build]
   backend = "python"
 ```
