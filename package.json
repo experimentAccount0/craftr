@@ -5,7 +5,7 @@
   "author": "Niklas Rosenstein <rosensteinniklas@gmail.com>",
   "license": "MIT",
   "engines": {
-    "python": ">=3.6"
+    "python": ">=3.6.1"
   },
   "main": "./api.py",
   "bin": {

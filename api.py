@@ -21,6 +21,7 @@
 __all__ = ['session', 'target', 'platform', 'arch', 'builddir', 'scope',
            'projectdir', 'projectbuilddir', 'config', 'glob', 'canonicalize',
            'path']
+
 import functools
 import typing as t
 import werkzeug.local as _local

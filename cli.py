@@ -19,8 +19,9 @@
 # SOFTWARE.
 
 import sys
-if sys.version < '3.6':
-  print('fatal: Craftr requires CPython 3.6 or higher')
+min_version = module.package.json['engines']['python'][2:]
+if sys.version < min_version:
+  print('fatal: Craftr requires CPython {} or higher'.format(min_version))
   sys.exit(1)
 
 import click
