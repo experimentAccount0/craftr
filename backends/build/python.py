@@ -92,9 +92,8 @@ class PythonBackend(Backend):
             if action.skippable(self):
               self._action_completed(action)
               break
-            print('Running', action)
             processes.append((action, action.execute()))
-            print(processes[-1][1].display_text())
+            print('[{}]: {}'.format(action.identifier, processes[-1][1].display_text()))
             break
 
           # Check the status of all currently running processes.

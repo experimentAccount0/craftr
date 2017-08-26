@@ -38,7 +38,8 @@ from os.path import (
   exists,
   join,
   split,
-  dirname as dir
+  dirname as dir,
+  basename as base
 )
 
 

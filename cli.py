@@ -140,11 +140,13 @@ def main(ctx, build_directory, file, config, debug, release, target,
       module = data
       if module.package:
         if event_name == nodepy.Context.Event_Enter:
-          session.enter_scope(module.package.json['name'], module.package.directory)
+          directory = module.package.directory
+          version = module.package.json.get('version', '1.0.0')
+          session.enter_scope(module.package.json['name'], directory, version)
         else:
           session.leave_scope(module.package.json['name'])
 
-  session.enter_scope('__main__', path.cwd())
+  session.enter_scope('__main__', path.cwd(), '1.0.0')
   require.context.event_handlers.append(event_handler)
   try:
     # For the current project, the default scope is __main__. If the Craftrfile

@@ -41,11 +41,13 @@ class Scope:
 
   name: str
   directory: str
+  version: str
   targets: t.Dict[str, 'Target']
 
-  def __init__(self, name: str, directory: str):
+  def __init__(self, name: str, directory: str, version: str):
     self.name = name
     self.directory = directory
+    self.version = version
     self.targets = {}
 
   def __repr__(self):
@@ -415,14 +417,14 @@ class Session:
   def scope(self, name: str) -> Scope:
     return self.scopes[name]
 
-  def enter_scope(self, name: str, directory: str) -> Scope:
+  def enter_scope(self, name: str, directory: str, version: str) -> Scope:
     if name not in self.scopes:
-      scope = Scope(name, directory)
+      scope = Scope(name, directory, version)
       self.scopes[name] = scope
     else:
       scope = self.scopes[name]
-      if scope.directory != directory:
-        raise RuntimeError('scope directory mismatch (duplicate scopes?)')
+      if scope.directory != directory or scope.version != version:
+        raise RuntimeError('scope mismatch (duplicate scopes?)')
     self.scopestack.append(scope)
     return scope
 
