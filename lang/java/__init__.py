@@ -29,6 +29,9 @@ import typing as t
 import craftr, * from 'craftr'
 import actions from 'craftr/actions'
 
+ONEJAR_FILENAME = path.canonical(config.get('java.onejar',
+  path.join(__directory__, 'one-jar-boot-0.97.jar')))
+
 
 def partition_sources(sources: t.List[str], base_dirs: t.List[str],
                       parent: str = None) -> t.Dict[str, t.List[str]]:
@@ -57,7 +60,44 @@ def partition_sources(sources: t.List[str], base_dirs: t.List[str],
   return result
 
 
-class JavaLibrary(craftr.AnnotatedTarget):
+class _JarBase(craftr.AnnotatedTarget):
+  """
+  jar_dir:
+    The directory where the jar will be created in.
+
+  jar_name:
+    The name of the JAR file. Defaults to the target name. Note that the Java
+    JAR command does not support dots in the output filename, thus it will
+    be rendered to a temporary directory.
+
+  main_class:
+    A classname that serves as an entry point for the JAR archive. Note that
+    you should prefer to use `java_binary()` to create a JAR binary that
+    contains all its dependencies merged into one.
+
+  javac_jar:
+    The name of Java JAR command to use. If not specified, defaults to the
+    value of the `java.javac_jar` option or simply "jar".
+  """
+
+  jar_dir: str = None
+  jar_name: str = None
+  main_class: str = None
+  javac_jar: str = None
+
+  def __init__(self, **kwargs):
+    super().__init__(**kwargs)
+    self.jar_dir = canonicalize(self.jar_dir or projectbuilddir())
+    self.jar_name = self.jar_name or (scope().name.split('/')[-1] + '-' + self.name + '-' + scope().version)
+    self.javac_jar = self.javac_jar or config.get('java.javac_jar', 'jar')
+
+  @property
+  def jar_filename(self) -> str:
+    return path.join(self.jar_dir, self.jar_name) + '.jar'
+
+
+@craftr.inherit_annotations()
+class JavaLibrary(_JarBase):
   """
   The base target for compiling Java source code and creating a Java binary
   or libary JAR file.
@@ -74,24 +114,9 @@ class JavaLibrary(craftr.AnnotatedTarget):
   class_dir:
     The directory where class files will be compiled to.
 
-  jar_dir:
-    The directory where the jar will be created in.
-
-  jar_name:
-    The name of the JAR file. Defaults to the target name.
-
-  main_class:
-    A classname that serves as an entry point for the JAR archive. Note that
-    you should prefer to use `java_binary()` to create a JAR binary that
-    contains all its dependencies merged into one.
-
   javac:
     The name of Java compiler to use. If not specified, defaults to the value
     of the `java.javac` option or simply "javac".
-
-  javac_jar:
-    The name of Java JAR command to use. If not specified, defaults to the
-    value of the `java.javac_jar` option or simply "jar".
 
   extra_arguments:
     A list of additional arguments for the Java compiler. They will be
@@ -101,11 +126,7 @@ class JavaLibrary(craftr.AnnotatedTarget):
   srcs: t.List[str]
   src_roots: t.List[str] = None
   class_dir: str = None
-  jar_dir: str = None
-  jar_name: str = None
-  main_class: str = None
   javac: str = None
-  javac_jar: str = None
   extra_arguments: t.List[str] = None
 
   def __init__(self, **kwargs):
@@ -116,14 +137,7 @@ class JavaLibrary(craftr.AnnotatedTarget):
     if self.src_roots:
       self.src_roots = canonicalize(self.src_roots, projectdir())
     self.class_dir = canonicalize(self.class_dir or 'classes/' + self.name, projectbuilddir())
-    self.jar_dir = canonicalize(self.jar_dir or projectbuilddir())
-    self.jar_name = self.jar_name or self.name
     self.javac = self.javac or config.get('java.javac', 'javac')
-    self.javac_jar = self.javac_jar or config.get('java.javac_jar', 'jar')
-
-  @property
-  def jar_filename(self) -> str:
-    return path.join(self.jar_dir, self.jar_name) + '.jar'
 
   def translate(self):
     deps = self.deps()
@@ -172,9 +186,7 @@ class JavaLibrary(craftr.AnnotatedTarget):
     command = [self.javac_jar, flags, self.jar_filename]
     if self.main_class:
       command.append(self.main_class)
-    command.append('-C')
-    command.append(self.class_dir)
-    command.append('.')
+    command += ['-C', self.class_dir, '.']
 
     mkdir = actions.mkdir(self,
       name = 'jar_dir',
@@ -189,40 +201,29 @@ class JavaLibrary(craftr.AnnotatedTarget):
     )
 
 
-class JavaBinary(craftr.AnnotatedTarget):
+@craftr.inherit_annotations()
+class JavaBinary(_JarBase):
   """
   Takes a list of Java dependencies and creates an executable JAR archive
   from them.
 
   # Parameters
-  jar_dir:
-    The directory where the jar will be created in.
-
-  jar_name:
-    The name of the JAR file. Defaults to the target name.
-
-  main_class:
-    The name of the main Java class.
-
-  javac_jar:
-    The name of Java JAR command to use. If not specified, defaults to the
-    value of the `java.javac_jar` option or simply "jar".
+  dist_type:
+    The distribution type. Can be `'merge'` or `'onejar'`. The default is
+    `'onejar'`.
   """
 
   jar_dir: str = None
   jar_name: str = None
   main_class: str
+  dist_type: str = 'onejar'
   javac_jar: str = None
 
   def __init__(self, **kwargs):
+    kwargs.setdefault('jar_name', kwargs['name'])
     super().__init__(**kwargs)
-    self.jar_dir = canonicalize(self.jar_dir or projectbuilddir())
-    self.jar_name = self.jar_name or self.name
-    self.javac_jar = self.javac_jar or config.get('java.javac_jar', 'jar')
-
-  @property
-  def jar_filename(self) -> str:
-    return path.join(self.jar_dir, self.jar_name) + '.jar'
+    if self.dist_type not in ('merge', 'onejar'):
+      raise ValueError('invalid dist_type: {!r}'.format(self.dist_type))
 
   def translate(self):
     deps = self.deps()
@@ -236,16 +237,26 @@ class JavaBinary(craftr.AnnotatedTarget):
 
     outputs = [self.jar_filename]
 
-    command = nodepy.proc_args + [require.resolve('./mergejar')]
-    command += ['-o', self.jar_filename] + inputs
-    command += ['--main-class', self.main_class]
+    if self.dist_type == 'merge':
+      command = nodepy.proc_args + [require.resolve('./mergejar')]
+      command += ['-o', self.jar_filename] + inputs
+      command += ['--main-class', self.main_class]
+
+    else:
+      assert self.dist_type == 'onejar'
+      command = nodepy.proc_args + [require.resolve('./augjar')]
+      command += [ONEJAR_FILENAME]
+      command += ['-o', self.jar_filename]
+      command += ['-s', 'One-Jar-Main-Class=' + self.main_class]
+      for infile in inputs:
+        command += ['-f', 'lib/' + path.base(infile) + '=' + infile]
 
     mkdir = actions.mkdir(self,
       name = 'jar_dir',
       directory = self.jar_dir
     )
-    t = actions.subprocess(self,
-      name = 'merge',
+    actions.subprocess(self,
+      name = self.dist_type,
       deps = deps,
       inputs = inputs,
       outputs = outputs,

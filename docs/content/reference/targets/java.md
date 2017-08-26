@@ -51,8 +51,19 @@ __Parameters__
 
 ### java_binary()
 
-Create an executable JAR archive from all the specified dependencies. All
-JAR archives will be merged into a single executable archive.
+Create an executable JAR archive from all the specified dependencies. You can
+choose to merge all JAR archives into one single archieve, or to use [One-Jar]
+(which is usually preferred).
+
+  [One-Jar]: http://one-jar.sourceforge.net/
+
+Craftr comes pre-bundled with `one-jar-boot-0.97.jar`, but you can specify
+a different one using the `java.onejar` option.
+
+```toml
+[java]
+  onejar = "path/to/onejar.jar"
+```
 
 __Parameters__
 
@@ -61,6 +72,8 @@ __Parameters__
 * `jar_name`: The name of the JAR file. Defaults to the target name.
 
 * `main_class`: The name of the main Java class.
+
+* `dist_type`: Can be `'onejar'` (default) or `'merge'`.
 
 * `javac_jar`: The name of Java JAR command to use. If not specified, defaults
   to the value of the `java.javac_jar` option or simply "jar".
