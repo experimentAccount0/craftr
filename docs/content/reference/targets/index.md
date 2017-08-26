@@ -1,5 +1,6 @@
 +++
 title = "Targets"
+ordering-priority = 1
 +++
 
 Every target factory in Craftr has a few parameters in common, namely the
@@ -21,3 +22,37 @@ __Parameters__
   dependency into account.
 
   Note: If `visible_deps` is not specified or `None`, it matches `deps`.
+
+## Custom targets
+
+Custom targets can be implemented in your own build scripts. This is useful to
+provide new functionality to the Craftr build system, e.g. for other languages.
+
+```python
+import craftr from 'craftr'
+import actions from 'craftr/actions'
+
+class SayHello(craftr.Target):
+
+  def __init__(self, *, subject: str, **kwargs):
+    craftr.Target.__init__(self, **kwargs)
+    self.subject = subject
+
+  def translate(self):
+    actions.subprocess(self,
+      name = 'a_subcommand',
+      deps = self.deps(),
+      commands = [
+        ['echo', 'Hello, {}!'.format(self.subject)],
+        ['sleep', '1']
+      ],
+      buffer = True
+    )
+
+say_hello = craftr.target_factory(SayHello)
+
+say_hello(
+  name = 'hello',
+  subject = 'Peter'
+)
+```
