@@ -1,0 +1,15 @@
+language: python
+python:
+- '3.6.1'
+- '3.6.2'
+- nightly
+
+install:
+- pip install git+https://github.com/nodepy/nodepy.git@master
+- nodepy --version
+- nppm install -I
+
+script:
+- pushd examples/java
+- nppm run craftr --build-directory build/ build
+- java -jar build/scopes/\@craftr/examples.java/main.jar
