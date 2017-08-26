@@ -12,4 +12,4 @@ install:
 script:
 - pushd examples/java
 - nppm run craftr --build-directory build/ build
-- java -jar build/scopes/\@craftr/examples.java/main.jar
+- java -jar build/scopes/craftr.examples-java/main.jar

@@ -5,12 +5,18 @@ import * from 'craftr/lang/java'
 print(builddir)
 
 java_library(
-  name = 'library',
-  srcs = glob('src/**.java')
+  name = 'utils',
+  srcs = glob('src/utils/**.java')
+)
+
+java_library(
+  name = 'main_lib',
+  srcs = glob('src/main/**.java'),
+  deps = [':utils']
 )
 
 java_binary(
   name = 'main',
-  deps = [':library'],
-  main_class = 'Main'
+  deps = [':main_lib'],
+  main_class = 'main.Main'
 )
