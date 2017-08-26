@@ -84,9 +84,11 @@ def pass_session(f):
   help='The build target (usually "debug" or "release").')
 @click.option('--backend', metavar='BACKEND',
   help='Name of the build backend. Defaults to "python"')
+@click.option('-d', '--define', metavar='KEY=VALUE', multiple=True,
+  help='Specify a KEY=VALUE pair to insert into the configuration.')
 @click.pass_context
 def main(ctx, build_directory, file, config, debug, release, target,
-         arch, backend):
+         arch, backend, define):
   """
   The Craftr build system.
   """
@@ -105,6 +107,15 @@ def main(ctx, build_directory, file, config, debug, release, target,
   load_config(path.expanduser('~/.craftr/config.py'), format='python')
   load_config('./.craftrconfig.toml', format='toml')
   load_config('./.craftrconfig.py', format='python')
+  for string in define:
+    key, sep, value = string.partition('=')
+    if not sep:
+      print_err('fatal: invalid value for -d,--define: {!r}'.format(string))
+      sys.exit(1)
+    if value == '':
+      session.config.pop(key, None)
+    else:
+      session.config[key] = value
 
   # Determine the build directory.
   if not build_directory:

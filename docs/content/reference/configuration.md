@@ -51,3 +51,10 @@ import * from 'craftr'
 if 'MYPROJECT_STASH_LOCATION' in os.environ:
   config['stashes.location'] = os.environ['MYPROJECT_STASH_LOCATION']
 ```
+
+## Command-line
+
+Plain-string configuration values can be specified on the command-line
+with the `-d,--define` option.
+
+    $ craftr -d java.dist_type=merge build

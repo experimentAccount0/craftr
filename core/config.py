@@ -121,7 +121,7 @@ class Configuration:
     with open(filename, 'w') as fp:
       self._parser.write(fp)
 
-  def __getitem__(self, key: str) -> str:
+  def __getitem__(self, key: str) -> t.Any:
     try:
       scope, name = OptionKey.parse(key)
     except ValueError:
@@ -132,7 +132,7 @@ class Configuration:
       raise KeyError(key)
     return self._data[scope][name]
 
-  def __setitem__(self, key: str, value: str):
+  def __setitem__(self, key: str, value: t.Any):
     try:
       scope, name = OptionKey.parse(key)
     except ValueError:
@@ -172,3 +172,27 @@ class Configuration:
         return [prefix + opt for opt in self._data[section].keys()]
       except KeyError:
         return []
+
+  def pop(self, key: str, default: t.Any = NotImplemented) -> t.Any:
+    try:
+      scope, name = OptionKey.parse(key)
+    except ValueError:
+      if default is NotImplemented:
+        raise KeyError(key)
+      return default
+    if scope not in self._data:
+      if default is NotImplemented:
+        raise KeyError(key)
+      return default
+    if name not in self._data[scope]:
+      if default is NotImplemented:
+        raise KeyError(key)
+      return default
+    section = self._data[scope]
+    if default is NotImplemented:
+      try:
+        return section.pop(name)
+      except KeyError:
+        raise KeyError(key)
+    else:
+      return section.pop(name, default)
