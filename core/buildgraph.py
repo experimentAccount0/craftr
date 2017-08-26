@@ -387,7 +387,7 @@ class Session:
 
   def __init__(self, target: str = 'debug', arch: str = None):
     self.build = None
-    self.build_directory = 'build'
+    self.build_directory = None
     self.target_graph = Graph()
     self.action_graph = Graph()
     self.scopes = {}

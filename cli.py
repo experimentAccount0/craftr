@@ -109,6 +109,7 @@ def main(ctx, build_directory, file, config, debug, release, target,
   if not build_directory:
     build_directory = 'target/{}-{}'.format(session.arch, session.target)
   session.build_directory = build_directory
+  api.init(session)
 
   # Load the backend.
   if not backend:
