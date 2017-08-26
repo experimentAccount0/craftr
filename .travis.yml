@@ -10,6 +10,11 @@ install:
 - nppm install -I
 
 script:
+# Build the example Java project.
 - pushd examples/java
-- nppm run craftr --build-directory build/ build
-- java -jar build/scopes/craftr.examples-java/main.jar
+# Build using the onejar option.
+- nppm run craftr --build-directory build-onejar/ -d java.dist_type=onejar build
+- java -jar build-onejar/scopes/craftr.examples-java/main.jar
+# Build using the merge option.
+- nppm run craftr --build-directory build-merge/ -d java.dist_type=merge build
+- java -jar build-merge/scopes/craftr.examples-java/main.jar
