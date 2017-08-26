@@ -23,7 +23,7 @@ import typing as t
 import {Target, Action, ActionProcess, Session} from './buildgraph'
 
 
-class Backend(metaclass=abc.ABCMeta):
+class BuildBackend(metaclass=abc.ABCMeta):
   """
   Describes the interface for a build backend.
   """

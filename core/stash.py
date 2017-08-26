@@ -20,7 +20,7 @@
 """
 This module provides the interface to implement a build-stash server that can
 be used to store build artifacts in order to speed up the build in large-scale
-enterprises. The #StashServer is the main interface when dealing with artifact
+enterprises. The #StashBackend is the main interface when dealing with artifact
 stashing.
 """
 
@@ -95,14 +95,14 @@ class Stash(metaclass=abc.ABCMeta):
   def ctime(self) -> int:
     """
     Returns the time that the stash was created, in seconds (in the timezone
-    of the #StashServer).
+    of the #StashBackend).
     """
 
   @abc.abstractmethod
   def atime(self) -> int:
     """
     Returns the time that the stash was last accessed, in seconds (in the
-    timezone of the #StashServer).
+    timezone of the #StashBackend).
     """
 
   @abc.abstractmethod
@@ -151,7 +151,7 @@ class StashBuilder(metaclass=abc.ABCMeta):
   """
   This interface allows to build a new #Stash. Once the #__exit__() method is
   called by exiting the #StashBuilder#'s with-context, it shall be uploaded to
-  the #StashServer.
+  the #StashBackend.
   """
 
   def __enter__(self) -> 'StashBuilder':
@@ -191,15 +191,15 @@ class StashBuilder(metaclass=abc.ABCMeta):
   def upload(self, progress: t.Optional[UploadProgress]) -> None:
     """
     Upload the stash's information collected with this #StashBuilder to the
-    #StashServer. The stash is not complete unless this method is called.
+    #StashBackend. The stash is not complete unless this method is called.
     Once this method completed successfully, the stash created with this
-    builder must be accessible from #StashServer.find_stash().
+    builder must be accessible from #StashBackend.find_stash().
     """
 
 
-class StashServer(metaclass=abc.ABCMeta):
+class StashBackend(metaclass=abc.ABCMeta):
   """
-  The StashServer represents a database of Stashes that are available to the
+  The StashBackend represents a database of Stashes that are available to the
   build system to avoid repetitive rebuilds. It provides the ability to find
   a #Stash based on hash that can be computed from a build #Action. If the
   stash exists, the #Action must not be executed, but instead the saved data
@@ -214,7 +214,7 @@ class StashServer(metaclass=abc.ABCMeta):
   @abc.abstractmethod
   def can_create_new_stashes(self) -> bool:
     """
-    Returns #True if this implementation of the #StashServer interface can
+    Returns #True if this implementation of the #StashBackend interface can
     create new #Stash#es with the #new_stash() function. Some implementations
     may serve stashes as read-only.
     """

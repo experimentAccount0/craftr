@@ -46,10 +46,10 @@ class LocalStashBuilder(base.StashBuilder):
   pass
 
 
-class LocalStashServer(base.StashServer):
+class LocalStashBackend(base.StashBackend):
 
   def __init__(self, session):
-    base.StashServer.__init__(self, session)
+    base.StashBackend.__init__(self, session)
 
     location = session.config.get('stashes.location', None)
     if not location:
@@ -72,4 +72,4 @@ class LocalStashServer(base.StashServer):
     return None
 
 
-exports = LocalStashServer
+exports = LocalStashBackend

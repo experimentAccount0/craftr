@@ -1,9 +1,9 @@
 +++
-title = "Build Backends"
+title = "Builders"
 ordering-priority = 3
 +++
 
-A build backend can be created by implementing the `craftr/core/backend:Backend`
+A builder can be created by implementing the `craftr/core/build:BuildBackend`
 interface. This implementation must then be exported. The backend can then be
 configured by specifying the request to `require()` that implementation from
 the Craftr module.
@@ -11,9 +11,9 @@ the Craftr module.
 Example: A Node.py module with the name `my-craftr-backend`.
 
 ```python
-import {Backend} from 'craftr/core/backend'
+import base from 'craftr/core/build'
 
-class MyBackend(Backend):
+class MyBackend(base.BuildBackend):
   ...
 
 exports = MyBackend

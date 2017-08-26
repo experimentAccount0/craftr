@@ -23,12 +23,12 @@ import os
 import sys
 import time
 import typing as t
-import {Backend} from '../../core/backend'
+import base from '../../core/build'
 import {Session, Target} from '../../core/buildgraph'
 import {topological_sort} from '../../core/graph'
 
 
-class PythonBackend(Backend):
+class PythonBackend(base.BuildBackend):
   """
   The pure-python Craftr build backend.
   """
