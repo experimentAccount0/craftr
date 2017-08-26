@@ -30,11 +30,28 @@ import shutil
 import sys
 import zipfile
 
-mergejar = require('./mergejar')
+
+def parse_manifest(fp):
+  """
+  Parses a Java manifest file.
+  """
+
+  for line in fp:
+    if ':' not in line: continue
+    yield line.rstrip().partition(':')[::2]
+
+
+def write_manifest(fp, data):
+  """
+  Writes a Java manifest file.
+  """
+
+  for key, value in data.items():
+    fp.write('{}: {}\n'.format(key, value))
 
 
 def main():
-  parser = argparse.ArgumentParser(description="Augment JAR files.")
+  parser = argparse.ArgumentParser(description="Augment/merge JAR files.")
   parser.add_argument('jar', help='The input JAR file.')
   parser.add_argument('-o', '--output', help='The output JAR file.')
   parser.add_argument('-a', '--append', help='Append a manifest property.',
@@ -48,6 +65,10 @@ def main():
   parser.add_argument('-r', '--rem-file', help='Remove a file from the JAR archive. '
       'If the file does not exist, an error is printed unless --force is '
       'specified.', action='append', default=[], metavar='ARCNAME')
+  parser.add_argument('-m', '--merge', help='Merge the specified JAR file '
+      'into the current JAR. Note that the META-INF/ directory will be '
+      'skipped during the merge process. If files are duplicate, an error '
+      'will occur.', metavar='JARFILE', action='append', default=[])
   parser.add_argument('--overwrite', action='store_true', help='Don\'t error '
       'with --put-file when a file already exists.')
   parser.add_argument('--force', action='store_true', help='Don\'t error '
@@ -58,6 +79,11 @@ def main():
   if not args.output:
     print('fatal: -o,--output must be specified.')
     sys.exit(1)
+
+  for fname in args.merge:
+    if not os.path.isfile(fname):
+      print('fatal: no such file or directory: {!r}'.format(fname))
+      sys.exit(1)
 
   put_files = {}
   rem_files = args.rem_file
@@ -108,7 +134,7 @@ def main():
 
       # Read the manifest file.
       manifest = utf8reader(injar.open('META-INF/MANIFEST.MF'))
-      manifest = dict(mergejar.parse_manifest(manifest))
+      manifest = dict(parse_manifest(manifest))
 
       # Augment the file.
       for key, value in add_values:
@@ -125,35 +151,58 @@ def main():
           print('fatal: JAR does not contain "{}", can not be removed'.format(arcname))
           sys.exit(1)
 
+      # A list of the files already added to the archive.
+      collected_names = []
+
       # Copy all files to the output archive.
-      for name in namelist:
-        # Check if one of the rem_files excludes this file by a whole
-        # directory.
-        excluded = any(name == x or (x.endswith('/') and name.startswith(x))
-                       for x in rem_files)
-        if excluded:
-          if args.verbose:
-            print('skipped:', name)
-          continue
-        if name in put_files:
-          if args.verbose:
-            print('skipped (from {}):'.format(put_files[name]), name)
-          continue
-        if name.endswith('/'):
-          continue
+      for current in [(injar, namelist)] + args.merge:
+        with contextlib.ExitStack() as stack:
+          if isinstance(current, str):
+            # A JAR file from the list of files to merge.
+            curr_jar = stack.enter_context(zipfile.ZipFile(current, 'r'))
+            curr_namelist = curr_jar.namelist()
+            skip_meta_inf = True
+          else:
+            # The original input JAR file.
+            curr_jar, curr_namelist = current
+            skip_meta_inf = False
 
-        # Special case, write the manifest data that we modified.
-        if name == 'META-INF/MANIFEST.MF':
-          with outjar.open(name, 'w') as fp:
-            mergejar.write_manifest(utf8writer(fp), manifest)
+          for name in curr_namelist:
+            if skip_meta_inf and name.startswith('META-INF/'):
+              continue
+            if name in collected_names:
+              print('fatal: duplicate entry: {!r}'.format(name))
+              continue
 
-        # Otherwise just copy the whole file contents.
-        else:
-          with injar.open(name) as src, outjar.open(name, 'w') as dst:
-            shutil.copyfileobj(src, dst)
+            # Check if one of the rem_files excludes this file by a whole
+            # directory.
+            excluded = any(name == x or (x.endswith('/') and name.startswith(x))
+                          for x in rem_files)
+            if excluded:
+              if args.verbose:
+                print('skipped:', name)
+              continue
+            if name in put_files:
+              if args.verbose:
+                print('skipped (from {}):'.format(put_files[name]), name)
+              continue
+            if name.endswith('/'):
+              continue
 
-        if args.verbose:
-          print('copied:', name)
+            # Special case, write the manifest data that we modified.
+            if name == 'META-INF/MANIFEST.MF':
+              with outjar.open(name, 'w') as fp:
+                write_manifest(utf8writer(fp), manifest)
+
+            # Otherwise just copy the whole file contents.
+            else:
+              with curr_jar.open(name) as src, outjar.open(name, 'w') as dst:
+                shutil.copyfileobj(src, dst)
+
+            if args.verbose:
+              print('copied:', name)
+
+        collected_names += curr_namelist
 
       # Write all new files into the archive.
       for name, source in put_files.items():

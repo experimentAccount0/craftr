@@ -237,16 +237,18 @@ class JavaBinary(_JarBase):
 
     outputs = [self.jar_filename]
 
+    command = nodepy.proc_args + [require.resolve('./augjar')]
+    command += ['-o', self.jar_filename]
+
     if self.dist_type == 'merge':
-      command = nodepy.proc_args + [require.resolve('./mergejar')]
-      command += ['-o', self.jar_filename] + inputs
-      command += ['--main-class', self.main_class]
+      command += [inputs.pop(0)]  # Merge into the first specified dependency.
+      command += ['-s', 'Main-Class=' + self.main_class]
+      for infile in inputs:
+        command += ['-m', infile]
 
     else:
       assert self.dist_type == 'onejar'
-      command = nodepy.proc_args + [require.resolve('./augjar')]
       command += [ONEJAR_FILENAME]
-      command += ['-o', self.jar_filename]
       command += ['-s', 'One-Jar-Main-Class=' + self.main_class]
       for infile in inputs:
         command += ['-f', 'lib/' + path.base(infile) + '=' + infile]
