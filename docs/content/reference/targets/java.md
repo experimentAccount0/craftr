@@ -6,6 +6,15 @@ title = "Java"
 import * from 'craftr/lang/java'
 ```
 
+## Options
+
+* `java.dist_type`: The default value for `java_binary(dist_type)`.
+* `java.onejar`: Path to the [One-Jar] bootstrap JAR.
+* `java.src_roots`: Source root directories. Defaults to `['src', 'java', 'javatest']`.
+* `java.javac`: Java compiler program name.
+* `java.javac_jar`: JAR program name.
+* `java.extra_arguments`: Additional arguments passed to the Java compiler.
+
 ## Functions
 
 ### java_prebuilt()
@@ -73,7 +82,8 @@ __Parameters__
 
 * `main_class`: The name of the main Java class.
 
-* `dist_type`: Can be `'onejar'` (default) or `'merge'`.
+* `dist_type`: Can be `'onejar'` (default) or `'merge'`. This can also be
+  controlled using the `java.dist_type` configuration value.
 
 * `javac_jar`: The name of Java JAR command to use. If not specified, defaults
   to the value of the `java.javac_jar` option or simply "jar".

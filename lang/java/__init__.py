@@ -210,18 +210,20 @@ class JavaBinary(_JarBase):
   # Parameters
   dist_type:
     The distribution type. Can be `'merge'` or `'onejar'`. The default is
-    `'onejar'`.
+    the value configured in `java.dist_type` or `'onejar'`
   """
 
   jar_dir: str = None
   jar_name: str = None
   main_class: str
-  dist_type: str = 'onejar'
+  dist_type: str = None
   javac_jar: str = None
 
   def __init__(self, **kwargs):
     kwargs.setdefault('jar_name', kwargs['name'])
     super().__init__(**kwargs)
+    if not self.dist_type:
+      self.dist_type = config.get('java.dist_type', 'onejar')
     if self.dist_type not in ('merge', 'onejar'):
       raise ValueError('invalid dist_type: {!r}'.format(self.dist_type))
 

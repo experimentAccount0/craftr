@@ -2,8 +2,6 @@
 import * from 'craftr'
 import * from 'craftr/lang/java'
 
-print(builddir)
-
 java_library(
   name = 'utils',
   srcs = glob('src/utils/**.java')
