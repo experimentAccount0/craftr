@@ -19,18 +19,36 @@
 # SOFTWARE.
 
 from nose.tools import *
-import {Graph} from 'craftr/core/graph'
+import {Graph, Node} from 'craftr/lib/graph'
 
 
 def test_graph():
   g = Graph()
-  g['//libcurl:compile'] = ['main.cpp']
-  g['//libcurl:curl'] = ['libcurl.a']
-  g.edge('//libcurl:compile', '//libcurl:curl')
 
-  assert_equals(list(g.inputs('//libcurl:compile')), [])
-  assert_equals(list(g.inputs('//libcurl:curl')), ['//libcurl:compile'])
-  assert_equals(list(g.outputs('//libcurl:compile')), ['//libcurl:curl'])
-  assert_equals(list(g.outputs('//libcurl:curl')), [])
-  assert g.has_edge('//libcurl:compile', '//libcurl:curl')
-  assert ('//libcurl:compile', '//libcurl:curl') in g
+  node1 = g.add(Node('node1', None))
+  node2 = g.add(Node('node2', None))
+  node3 = g.add(Node('node3', None))
+  node4 = g.add(Node('node4', None))
+  node5 = g.add(Node('node5', None))
+  node6 = g.add(Node('node6', None))
+
+  with assert_raises(ValueError):
+    g.add(Node('node3', None))  # Node with key 'node3' already exists
+
+  node1.connect(node3)
+  node2.connect(node3)
+  node3.connect(node4)
+  node3.connect(node5)
+  node4.connect(node6)
+  node5.connect(node6)
+  list(g.topo_sort())
+
+  node6.connect(node1)
+  with assert_raises(RuntimeError):
+    list(g.topo_sort())  # has cycle
+
+  with assert_raises(ValueError):
+    node1.disconnect(node6)  # no such connection
+
+  node6.disconnect(node1)
+  list(g.topo_sort())

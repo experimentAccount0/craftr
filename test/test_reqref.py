@@ -18,21 +18,20 @@
 # OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
 # SOFTWARE.
 
-__all__ = ['Null']
+from nose.tools import *
+import reqref from 'craftr/lib/reqref'
 
-import {ActionImpl} from '../core/buildgraph'
+# A class for which we can create weak references.
+class Obj: pass
 
 
-class Null(ActionImpl):
+def test_ref():
+  obj = Obj()
+  ref = reqref.ref(obj)
+  assert_equals(ref(), obj)
+  del obj
+  with assert_raises(RuntimeError):
+    ref()
 
-  def display(self, full):
-    return 'null'
-
-  def abort(self):
-    pass
-
-  def skippable(self):
-    return True
-
-  def execute(self):
-    return 0
+  ref = reqref.ref(None)
+  assert_equals(ref(), None)

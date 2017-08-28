@@ -24,8 +24,8 @@ import sys
 import time
 import typing as t
 import base from '../../core/build'
-import {Session, Target} from '../../core/buildgraph'
-import {topological_sort} from '../../core/graph'
+import {Target} from '../../core/buildgraph'
+import {Session} from '../../core/session'
 
 
 class PythonBackend(base.BuildBackend):
@@ -55,8 +55,8 @@ class PythonBackend(base.BuildBackend):
     return self._cache.get('actions', {}).get(action, {}).get('key')
 
   def build(self, targets: t.List[Target]):
-    graph = self.session.action_graph
-    actions = [n.data for n in topological_sort(graph)]
+    graph = self.session.actions
+    actions = [n.value() for n in graph.topo_sort()]
 
     def can_run(action):
       for dep in action.deps():
@@ -129,7 +129,7 @@ class PythonBackend(base.BuildBackend):
     # We must only keep the hash keys for actions that are still in the graph.
     actions = self._cache.setdefault('actions', {})
     for key in list(actions.keys()):
-      if key not in self.session.action_graph:
+      if key not in self.session.actions:
         del actions[key]
     with open(self.cache_filename, 'w') as fp:
       json.dump(self._cache, fp)

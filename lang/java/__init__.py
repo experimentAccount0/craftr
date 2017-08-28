@@ -26,15 +26,16 @@ __all__ = ['java_library', 'java_binary', 'java_prebuilt']
 import nodepy
 import re
 import typing as t
-import craftr, * from 'craftr'
+import context, * from 'craftr'
 import actions from 'craftr/actions'
+
 
 ONEJAR_FILENAME = path.canonical(config.get('java.onejar',
   path.join(__directory__, 'one-jar-boot-0.97.jar')))
 
 
 def partition_sources(sources: t.List[str], base_dirs: t.List[str],
-                      parent: str = None) -> t.Dict[str, t.List[str]]:
+                      parent: str) -> t.Dict[str, t.List[str]]:
   """
   Partitions a set of files in *sources* to the appropriate parent directory
   in *base_dirs*. If a file is found that is not located in one of the
@@ -45,7 +46,6 @@ def partition_sources(sources: t.List[str], base_dirs: t.List[str],
   executed module's directory.
   """
 
-  parent = parent or projectdir()
   base_dirs = [canonicalize(b, parent) for b in base_dirs]
   result = {}
   for source in (canonicalize(s, parent) for s in sources):
@@ -60,7 +60,7 @@ def partition_sources(sources: t.List[str], base_dirs: t.List[str],
   return result
 
 
-class _JarBase(craftr.AnnotatedTarget):
+class _JarBase(context.AnnotatedTarget):
   """
   jar_dir:
     The directory where the jar will be created in.
@@ -87,8 +87,8 @@ class _JarBase(craftr.AnnotatedTarget):
 
   def __init__(self, **kwargs):
     super().__init__(**kwargs)
-    self.jar_dir = canonicalize(self.jar_dir or projectbuilddir())
-    self.jar_name = self.jar_name or (scope().name.split('/')[-1] + '-' + self.name + '-' + scope().version)
+    self.jar_dir = canonicalize(self.jar_dir or context.outdir)
+    self.jar_name = self.jar_name or (context.cell.name.split('/')[-1] + '-' + self.target.name + '-' + context.cell.version)
     self.javac_jar = self.javac_jar or config.get('java.javac_jar', 'jar')
 
   @property
@@ -96,7 +96,7 @@ class _JarBase(craftr.AnnotatedTarget):
     return path.join(self.jar_dir, self.jar_name) + '.jar'
 
 
-@craftr.inherit_annotations()
+@context.inherit_annotations()
 class JavaLibrary(_JarBase):
   """
   The base target for compiling Java source code and creating a Java binary
@@ -135,12 +135,12 @@ class JavaLibrary(_JarBase):
     if self.src_roots is None:
       self.src_roots = config.get('java.src_roots', ['src', 'java', 'javatest'])
     if self.src_roots:
-      self.src_roots = canonicalize(self.src_roots, projectdir())
-    self.class_dir = canonicalize(self.class_dir or 'classes/' + self.name, projectbuilddir())
+      self.src_roots = canonicalize(self.src_roots, context.cell.directory)
+    self.class_dir = canonicalize(self.class_dir or 'classes/' + self.target.name, context.outdir)
     self.javac = self.javac or config.get('java.javac', 'javac')
 
   def translate(self):
-    deps = self.deps()
+    deps = self.target.transitive_deps()
     extra_arguments = config.get('java.extra_arguments', []) + (self.extra_arguments or [])
     classpath = []
 
@@ -154,7 +154,7 @@ class JavaLibrary(_JarBase):
 
     # Calculate output files.
     classfiles = []
-    for base, sources in partition_sources(self.srcs, self.src_roots).items():
+    for base, sources in partition_sources(self.srcs, self.src_roots, self.target.cell.directory).items():
       for src in sources:
         classfiles.append(path.join(self.class_dir, path.setsuffix(src, '.class')))
 
@@ -165,16 +165,18 @@ class JavaLibrary(_JarBase):
       command += self.srcs
       command += extra_arguments
 
-      mkdir = actions.mkdir(self,
-        name = 'class_dir',
+      mkdir = self.new_action(
+        actions.Mkdir,
+        name = 'mkdir',
         directory = self.class_dir
       )
-      javac = actions.subprocess(self,
+      javac = self.new_action(
+        actions.Subprocess,
         name = 'javac',
         commands = [command],
         deps = deps + [mkdir],
-        inputs = self.srcs,
-        outputs = classfiles
+        input_files = self.srcs,
+        output_files = classfiles
       )
     else:
       javac = None
@@ -188,20 +190,22 @@ class JavaLibrary(_JarBase):
       command.append(self.main_class)
     command += ['-C', self.class_dir, '.']
 
-    mkdir = actions.mkdir(self,
+    mkdir = self.new_action(
+      actions.Mkdir,
       name = 'jar_dir',
       directory = self.jar_dir
     )
-    actions.subprocess(self,
+    self.new_action(
+      actions.Subprocess,
       name = 'jar',
       commands = [command],
       deps = [javac, mkdir] if javac else [mkdir],
-      inputs = classfiles,
-      outputs = [self.jar_filename]
+      input_files = classfiles,
+      output_files = [self.jar_filename]
     )
 
 
-@craftr.inherit_annotations()
+@context.inherit_annotations()
 class JavaBinary(_JarBase):
   """
   Takes a list of Java dependencies and creates an executable JAR archive
@@ -220,7 +224,7 @@ class JavaBinary(_JarBase):
   javac_jar: str = None
 
   def __init__(self, **kwargs):
-    kwargs.setdefault('jar_name', kwargs['name'])
+    kwargs.setdefault('jar_name', self.target.name)
     super().__init__(**kwargs)
     if not self.dist_type:
       self.dist_type = config.get('java.dist_type', 'onejar')
@@ -228,7 +232,7 @@ class JavaBinary(_JarBase):
       raise ValueError('invalid dist_type: {!r}'.format(self.dist_type))
 
   def translate(self):
-    deps = self.deps()
+    deps = self.target.transitive_deps()
 
     inputs = []
     for dep in deps:
@@ -255,20 +259,22 @@ class JavaBinary(_JarBase):
       for infile in inputs:
         command += ['-f', 'lib/' + path.base(infile) + '=' + infile]
 
-    mkdir = actions.mkdir(self,
+    mkdir = self.new_action(
+      actions.Mkdir,
       name = 'jar_dir',
       directory = self.jar_dir
     )
-    actions.subprocess(self,
+    self.new_action(
+      actions.Subprocess,
       name = self.dist_type,
       deps = deps,
-      inputs = inputs,
-      outputs = outputs,
+      input_files = inputs,
+      output_files = outputs,
       commands = [command]
     )
 
 
-class JavaPrebuilt(craftr.AnnotatedTarget):
+class JavaPrebuilt(context.AnnotatedTarget):
   """
   Represents a prebuilt JAR. Does not yield actions.
 
@@ -280,9 +286,9 @@ class JavaPrebuilt(craftr.AnnotatedTarget):
   binary_jar: str
 
   def translate(self):
-    actions.null(self, name='null', deps=self.deps())
+    actions.null(self, name='null', deps=self.target.transitive_deps())
 
 
-java_library = craftr.target_factory(JavaLibrary)
-java_binary = craftr.target_factory(JavaBinary)
-java_prebuilt = craftr.target_factory(JavaPrebuilt)
+java_library = context.target_factory(JavaLibrary)
+java_binary = context.target_factory(JavaBinary)
+java_prebuilt = context.target_factory(JavaPrebuilt)

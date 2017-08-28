@@ -8,7 +8,7 @@
     "python": ">=3.6.1",
     "nodepy": ">=0.0.21"
   },
-  "main": "./api.py",
+  "main": "./main.py",
   "bin": {
     "craftr": "./cli.py"
   },

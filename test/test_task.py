@@ -18,13 +18,39 @@
 # OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
 # SOFTWARE.
 
-import typing as t
+from nose.tools import *
+import time
+import threading
+import task from 'craftr/lib/task'
 
 
-class FileComponent(t.NamedTuple):
-  filename: str
-  is_input: bool
+def test_task():
 
+  event = threading.Event()
+  def action():
+    event.wait()
+    return 42
 
-class DataComponent(t.NamedTuple):
-  data: bytes
+  t = task.Task(action)
+  assert_equals(t.result(None), None)
+  event.set()
+  assert_equals(t.result(), 42)
+  event.clear()
+
+  t = task.Task(action)
+  assert_equals(t.result(58), 58)
+  event.set()
+  assert_equals(t.result(), 42)
+  assert_equals(t.result(), 42)
+  event.clear()
+
+  def raiser():
+    event.wait()
+    raise IndexError("foobar!")
+
+  t = task.Task(raiser, print_exc=False)
+  assert_equals(t.result(None), None)
+  event.set()
+  with assert_raises(IndexError):
+    t.result()
+  event.clear()

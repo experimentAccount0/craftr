@@ -20,7 +20,8 @@
 
 import abc
 import typing as t
-import {Target, Action, ActionProcess, Session} from './buildgraph'
+import {Target, Action} from './buildgraph'
+import {Session} from './session'
 
 
 class BuildBackend(metaclass=abc.ABCMeta):

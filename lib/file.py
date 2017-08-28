@@ -18,20 +18,18 @@
 # OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
 # SOFTWARE.
 
-from nose.tools import *
-import {reqref} from 'craftr/core/util'
+import typing as t
 
-# A class for which we can create weak references.
-class Obj: pass
+T = t.TypeVar('T')
 
 
-def test_reqref():
-  obj = Obj()
-  ref = reqref(obj)
-  assert_equals(ref(), obj)
-  del obj
-  with assert_raises(RuntimeError):
-    ref()
+def file_iter_chunks(fp: t.IO[T], chunksize: int = 4096) -> t.Iterable[T]:
+  """
+  Iterates over a file-like object in chunks and yields them.
+  """
 
-  ref = reqref(None)
-  assert_equals(ref(), None)
+  while True:
+    data = fp.read(chunksize)
+    if not data:
+      break
+    yield data

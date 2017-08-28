@@ -18,56 +18,37 @@
 # OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
 # SOFTWARE.
 
-__all__ = ['mkdir', 'MkdirAction']
+__all__ = ['Mkdir']
 
 import errno
 import os
-import api from '../api'
-import {ThreadedActionProcess} from './base'
-import {Action} from '../core/buildgraph'
+import {ActionImpl} from '../core/buildgraph'
 
 
-class MkdirActionProcess(ThreadedActionProcess):
+class Mkdir(ActionImpl):
 
-  def __init__(self, directory):
-    self.directory = directory
-    self.exit_code = None
+  def __init__(self, directory: str):
     super().__init__()
+    self.directory = directory
 
-  def display_text(self):
-    return 'mkdir: {}'.format(self.directory)
-
-  def terminate(self):
+  def abort(self):
     pass
 
-  def poll(self):
-    with self.lock:
-      return self.exit_code
+  def progress(self):
+    return 0.0
 
-  def run(self):
-    exit_code = 0
-    try:
-      os.makedirs(self.directory)
-    except OSError as e:
-      if e.errno != errno.EEXIST:
-        exit_code = e.errno
-        self.print(e, err=True)
-    with self.lock:
-      self.exit_code = exit_code
+  def display(self, full):
+    return 'mkdir: {}'.format(self.directory)
 
-
-class MkdirAction(Action):
-
-  def __init__(self, *, directory: str, **kwargs):
-    super().__init__(**kwargs)
-    self.directory = directory
-
-  def skippable(self, build):
+  def skippable(self):
     if os.path.isdir(self.directory):
       return True
 
   def execute(self):
-    return MkdirActionProcess(self.directory).start()
-
-
-mkdir = api.action_factory(MkdirAction)
+    try:
+      os.makedirs(self.directory)
+    except OSError as e:
+      if e.errno != errno.EEXIST:
+        self.print(e, err=True)
+        return e.errno
+    return 0

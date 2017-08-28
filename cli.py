@@ -30,10 +30,12 @@ import functools
 import nodepy
 import operator
 import sys
-import api from './api'
+import context from './context'
 import path from './core/path'
-import {Session} from './core/buildgraph'
-import _graph from './core/graph'
+import _graph from './lib/graph'
+import {Session} from './core/session'
+
+craftr_main = require('./main', exports=False).namespace
 
 VERSION = module.package.json['version']
 
@@ -43,9 +45,10 @@ def load_config(filename, format):
   Loads a configuration file. *format* can be either `'toml'` or `'python'`.
   """
 
+  config = craftr_main.exports.config
   if format == 'toml':
     if path.isfile(filename):
-      api.session.config.read(filename)
+      config.read(filename)
   elif format == 'python':
     try:
       require(filename, current_dir=path.cwd())
@@ -100,7 +103,7 @@ def main(ctx, build_directory, file, config, debug, release, target,
 
   # Create a new session object and expose it to the Craftr API.
   session = Session(target=target, arch=arch)
-  api.init(session)
+  craftr_main.exports = context.BuildContext(session)
 
   # Load the configuration files.
   load_config(path.expanduser('~/.craftr/config.toml'), format='toml')
@@ -121,7 +124,6 @@ def main(ctx, build_directory, file, config, debug, release, target,
   if not build_directory:
     build_directory = 'target/{}-{}'.format(session.arch, session.target)
   session.build_directory = build_directory
-  api.init(session)
 
   # Load the backend.
   if not backend:
@@ -146,29 +148,32 @@ def main(ctx, build_directory, file, config, debug, release, target,
   require.context.register_index_file('Craftrfile')
 
   # This is a Node.py context event handler that synchronizes the current
-  # module with the scope stack in the Craftr session.
+  # module with the cell stack in the Craftr session.
   def event_handler(event_name, data):
     if event_name in (nodepy.Context.Event_Enter, nodepy.Context.Event_Leave):
       module = data
       if module.package:
+        name = module.package.json['name']
         if event_name == nodepy.Context.Event_Enter:
           directory = module.package.directory
           version = module.package.json.get('version', '1.0.0')
-          session.enter_scope(module.package.json['name'], directory, version)
+          print("ENTER", name)
+          session.enter_cell(name, directory, version)
         else:
-          session.leave_scope(module.package.json['name'])
+          print("LEAVE", name)
+          session.leave_cell(name)
 
-  session.enter_scope('__main__', path.cwd(), '1.0.0')
+  session.enter_cell('__main__', path.cwd(), '1.0.0')
   require.context.event_handlers.append(event_handler)
   try:
-    # For the current project, the default scope is __main__. If the Craftrfile
+    # For the current project, the default cell is __main__. If the Craftrfile
     # is embedded in a Node.py package, that namespace will be automatically
     # obtained when the module is loaded (due to the event handler that we
     # just registered).
     require.exec_main(file, current_dir=path.cwd())
   finally:
     require.context.event_handlers.remove(event_handler)
-    session.leave_scope('__main__')
+    session.leave_cell('__main__')
 
   ctx.obj = {'session': session}
 
