@@ -22,6 +22,7 @@ import contextlib
 import nodepy
 import os
 import graph from '../base/graph'
+import platform from '../lib/platform'
 import {Cell} from './cell'
 import {parse_target_reference} from './target'
 import {LoaderSupport, get_current_module} from './loader'
@@ -29,10 +30,12 @@ import {LoaderSupport, get_current_module} from './loader'
 
 class Session:
 
-  def __init__(self, maindir=None, builddir=None):
+  def __init__(self, arch=None, target=None, builddir=None, maindir=None):
     self.cells = {}
-    self.builddir = builddir or 'build'
+    self.arch = arch or platform.arch
+    self.target = target or 'debug'
     self.maindir = maindir or os.getcwd()
+    self.builddir = builddir or 'build'
 
   @contextlib.contextmanager
   def with_loader(self):
