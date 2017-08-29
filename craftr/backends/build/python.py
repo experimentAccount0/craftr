@@ -34,7 +34,19 @@ class PythonBuilder(base.Builder):
     print('Translating to actions...')
     session.create_target_graph().translate()
     actions = session.create_action_graph()
-    print('note: the Python build backend is not yet implemented.')
+    print('note: the Python build backend currently executed actions sequentially.')
+    for action in actions.topo_sort():
+      print('[{}]: {}'.format(action.long_name, action.display(full=True)))
+      action.execute()
+      action.wait()
+      code = action.exit_code()
+      if code != 0:
+        content = action.get_buffered_output()
+        if content:
+          sys.stdout.buffer.write(content)
+        print('fatal: [{}] exited with {}'.format(action.long_name, code))
+        sys.exit(code)
+
     sys.exit(0)
 
 
