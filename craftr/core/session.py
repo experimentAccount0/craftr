@@ -37,6 +37,10 @@ class Session:
     self.maindir = maindir or os.getcwd()
     self.builddir = builddir or 'build'
 
+  @staticmethod
+  def get_current():
+    return get_current_module().cell.session
+
   @contextlib.contextmanager
   def with_loader(self):
     loader = next((x for x in require.context.resolvers if isinstance(x, nodepy.FilesystemResolver)), None)
