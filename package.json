@@ -1,6 +1,7 @@
 {
   "name": "craftr",
   "version": "3.0.0",
+  "resolve_root": "craftr/",
   "main": "craftr/main.py",
   "bin": {
     "craftr": "craftr/main.py"

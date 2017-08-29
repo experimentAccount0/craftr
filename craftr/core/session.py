@@ -22,7 +22,8 @@ import contextlib
 import nodepy
 import os
 import {Cell} from './cell'
-import {LoaderSupport} from './loader'
+import {parse_target_reference} from './target'
+import {LoaderSupport, get_current_module} from './loader'
 
 
 class Session:
@@ -40,7 +41,7 @@ class Session:
     support = LoaderSupport(self)
     loader.supports.insert(0, support)
     try:
-      yield self
+      yield
     finally:
       loader.supports.remove(support)
 
@@ -55,3 +56,23 @@ class Session:
       cell = Cell(self, name, version, directory)
       self.cells[name] = cell
     return cell
+
+  def find_target(self, identifier):
+    scope, name = parse_target_reference(identifier)
+    if not scope:
+      scope = get_current_module().cell.name
+      identifier = '//{}:{}'.format(scope, name)
+
+    cell = self.cells.get(scope)
+    if cell is None:
+      raise NoSuchTargetError(identifier)
+    target = cell.targets.get(name)
+    if target is None:
+      raise NoSuchTargetError(identifier)
+    return target
+
+  def translate_targets(self):
+    for cell in self.cells.values():
+      for target in cell.targets.values():
+        if not target.translated:
+          target.translate()

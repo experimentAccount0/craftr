@@ -18,6 +18,7 @@
 # OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
 # SOFTWARE.
 
+import abc
 import weakref
 
 
@@ -65,3 +66,18 @@ class ActionImpl(metaclass=abc.ABCMeta):
   @property
   def action(self):
     return self.__action()
+
+  def progress(self):
+    return None
+
+  @abc.abstractmethod
+  def display(self, full):
+    pass
+
+  @abc.abstractmethod
+  def abort(self):
+    pass
+
+  @abc.abstractmethod
+  def execute(self):
+    pass

@@ -18,37 +18,27 @@
 # OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
 # SOFTWARE.
 
-import weakref
+import functools
+import {Action} from './core/action'
+import {Target} from './core/target'
+import {get_current_module} from './core/loader'
 
 
-class Cell:
+def target_factory(target_impl_class):
   """
-  A cell is a scope where targets can be created. Every scope has a unique
-  name (that matches the Node.py package name, thus it may contain slashes!),
-  a base directory (where the `package.json` resides) and a version number
-  (also from the Node.py package).
+  Create a factory for a #TargetImpl subclass.
   """
 
-  def __init__(self, session, name, version, directory):
-    self.__session = weakref.ref(session)
-    self.name = name
-    self.version = version
-    self.directory = directory
-    self.targets = {}
+  @functools.wraps(target_impl_class)
+  def wrapper(*, name, deps=(), visible_deps=(), **kwargs):
+    cell = get_current_module().cell
+    session = cell.session
+    deps = [session.find_target(x) for x in deps]
+    visible_deps = [session.find_target(x) for x in visible_deps]
+    impl = object.__new__(target_impl_class)
+    target = Target(cell, name, deps, visible_deps, impl)
+    impl.__init__(target, **kwargs)
+    cell.add_target(target)
+    return target
 
-  def __repr__(self):
-    return '<Cell "{}">'.format(self.name)
-
-  @property
-  def session(self):
-    return self.__session()
-
-  @property
-  def builddir(self):
-    return os.path.join(self.session.builddir, 'cells', self.name)
-
-  def add_target(self, target):
-    assert target.cell is self
-    if target.name in self.targets:
-      raise RuntimeError('target {!r} already exists'.format(target.long_name))
-    self.targets[target.name] = target
+  return wrapper

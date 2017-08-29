@@ -61,8 +61,12 @@ class CraftrModule(nodepy.PythonModule):
     self.build_context = BuildContext(cell)
     super().__init__(*args, **kwargs)
 
+  @property
+  def cell(self):
+    return self.__cell()
 
-def find_current_module(frame=None):
+
+def get_current_module(frame=None):
   for module in reversed(require.context.current_modules):
     if isinstance(module, CraftrModule):
       return module

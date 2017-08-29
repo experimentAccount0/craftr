@@ -18,8 +18,9 @@
 # OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
 # SOFTWARE.
 
-import {Cell} from './cell'
+import abc
 import weakref
+import {Action} from './action'
 
 
 class Target:
@@ -45,6 +46,11 @@ class Target:
     self.deps = deps
     self.visible_deps = visible_deps
     self.impl = impl
+    self.actions = {}
+    self.translated = False
+
+  def __repr__(self):
+    return '<Target "{}">'.format(self.long_name)
 
   @property
   def cell(self):
@@ -58,6 +64,12 @@ class Target:
   def long_name(self):
     return '//{}:{}'.format(self.cell.name, self.name)
 
+  def add_action(self, action):
+    assert action.target is self
+    if action.name in self.actions:
+      raise RuntimeError('action {!r} already exists.'.format(action.name))
+    self.actions[action.name] = action
+
   def transitive_deps(self):
     result = self.deps[:]
     def recursion(target):
@@ -68,6 +80,17 @@ class Target:
       recursion(dep)
     recursion(self)
     return result
+
+  def translate(self):
+    if self.translated:
+      return
+    self.translated = True
+    for dep in self.deps:
+      dep.translate()
+    for dep in self.visible_deps:
+      if dep not in self.deps:
+        dep.translate()
+    self.impl.translate()
 
 
 class TargetImpl(metaclass=abc.ABCMeta):
@@ -81,3 +104,40 @@ class TargetImpl(metaclass=abc.ABCMeta):
   @property
   def target(self):
     return self.__target()
+
+  def action(self, action_impl_type, *, name, deps=(), input_files=(),
+                   output_files=(), **kwargs):
+    """
+    Add a new #Action to the target. Should be used inside #translate().
+    """
+
+    target = self.target
+    deps = list(deps)
+    assert all(isinstance(x, Action) for x in deps)
+    input_files = [os.path.abspath(x) for x in input_files]
+    output_files = [os.path.abspath(x) for x in output_files]
+    impl = object.__new__(action_impl_type)
+    action = Action(target, name, deps, input_files, output_files, impl)
+    impl.__init__(action, **kwargs)
+    target.add_action(action)
+    return action
+
+  @abc.abstractmethod
+  def translate(self):
+    pass
+
+
+def parse_target_reference(s, default_scope=None):
+  """
+  Parses a target reference of the form `[//scope]:target`.
+  """
+
+  if not s.startswith('//') and not s.startswith(':'):
+    raise ValueError('invalid target-reference string: {!r}'.format(s))
+  left, sep, right = s.partition(':')
+  if not sep:
+    raise ValueError('invalid target-reference string: {!r}'.format(s))
+  if left:
+    assert left.startswith('//')
+    left = left[2:]
+  return (left or default_scope, right)

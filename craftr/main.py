@@ -26,8 +26,10 @@ import {Session} from './core/session'
 def main():
   parser = argparse.ArgumentParser(description='The Craftr build system.')
   args = parser.parse_args()
-  with Session().with_loader():
+  session = Session()
+  with session.with_loader():
     require('.', current_dir=os.getcwd())
+  session.translate_targets()
 
 
 if require.main == module:
