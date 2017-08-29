@@ -83,13 +83,15 @@ class Target:
 
   def translate(self):
     if self.translated:
-      return
-    self.translated = True
+      raise RuntimeError('target {!r} already translated'.format(self.long_name))
+
+    # Ensure that all dependencies are translated.
     for dep in self.deps:
-      dep.translate()
+      assert dep.translated, dep
     for dep in self.visible_deps:
-      if dep not in self.deps:
-        dep.translate()
+      assert dep.translated, dep
+
+    self.translated = True
     self.impl.translate()
 
 

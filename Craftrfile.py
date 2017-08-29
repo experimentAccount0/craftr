@@ -31,5 +31,6 @@ b = test_target(name = 'b')
 
 c = test_target(
   name = 'c',
-  deps = [':a', ':b']
+  deps = [':a'],
+  visible_deps = [':b']
 )

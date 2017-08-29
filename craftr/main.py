@@ -29,7 +29,17 @@ def main():
   session = Session()
   with session.with_loader():
     require('.', current_dir=os.getcwd())
-  session.translate_targets()
+
+  targets = session.create_target_graph()
+  actions = targets.translate()
+  for action in actions.topo_sort():
+    print(action.impl.display(full=True))
+    action.impl.execute()
+
+  import sys
+  targets.dotviz(sys.stdout)
+  print()
+  actions.dotviz(sys.stdout)
 
 
 if require.main == module:
