@@ -19,6 +19,7 @@
 # SOFTWARE.
 
 import os
+import sys
 import trick from './lib/trick'
 import platform from './lib/platform'
 import {Session} from './core/session'
@@ -68,6 +69,23 @@ def build():
   """
 
   session.builder.build(session, [])
+
+
+@main.command()
+@trick.argument('--actions', action='store_true', help='Visualize the action '
+  'graph instead of the target graph.')
+def viz(actions):
+  """
+  Generate a DOT graph from the target- or action-graph.
+  """
+
+  session.load_targets()
+  graph = session.create_target_graph()
+  if actions:
+    graph.translate()
+    graph = session.create_action_graph()
+
+  graph.dotviz(sys.stdout)
 
 
 if require.main == module:
