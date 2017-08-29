@@ -70,6 +70,14 @@ class Target:
       raise RuntimeError('action {!r} already exists.'.format(action.name))
     self.actions[action.name] = action
 
+  def leaf_actions(self):
+    actions = set(self.actions.values())
+    outputs = set()
+    for action in actions:
+      for dep in action.deps:
+        outputs.add(dep)
+    return actions - outputs
+
   def transitive_deps(self):
     result = self.deps[:]
     def recursion(target):
@@ -114,8 +122,21 @@ class TargetImpl(metaclass=abc.ABCMeta):
     """
 
     target = self.target
-    deps = list(deps)
-    assert all(isinstance(x, Action) for x in deps)
+
+    def unpack_deps():
+      new_deps = []
+      for dep in deps:
+        if isinstance(dep, Target):
+          new_deps += dep.leaf_actions()
+        elif isinstance(dep, Action):
+          new_deps.append(dep)
+        elif isinstance(dep, str):
+          new_deps.append(target.actions[dep])
+        else:
+          raise TypeError('dependency must be Target/Action/str', type(dep))
+      return new_deps
+
+    deps = unpack_deps()
     input_files = [os.path.abspath(x) for x in input_files]
     output_files = [os.path.abspath(x) for x in output_files]
     impl = object.__new__(action_impl_type)

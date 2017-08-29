@@ -42,6 +42,9 @@ class Action:
     self.output_files = output_files
     self.impl = impl
 
+  def __repr__(self):
+    return '<Action "{}">'.format(self.long_name)
+
   @property
   def target(self):
     return self.__target()
@@ -52,7 +55,7 @@ class Action:
 
   @property
   def long_name(self):
-    return '{}!{}'.format(self.target.name, self.name)
+    return '{}!{}'.format(self.target.long_name, self.name)
 
 
 class ActionImpl(metaclass=abc.ABCMeta):
