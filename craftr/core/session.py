@@ -30,12 +30,14 @@ import {LoaderSupport, get_current_module} from './loader'
 
 class Session:
 
-  def __init__(self, arch=None, target=None, builddir=None, maindir=None):
+  def __init__(self, arch=None, target=None, builddir=None, maindir=None,
+               builder=None):
     self.cells = {}
     self.arch = arch or platform.arch
     self.target = target or 'debug'
     self.maindir = maindir or os.getcwd()
     self.builddir = builddir or 'build'
+    self.builder = builder
 
   @staticmethod
   def get_current():
@@ -81,13 +83,26 @@ class Session:
 
   def targets(self):
     for cell in self.cells.values():
-      for target in cell.targets.values():
-        yield target
+      yield from cell.targets.values()
+
+  def actions(self):
+    for target in self.targets():
+      yield from target.actions.values()
+
+  def load_targets(self):
+    with self.with_loader():
+      require('.', current_dir=os.getcwd())
 
   def create_target_graph(self):
     g = TargetGraph()
     for target in self.targets():
       g.add(target)
+    return g
+
+  def create_action_graph(self):
+    g = ActionGraph()
+    for action in self.actions():
+      g.add(action)
     return g
 
 

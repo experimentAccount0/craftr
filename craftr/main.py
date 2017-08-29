@@ -18,28 +18,56 @@
 # OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
 # SOFTWARE.
 
-import argparse
 import os
+import trick from './lib/trick'
+import platform from './lib/platform'
 import {Session} from './core/session'
 
 
-def main():
-  parser = argparse.ArgumentParser(description='The Craftr build system.')
-  args = parser.parse_args()
-  session = Session()
-  with session.with_loader():
-    require('.', current_dir=os.getcwd())
+@trick.group()
+@trick.argument('--arch', default=platform.arch, metavar='ARCH',
+  help='The build architecture. Defaults to "' + platform .arch + '". Note '
+    'that usually only native code compilation is architecture dependent and '
+    'if none such is used, the validity of this value will not be checked.')
+@trick.argument('--target', default='debug', metavar='TARGET',
+  help='The build target (usually "debug" or "release"). Defaults to "debug".')
+@trick.argument('--build-dir', '--build-directory', metavar='DIRNAME',
+  help='The build output directory. Defaults to "build/{arch}-{target}".')
+def main(subcommand, *, arch, target, build_dir):
+  """
+  The Craftr build system.
+  """
 
-  targets = session.create_target_graph()
-  actions = targets.translate()
-  for action in actions.topo_sort():
-    print(action.impl.display(full=True))
-    action.impl.execute()
+  # TODO: Extend the 'trick' module with a per-invokation context that can
+  #       be accessed from the wrapped functions.
 
-  import sys
-  targets.dotviz(sys.stdout)
-  print()
-  actions.dotviz(sys.stdout)
+  builder = require('./backends/build/python')()
+
+  global session
+  arch = arch or platform.arch
+  target = target or platform.target
+  build_dir = build_dir or os.path.join('build', arch + '-' + target)
+  session = Session(arch, target, build_dir, builder=builder)
+
+
+
+@main.command()
+def generate():
+  """
+  Execute the "generate" procedure of the build backend. The native Python
+  backend does not require this step.
+  """
+
+  session.builder.generate(session, [])
+
+
+@main.command()
+def build():
+  """
+  Execute the "build" procedure of the build backend.
+  """
+
+  session.builder.build(session, [])
 
 
 if require.main == module:
