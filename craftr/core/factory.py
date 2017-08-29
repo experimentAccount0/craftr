@@ -19,9 +19,9 @@
 # SOFTWARE.
 
 import functools
-import {Action} from './core/action'
-import {Target} from './core/target'
-import {get_current_module} from './core/loader'
+import {Action} from './action'
+import {Target} from './target'
+import {get_current_module} from './loader'
 
 
 def target_factory(target_impl_class):

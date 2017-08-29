@@ -21,4 +21,4 @@
 import {Action, ActionImpl} from './core/action'
 import {Target, TargetImpl} from './core/target'
 import {get_current_module} from './core/loader'
-import {target_factory} from './factory'
+import {target_factory} from './core/factory'
