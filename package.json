@@ -1,0 +1,11 @@
+{
+  "name": "craftr",
+  "version": "3.0.0",
+  "main": "craftr/main.py",
+  "bin": {
+    "craftr": "craftr/main.py"
+  },
+  "extensions": [
+    "!require-import-syntax"
+  ]
+}
