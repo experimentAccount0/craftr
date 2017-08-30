@@ -13,7 +13,7 @@ install:
 script:
 # Build the example Java project (OneJar).
 - craftr -m ./examples/java -d java.dist_type=onejar build
-- java -jar build/cells/craftr.examples-java/main.jar
+- java -jar build/x86_64-debug/cells/craftr.examples-java/main.jar
 # Build the example Java project (MergeJar).
 - craftr -m ./examples/java -d java.dist_type=merge build
-- java -jar build/cells/craftr.examples-java/main.jar
+- java -jar build/x86_64-debug/cells/craftr.examples-java/main.jar
