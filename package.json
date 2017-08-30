@@ -1,0 +1,20 @@
+{
+  "name": "craftr",
+  "version": "3.0.0",
+  "resolve_root": "craftr/",
+  "main": "public.py",
+  "bin": {
+    "craftr": "craftr/main.py"
+  },
+  "extensions": [
+    "!require-import-syntax"
+  ],
+  "engines": {
+    "python": ">=3.6",
+    "nodepy": ">=0.0.22"
+  },
+  "python-dependencies": {
+    "Werkzeug": ">=0.12.2",
+    "toml": ">=0.9.2"
+  }
+}

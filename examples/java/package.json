@@ -1,0 +1,8 @@
+{
+  "name": "craftr.examples-java",
+  "version": "1.0.0",
+  "private": true,
+  "extensions": [
+    "!require-import-syntax"
+  ]
+}
