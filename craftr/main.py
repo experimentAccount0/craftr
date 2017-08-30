@@ -34,10 +34,13 @@ def load_config(config, filename, format):
       config.read(filename)
   elif format == 'python':
     try:
-      require(filename, current_dir=os.getcwd())
+      module = require(filename, current_dir=os.getcwd(), exec_=False, exports=False)
     except require.ResolveError as e:
       if e.request.name != filename:
         raise
+    else:
+      module.namespace.config = config
+      module.exec_()
   else:
     raise ValueError('invalid format: {!r}'.format(format))
 
@@ -77,8 +80,8 @@ def main(subcommand, *, arch, target, build_dir, builder):
     'platform': platform.name, 'arch': arch, 'target': target,})
   load_config(config, '~/.craftr/config.toml', 'toml')
   load_config(config, '~/.craftr/config.py', 'python')
-  load_config(config, '.craftrconfig.toml', 'toml')
-  load_config(config, '.craftrconfig.py', 'python')
+  load_config(config, './.craftrconfig.toml', 'toml')
+  load_config(config, './.craftrconfig.py', 'python')
 
   # Load the builder  implementation.
   builder = builder or config.get('build.backend', 'python')
