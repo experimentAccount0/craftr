@@ -20,7 +20,7 @@
 
 import functools
 import {Action} from './action'
-import {Target} from './target'
+import {Target, TargetImpl} from './target'
 import {get_current_module} from './loader'
 
 
@@ -37,8 +37,48 @@ def target_factory(target_impl_class):
     visible_deps = [session.find_target(x) for x in visible_deps]
     impl = object.__new__(target_impl_class)
     target = Target(cell, name, deps, visible_deps, impl)
+    print(">>", impl)
     impl.__init__(target, **kwargs)
     cell.add_target(target)
     return target
 
   return wrapper
+
+
+def inherit_annotations(*from_):
+  """
+  Decorator to inherit annotations from the object *from_*. If *from_* is
+  not specified, the decorator is supposed to be used on a class and the
+  parent class' annotations are inherited.
+  """
+
+  def wrapper(obj):
+    nonlocal from_
+    if not from_ and isinstance(obj, type):
+      from_ = obj.__bases__
+    for src in from_:
+      for key in src.__annotations__:
+        if key not in obj.__annotations__:
+          obj.__annotations__[key] = src.__annotations__[key]
+    return obj
+
+  return wrapper
+
+
+class AnnotatedTargetImpl(TargetImpl):
+  """
+  A subclass of #Target which accepts keyword parameters as annotated on the
+  class level and stores them.
+  """
+
+  def __init__(self, target, **kwargs):
+    for key in type(self).__annotations__.keys():
+      if hasattr(type(self), key):
+        value = kwargs.pop(key, getattr(type(self), key))
+      else:
+        try:
+          value = kwargs.pop(key)
+        except KeyError:
+          raise TypeError('missing keyword argument: {!r}'.format(key))
+      setattr(self, key, value)
+    super().__init__(target, **kwargs)

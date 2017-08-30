@@ -18,7 +18,15 @@
 # OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
 # SOFTWARE.
 
+import actions from './actions'
 import {Action, ActionImpl} from './core/action'
 import {Target, TargetImpl} from './core/target'
 import {get_current_module} from './core/loader'
-import {target_factory} from './core/factory'
+import {inherit_annotations, target_factory, AnnotatedTargetImpl} from './core/factory'
+import path from './lib/path'
+
+import werkzeug.local as _local
+
+cell = _local.LocalProxy(lambda: get_current_module().cell)
+session = _local.LocalProxy(lambda: cell.session)
+config = _local.LocalProxy(lambda: session.config)

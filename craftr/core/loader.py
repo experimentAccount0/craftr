@@ -21,7 +21,6 @@
 import nodepy
 import os
 import weakref
-import {BuildContext} from './context'
 
 
 class LoaderSupport(nodepy.FilesystemLoaderSupport):
@@ -58,7 +57,6 @@ class CraftrModule(nodepy.PythonModule):
 
   def __init__(self, cell, *args, **kwargs):
     self.__cell = weakref.ref(cell)
-    self.build_context = BuildContext(cell)
     super().__init__(*args, **kwargs)
 
   @property

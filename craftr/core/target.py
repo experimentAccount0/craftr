@@ -115,6 +115,10 @@ class TargetImpl(metaclass=abc.ABCMeta):
   def target(self):
     return self.__target()
 
+  @property
+  def cell(self):
+    return self.target.cell
+
   def action(self, action_impl_type, *, name, deps=(), input_files=(),
                    output_files=(), **kwargs):
     """
