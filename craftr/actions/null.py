@@ -18,5 +18,16 @@
 # OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
 # SOFTWARE.
 
-import {Mkdir} from './mkdir'
-import {Null} from './null'
+import {ActionImpl} from '../core/action'
+
+
+class Null(ActionImpl):
+
+  def display(self, full):
+    return 'null'
+
+  def abort(self):
+    pass
+
+  def execute(self):
+    pass
