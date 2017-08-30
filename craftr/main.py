@@ -18,11 +18,38 @@
 # OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
 # SOFTWARE.
 
+import contextlib
 import os
 import sys
+import {Session} from './core/session'
+import {Configuration} from './lib/config'
 import trick from './lib/trick'
 import platform from './lib/platform'
-import {Session} from './core/session'
+
+
+def load_config(config, filename, format):
+  filename = os.path.expanduser(filename)
+  if format == 'toml':
+    with contextlib.suppress(FileNotFoundError):
+      config.read(filename)
+  elif format == 'python':
+    try:
+      require(filename, current_dir=os.getcwd())
+    except require.ResolveError as e:
+      if e.request.name != filename:
+        raise
+  else:
+    raise ValueError('invalid format: {!r}'.format(format))
+
+
+def load_backend(prefix, name):
+  request = './backends/{}/{}'.format(prefix, name)
+  try:
+    return require(request)
+  except require.ResolveError as e:
+    if e.request.name != request:
+      raise
+  return require(name)
 
 
 @trick.group()
@@ -34,21 +61,33 @@ import {Session} from './core/session'
   help='The build target (usually "debug" or "release"). Defaults to "debug".')
 @trick.argument('--build-dir', '--build-directory', metavar='DIRNAME',
   help='The build output directory. Defaults to "build/{arch}-{target}".')
-def main(subcommand, *, arch, target, build_dir):
+@trick.argument('--builder', metavar='BUILDER',
+  help='The build backend to use. Defaults to "python".')
+def main(subcommand, *, arch, target, build_dir, builder):
   """
   The Craftr build system.
   """
 
+  arch = arch or platform.arch
+  target = target or 'debug'
+  build_dir = build_dir or os.path.join('build', arch + '-' + target)
+
+  # Load the configuration files.
+  config = Configuration(props={
+    'platform': platform.name, 'arch': arch, 'target': target,})
+  load_config(config, '~/.craftr/config.toml', 'toml')
+  load_config(config, '~/.craftr/config.py', 'python')
+  load_config(config, '.craftrconfig.toml', 'toml')
+  load_config(config, '.craftrconfig.py', 'python')
+
+  # Load the builder  implementation.
+  builder = builder or config.get('build.backend', 'python')
+  builder = load_backend('build', builder)()
+
   # TODO: Extend the 'trick' module with a per-invokation context that can
   #       be accessed from the wrapped functions.
-
-  builder = require('./backends/build/python')()
-
   global session
-  arch = arch or platform.arch
-  target = target or platform.target
-  build_dir = build_dir or os.path.join('build', arch + '-' + target)
-  session = Session(arch, target, build_dir, builder=builder)
+  session = Session(config, builder, arch, target, build_dir)
 
   if not subcommand:
     print('fatal: missing subcommand', file=sys.stderr)

@@ -30,14 +30,15 @@ import {LoaderSupport, get_current_module} from './loader'
 
 class Session:
 
-  def __init__(self, arch=None, target=None, builddir=None, maindir=None,
-               builder=None):
+  def __init__(self, config, builder, arch=None, target=None,
+               builddir=None, maindir=None):
     self.cells = {}
+    self.config = config
+    self.builder = builder
     self.arch = arch or platform.arch
     self.target = target or 'debug'
     self.maindir = maindir or os.getcwd()
     self.builddir = builddir or 'build'
-    self.builder = builder
 
   @staticmethod
   def get_current():
