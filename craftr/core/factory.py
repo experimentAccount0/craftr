@@ -37,7 +37,6 @@ def target_factory(target_impl_class):
     visible_deps = [session.find_target(x) for x in visible_deps]
     impl = object.__new__(target_impl_class)
     target = Target(cell, name, deps, visible_deps, impl)
-    print(">>", impl)
     impl.__init__(target, **kwargs)
     cell.add_target(target)
     return target
