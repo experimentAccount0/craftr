@@ -1,35 +1,22 @@
 
-import * from 'craftr/public'
+import * from 'craftr'
+import actions from 'craftr/actions'
 
 
-class TestAction(ActionImpl):
-
-  def display(self, full):
-    return "TestAction"
-
-  def abort(self):
-    pass
-
-  def execute(self):
-    pass
-
-
-class TestTarget(TargetImpl):
+@target_factory
+class hello(TargetImpl):
 
   def translate(self):
     self.action(
-      TestAction,
-      name = 'foo'
+      actions.Commands,
+      name = 'cmd',
+      commands = [['echo', 'Hello, World!'], ['sleep', '1']]
     )
 
 
-test_target = target_factory(TestTarget)
-
-a = test_target(name = 'a')
-
-b = test_target(name = 'b')
-
-c = test_target(
+a = hello(name = 'a')
+b = hello(name = 'b')
+c = hello(
   name = 'c',
   deps = [':a'],
   visible_deps = [':b']
