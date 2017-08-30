@@ -19,6 +19,7 @@
 # SOFTWARE.
 
 import abc
+import os
 import weakref
 import {Action} from './action'
 

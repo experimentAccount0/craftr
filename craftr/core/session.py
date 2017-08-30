@@ -39,6 +39,7 @@ class Session:
     self.target = target or 'debug'
     self.maindir = maindir or os.getcwd()
     self.builddir = builddir or 'build'
+    self.main_module_name = '.'
 
   @staticmethod
   def get_current():
@@ -92,7 +93,7 @@ class Session:
 
   def load_targets(self):
     with self.with_loader():
-      require('.', current_dir=os.getcwd())
+      require(self.main_module_name, current_dir=self.maindir)
 
   def create_target_graph(self):
     g = TargetGraph()

@@ -56,6 +56,7 @@ def load_backend(prefix, name):
 
 
 @trick.group()
+@trick.argument('-m', '--module', default='./Craftrfile.py')
 @trick.argument('--arch', default=platform.arch, metavar='ARCH',
   help='The build architecture. Defaults to "' + platform .arch + '". Note '
     'that usually only native code compilation is architecture dependent and '
@@ -66,7 +67,7 @@ def load_backend(prefix, name):
   help='The build output directory. Defaults to "build/{arch}-{target}".')
 @trick.argument('--builder', metavar='BUILDER',
   help='The build backend to use. Defaults to "python".')
-def main(subcommand, *, arch, target, build_dir, builder):
+def main(subcommand, *, module, arch, target, build_dir, builder):
   """
   The Craftr build system.
   """
@@ -91,6 +92,7 @@ def main(subcommand, *, arch, target, build_dir, builder):
   #       be accessed from the wrapped functions.
   global session
   session = Session(config, builder, arch, target, build_dir)
+  session.main_module_name = module
 
   if not subcommand:
     print('fatal: missing subcommand', file=sys.stderr)

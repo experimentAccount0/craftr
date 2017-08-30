@@ -28,5 +28,31 @@ import path from './lib/path'
 import werkzeug.local as _local
 
 cell = _local.LocalProxy(lambda: get_current_module().cell)
-session = _local.LocalProxy(lambda: cell.session)
+session = _local.LocalProxy(lambda: require('./main').session)
 config = _local.LocalProxy(lambda: session.config)
+
+
+def glob(patterns, parent=None, excludes=None):
+  """
+  Same as #path.glob(), except that *parent* defaults to the parent directory
+  of the currently executed module (not always the same directory as the cell
+  base directory!).
+  """
+
+  if not parent:
+    parent = require.context.current_module.directory
+  return path.glob(patterns, parent, excludes)
+
+
+def canonicalize(paths, parent = None):
+  """
+  Canonicalize a path or a list of paths. Relative paths are converted to
+  absolute paths from the currently executed module's directory (NOT the
+  curren Craftr module but the current Node.py module).
+  """
+
+  parent = parent or require.context.current_module.directory
+  if isinstance(paths, str):
+    return path.canonical(path.abs(paths, parent))
+  else:
+    return [path.canonical(path.abs(x, parent)) for x in paths]
