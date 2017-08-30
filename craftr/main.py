@@ -58,20 +58,33 @@ def load_backend(prefix, name):
 @trick.group()
 @trick.argument('-m', '--module', default='./Craftrfile.py')
 @trick.argument('-d', '--define', action='append', default=[])
+@trick.argument('--debug', action='store_true',
+  help='Short form of --target=debug.')
+@trick.argument('--release', action='store_true',
+  help='Short form of --target=release.')
 @trick.argument('--arch', default=platform.arch, metavar='ARCH',
   help='The build architecture. Defaults to "' + platform .arch + '". Note '
     'that usually only native code compilation is architecture dependent and '
     'if none such is used, the validity of this value will not be checked.')
-@trick.argument('--target', default='debug', metavar='TARGET',
+@trick.argument('--target', metavar='TARGET',
   help='The build target (usually "debug" or "release"). Defaults to "debug".')
 @trick.argument('--build-dir', '--build-directory', metavar='DIRNAME',
   help='The build output directory. Defaults to "build/{arch}-{target}".')
 @trick.argument('--builder', metavar='BUILDER',
   help='The build backend to use. Defaults to "python".')
-def main(subcommand, *, module, define, arch, target, build_dir, builder):
+def main(subcommand, *, module, define, debug, release, arch, target,
+         build_dir, builder):
   """
   The Craftr build system.
   """
+
+  if sum(map(bool, (debug, release, target))) > 1:
+    print('fatal: --target, --debug and --release can not be combined.', file=sys.stderr)
+    return 1
+  if debug:
+    target = 'debug'
+  elif release:
+    target = 'release'
 
   arch = arch or platform.arch
   target = target or 'debug'
