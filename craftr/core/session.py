@@ -21,7 +21,7 @@
 import contextlib
 import nodepy
 import os
-import graph from '../base/graph'
+import graph from '../lib/graph'
 import platform from '../lib/platform'
 import {Cell} from './cell'
 import {parse_target_reference} from './target'
