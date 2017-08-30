@@ -57,6 +57,7 @@ def load_backend(prefix, name):
 
 @trick.group()
 @trick.argument('-m', '--module', default='./Craftrfile.py')
+@trick.argument('-d', '--define', action='append', default=[])
 @trick.argument('--arch', default=platform.arch, metavar='ARCH',
   help='The build architecture. Defaults to "' + platform .arch + '". Note '
     'that usually only native code compilation is architecture dependent and '
@@ -67,7 +68,7 @@ def load_backend(prefix, name):
   help='The build output directory. Defaults to "build/{arch}-{target}".')
 @trick.argument('--builder', metavar='BUILDER',
   help='The build backend to use. Defaults to "python".')
-def main(subcommand, *, module, arch, target, build_dir, builder):
+def main(subcommand, *, module, define, arch, target, build_dir, builder):
   """
   The Craftr build system.
   """
@@ -78,11 +79,20 @@ def main(subcommand, *, module, arch, target, build_dir, builder):
 
   # Load the configuration files.
   config = Configuration(props={
-    'platform': platform.name, 'arch': arch, 'target': target,})
+    'platform': platform.name, 'arch': arch, 'target': target})
   load_config(config, '~/.craftr/config.toml', 'toml')
   load_config(config, '~/.craftr/config.py', 'python')
   load_config(config, './.craftrconfig.toml', 'toml')
   load_config(config, './.craftrconfig.py', 'python')
+  for string in define:
+    key, sep, value = string.partition('=')
+    if not sep:
+      print('fatal: invalid value for -d,--define: {!r}'.format(string), file=sys.stderr)
+      return 1
+    if value == '':
+      config.pop(key, None)
+    else:
+      config[key] = value
 
   # Load the builder  implementation.
   builder = builder or config.get('build.backend', 'python')
@@ -136,4 +146,4 @@ def viz(actions):
 
 
 if require.main == module:
-  main()
+  sys.exit(main())
