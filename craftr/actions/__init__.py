@@ -20,3 +20,4 @@
 
 import {Mkdir} from './mkdir'
 import {Null} from './null'
+import {Commands} from './commands'
