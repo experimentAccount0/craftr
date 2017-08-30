@@ -1,0 +1,19 @@
+language: python
+python:
+- '3.6.1'
+- '3.6.2'
+- nightly
+
+install:
+- pip install git+https://github.com/nodepy/nodepy.git@master
+- nodepy --version
+- nppm install -I
+- export PATH="nodepy_modules/.bin:$PATH"
+
+script:
+# Build the example Java project (OneJar).
+- craftr -m ./examples/java -d java.dist_type=onejar build
+- java -jar build/cells/craftr.examples-java/main.jar
+# Build the example Java project (MergeJar).
+- craftr -m ./examples/java -d java.dist_type=merge build
+- java -jar build/cells/craftr.examples-java/main.jar
