@@ -18,38 +18,4 @@
 # OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
 # SOFTWARE.
 
-import os
-import weakref
-
-
-class Cell:
-  """
-  A cell is a scope where targets can be created. Every scope has a unique
-  name (that matches the Node.py package name, thus it may contain slashes!),
-  a base directory (where the `package.json` resides) and a version number
-  (also from the Node.py package).
-  """
-
-  def __init__(self, session, name, version, directory):
-    self.__session = weakref.ref(session)
-    self.name = name
-    self.version = version
-    self.directory = directory
-    self.targets = {}
-
-  def __repr__(self):
-    return '<Cell "{}">'.format(self.name)
-
-  @property
-  def session(self):
-    return self.__session()
-
-  @property
-  def builddir(self):
-    return os.path.join(self.session.builddir, 'cells', self.name)
-
-  def add_target(self, target):
-    assert target.cell is self
-    if target.name in self.targets:
-      raise RuntimeError('target {!r} already exists'.format(target.long_name))
-    self.targets[target.name] = target
+import {Mkdir} from './mkdir'

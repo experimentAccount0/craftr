@@ -50,6 +50,9 @@ def main(subcommand, *, arch, target, build_dir):
   build_dir = build_dir or os.path.join('build', arch + '-' + target)
   session = Session(arch, target, build_dir, builder=builder)
 
+  if not subcommand:
+    print('fatal: missing subcommand', file=sys.stderr)
+    sys.exit(1)
 
 
 @main.command()
