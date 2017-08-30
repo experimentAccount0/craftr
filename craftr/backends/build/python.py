@@ -40,10 +40,10 @@ class PythonBuilder(base.Builder):
       action.execute()
       action.wait()
       code = action.exit_code()
+      content = action.get_buffered_output()
+      if content:
+        sys.stdout.buffer.write(content)
       if code != 0:
-        content = action.get_buffered_output()
-        if content:
-          sys.stdout.buffer.write(content)
         print('fatal: [{}] exited with {}'.format(action.long_name, code))
         sys.exit(code)
 
