@@ -20,10 +20,88 @@
 
 import contextlib
 import json
+import os
+import re
+import subprocess
+import tempfile
 import typing as t
 import * from 'craftr'
 import msvcdet from 'craftr/lib/msvcdet'
+import {override_environ} from 'craftr/lib/shell'
 import {NamedObject} from 'craftr/lib/types'
+
+
+class AsDictJSONEncoder(json.JSONEncoder):
+
+  def default(self, obj):
+    if hasattr(obj, '_asdict'):
+      return obj._asdict()
+    elif hasattr(obj, 'asdict'):
+      return obj.asdict()
+    return super().default(obj)
+
+
+class ClInfo(NamedObject):
+
+  version: str
+  version_str: str
+  target: str
+  msvc_deps_prefix: str = None
+  assembler_program: str
+  link_program: str
+  lib_program: str
+
+  VERSION_REGEX = re.compile(r'compiler\s+version\s*([\d\.]+)\s*\w+\s*(x\w+)', re.I | re.M)
+
+  @classmethod
+  def from_program(cls, program, env=None):
+    with override_environ(env or {}):
+      version_output = subprocess.check_output(['cl'], stderr=subprocess.STDOUT).decode()
+    match = cls.VERSION_REGEX.search(version_output)
+    if not match:
+      raise RuntimeError('ClInfo could not be detected from {!r}'
+        .format(program))
+
+    version = match.group(1)
+    arch = match.group(2)
+
+    # Determine the msvc_deps_prefix by making a small test. The
+    # compilation will not succeed since no entry point is defined.
+    deps_prefix = None
+    with tempfile.NamedTemporaryFile(suffix='.cpp', delete=False) as fp:
+      fp.write(b'#include <stddef.h>\n')
+      fp.close()
+      command = [program, '/Zs', '/showIncludes', fp.name]
+      try:
+        with override_environ(env or {}):
+          output = subprocess.check_output(command, stderr=subprocess.STDOUT).decode()
+      finally:
+        os.remove(fp.name)
+
+      # Find the "Note: including file:" in the current language. We
+      # assume that the structure is the same, only the words different.
+      # After the logo output follows the filename followed by the include
+      # notices.
+      for line in output.split('\n'):
+        if 'stddef.h' in line:
+          if 'C1083' in line or 'C1034' in line:
+            # C1083: can not open include file
+            # C1034: no include path sep
+            msg = 'MSVC can not compile a simple C program.\n  Program: {}\n  Output:\n\n{}'
+            raise ToolDetectionError(msg.format(program, output))
+          match = re.search('[\w\s]+:[\w\s]+:', line)
+          if match:
+            deps_prefix = match.group(0)
+
+    return cls(
+      version = version,
+      version_str = version_output.split('\n', 1)[0].strip(),
+      target = arch,
+      msvc_deps_prefix = deps_prefix,
+      assembler_program = 'ml64' if arch == 'x64' else 'ml',
+      link_program = 'link',
+      lib_program = 'lib'
+    )
 
 
 class MsvcToolkit(NamedObject):
@@ -43,7 +121,7 @@ class MsvcToolkit(NamedObject):
   sdk_version: str = None
   _csc_version: str = None
   _vbc_version: str = None
-  _cl_version: str = None
+  _cl_info: ClInfo = None
 
   @classmethod
   def from_installation(cls, inst, arch=None, platform_type=None, sdk_version=None):
@@ -56,6 +134,8 @@ class MsvcToolkit(NamedObject):
       with open(file, 'r') as fp:
         return cls.from_file(fp)
     data = json.load(file)
+    if data.get('_cl_info'):
+      data['_cl_info'] = ClInfo(**data['_cl_info'])
     return cls(**data)
 
   @classmethod
@@ -106,7 +186,7 @@ class MsvcToolkit(NamedObject):
       path.makedirs(path.dir(file))
       with open(file, 'w') as fp:
         return self.save(fp)
-    json.dump(self.asdict(), file)
+    json.dump(self.asdict(), file, cls=AsDictJSONEncoder)
 
   @property
   def key_info(self):
@@ -114,7 +194,29 @@ class MsvcToolkit(NamedObject):
 
   @property
   def csc_version(self):
-    pass
+    if not self._csc_version:
+      with override_environ(self.environ):
+        output = subprocess.check_output(['csc', '/version']).decode()
+        self._csc_version = output.strip()
+    return self._csc_version
+
+  @property
+  def cl_version(self):
+    return self.cl_info.version
+
+  @property
+  def cl_info(self):
+    if not self._cl_info:
+      self._cl_info = ClInfo.from_program('cl', self.environ)
+    return self._cl_info
+
+  @property
+  def vbc_version(self):
+    if not self._vbc_version:
+      with override_environ(self.environ):
+        output = subprocess.check_output(['vbc', '/version']).decode()
+        self._vbc_version = output.strip()
+    return self._vbc_version
 
 
 toolkit = MsvcToolkit.from_config()

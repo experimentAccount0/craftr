@@ -18,6 +18,7 @@
 # OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
 # SOFTWARE.
 
+import contextlib
 import os
 import re
 import shlex
@@ -67,3 +68,16 @@ def quote(s, for_ninja=False):
 
 def join(args):
   return ' '.join(map(quote, args))
+
+
+@contextlib.contextmanager
+def override_environ(environ):
+  old = os.environ.copy()
+  os.environ.update(environ)
+  try:
+    yield
+  finally:
+    os.environ.update(old)
+    for key in environ:
+      if key not in old:
+        del os.environ[key]
