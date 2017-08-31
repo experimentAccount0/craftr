@@ -21,7 +21,6 @@
 import contextlib
 import nodepy
 import os
-import graph from '../lib/graph'
 import platform from '../lib/platform'
 import {Cell} from './cell'
 import {parse_target_reference} from './target'
@@ -100,69 +99,6 @@ class Session:
 
   def resolve_targets(self, targets):
     return [self.find_target(x, self.main_cell) for x in targets]
-
-  def create_target_graph(self):
-    g = TargetGraph()
-    for target in self.targets():
-      g.add(target)
-    return g
-
-  def create_action_graph(self):
-    g = ActionGraph()
-    for action in self.actions():
-      g.add(action)
-    return g
-
-
-class BaseGraph(graph.Graph):
-  """
-  Duck typing, yeay!
-  """
-
-  def add(self, obj, recursive=True):
-    try:
-      node = self[obj.long_name]
-      assert node.value is obj, (node.value, obj)
-      return node
-    except KeyError:
-      node = graph.Node(obj.long_name, obj)
-      super().add(node)
-
-    if recursive:
-      for dep in obj.deps:
-        other = self.add(dep, True)
-        other.connect(node)
-      for dep in getattr(obj, 'visible_deps', ()):
-        other = self.add(dep, True)
-        other.connect(node)
-    return node
-
-  def remove(self, obj):
-    node = self[obj.long_name]
-    super().remove(node)
-
-  def topo_sort(self):
-    for node in super().topo_sort():
-      yield node.value
-
-  def values(self):
-    return (node.value for node in self.nodes())
-
-
-class TargetGraph(BaseGraph):
-
-  def translate(self):
-    for target in self.topo_sort():
-      target.translate()
-    g = ActionGraph()
-    for target in self.values():
-      for action in target.actions.values():
-        g.add(action)
-    return g
-
-
-class ActionGraph(BaseGraph):
-  pass
 
 
 class NoSuchTargetError(Exception):

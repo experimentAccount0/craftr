@@ -129,16 +129,17 @@ def generate():
   backend does not require this step.
   """
 
-  session.builder.generate(session, [])
+  session.builder.generate(session)
 
 
 @main.command()
-def build():
+@trick.argument('targets', nargs='*')
+def build(targets):
   """
   Execute the "build" procedure of the build backend.
   """
 
-  session.builder.build(session, [])
+  session.builder.build(session, targets)
 
 
 @main.command()

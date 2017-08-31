@@ -20,20 +20,30 @@
 
 import sys
 import base from '../../core/builder'
+import {TargetGraph} from '../../core/graph'
 
 
 class PythonBuilder(base.Builder):
 
-  def generate(self, session, targets):
+  def generate(self, session):
     print('error: the Python build backend does not require a "generate" step.')
     sys.exit(1)
 
   def build(self, session, targets):
     print('Loading build files...')
     session.load_targets()
-    print('Translating to actions...')
-    session.create_target_graph().translate()
-    actions = session.create_action_graph()
+
+    if targets:
+      print('Resolving targets...')
+      targets = session.resolve_targets(targets)
+
+    print('Creating target graph...')
+    graph = TargetGraph.from_(targets or session.targets())
+
+    print('Creating action graph...')
+    actions = graph.translate()
+    actions.with_actions_from_targets(targets)
+
     print('note: the Python build backend currently executed actions sequentially.')
     for action in actions.topo_sort():
       print('[{}]: {}'.format(action.long_name, action.display(full=True)))
