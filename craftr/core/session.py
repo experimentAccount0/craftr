@@ -21,6 +21,7 @@
 import contextlib
 import nodepy
 import os
+import traceback
 import platform from '../lib/platform'
 import {Cell} from './cell'
 import {parse_target_reference} from './target'
@@ -40,10 +41,14 @@ class Session:
     self.builddir = builddir or 'build'
     self.main_module_name = '.'
     self.main_cell = None
+    self.after_load_handlers = []
 
   @staticmethod
   def get_current():
     return get_current_module().cell.session
+
+  def finally_(self, func):
+    self.after_load_handlers.append(func)
 
   @contextlib.contextmanager
   def with_loader(self):
@@ -56,6 +61,11 @@ class Session:
       yield
     finally:
       loader.supports.remove(support)
+      for func in self.after_load_handlers:
+        try:
+          func()
+        except:
+          traceback.print_exc()
 
   def get_main_cell(self):
     return self.get_or_create_cell('__main__', '1.0.0', self.maindir)
