@@ -30,4 +30,4 @@ class Null(ActionImpl):
     pass
 
   def execute(self):
-    pass
+    return 0

@@ -289,7 +289,11 @@ class JavaPrebuilt(AnnotatedTargetImpl):
   binary_jar: str
 
   def translate(self):
-    actions.null(self, name='null', deps=self.target.transitive_deps())
+    self.action(
+      actions.Null,
+      name = 'null',
+      deps = self.target.transitive_deps()
+    )
 
 
 java_library = target_factory(JavaLibrary)
