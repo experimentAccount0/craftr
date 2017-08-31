@@ -121,7 +121,7 @@ class TargetImpl(metaclass=abc.ABCMeta):
     return self.target.cell
 
   def action(self, action_impl_type, *, name, deps=(), input_files=(),
-                   output_files=(), **kwargs):
+                   output_files=(), explicit=False, **kwargs):
     """
     Add a new #Action to the target. Should be used inside #translate().
     """
@@ -145,7 +145,7 @@ class TargetImpl(metaclass=abc.ABCMeta):
     input_files = [os.path.abspath(x) for x in input_files]
     output_files = [os.path.abspath(x) for x in output_files]
     impl = object.__new__(action_impl_type)
-    action = Action(target, name, deps, input_files, output_files, impl)
+    action = Action(target, name, deps, input_files, output_files, explicit, impl)
     impl.__init__(action, **kwargs)
     target.add_action(action)
     return action

@@ -37,12 +37,13 @@ class Action:
   impl.__init__(action, ...)
   """
 
-  def __init__(self, target, name, deps, input_files, output_files, impl):
+  def __init__(self, target, name, deps, input_files, output_files, explicit, impl):
     self.__target = weakref.ref(target)
     self.name = name
     self.deps = deps
     self.input_files = input_files
     self.output_files = output_files
+    self.explicit = explicit
     self.impl = impl
     self.task = None
     self.aborted = False
