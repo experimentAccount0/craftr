@@ -53,7 +53,7 @@ class MsvcInstallation(t.NamedTuple):
       return os.path.join(self.directory, 'VC', 'vcvarsall.bat')
 
   @functools.lru_cache()
-  def environ(self, arch=None, platform_type=None, version=None):
+  def environ(self, arch=None, platform_type=None, sdk_version=None):
     """
     Executes the `vcvarsall.bat` of this installation with the specified
     *arch* and returns the environment dictionary after that script
@@ -68,19 +68,15 @@ class MsvcInstallation(t.NamedTuple):
     is raised.
     """
 
-    if not arch:
-      # Translate the known platform architectures to the corresponding
-      # architecture name for vcvarsall.
-      if platform.arch == 'x86_64':
-        arch = 'x86_amd64'
-      else:
-        arch = platform.arch
+    arch = platform.arch
+    if arch == 'x86_64':
+      arch = 'x86_amd64'
 
     cmd = [self.vcvarsall, arch]
     if platform_type:
       cmd.append(platform_type)
-    if version:
-      cmd.append(version)
+    if sdk_version:
+      cmd.append(sdk_version)
 
     key = 'JSONOUTPUTBEGIN:'
     pyprint = 'import os, json; print("{}" + json.dumps(dict(os.environ)))'\
@@ -125,7 +121,6 @@ class MsvcInstallation(t.NamedTuple):
 
       results.append(cls(version=ver, directory=value))
 
-    # Missing MSVC versions.
     have_versions = set(x.version for x in results)
 
     # Special handling for MSVC 150.
