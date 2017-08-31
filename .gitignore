@@ -1,2 +1,4 @@
 nodepy_modules/
 build/
+*.py[co]
+

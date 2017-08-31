@@ -28,8 +28,8 @@ import functools
 import subprocess
 import sys
 import typing as t
-import platform from './platform'
-import shell from './shell'
+import platform from '../platform'
+import shell from '../shell'
 
 
 class MsvcInstallation(t.NamedTuple):
