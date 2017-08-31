@@ -21,6 +21,7 @@
 import os
 import shlex
 import subprocess
+import {override_environ} from '../lib/shell'
 import {ActionImpl} from '../core/action'
 
 
@@ -53,10 +54,6 @@ class Commands(ActionImpl):
     return 1.0
 
   def execute(self):
-    environ = os.environ.copy()
-    if self.environ is not None:
-      environ.update(self.environ)
-
     stdin = stdout = stderr = None
     if self.buffer:
       stdin = stdout = subprocess.PIPE
@@ -65,10 +62,14 @@ class Commands(ActionImpl):
     code = 0
     for i in range(len(self.commands)):
       self._index = i
-      self._process = subprocess.Popen(
-        self.commands[i], env=environ, cwd=self.cwd,
-        stdin=stdin, stdout=stdout, stderr=stderr,
-        universal_newlines=False)
+
+      # TODO: Process-wide lock so that no other process can modify the
+      # environment while the process is created.
+      with override_environ(self.environ or {}):
+        self._process = subprocess.Popen(
+          self.commands[i], cwd=self.cwd,
+          stdin=stdin, stdout=stdout, stderr=stderr,
+          universal_newlines=False)
       content = self._process.communicate()[0]
       if self.buffer:
         self.buf.write(content)

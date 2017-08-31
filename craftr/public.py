@@ -24,6 +24,7 @@ import {Target, TargetImpl} from './core/target'
 import {get_current_module} from './core/loader'
 import {inherit_annotations, target_factory, AnnotatedTargetImpl} from './core/factory'
 import path from './lib/path'
+import {name as platform} from './lib/platform'
 
 import werkzeug.local as _local
 
