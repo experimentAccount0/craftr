@@ -16,7 +16,4 @@ install:
 - export PATH="nodepy_modules/.bin:$PATH"
 
 script:
-- craftr -m ${BUILD_MODULE} $BUILD_OPTIONS build
-- if [ ${BUILD_MODULE} == "examples/java" ]; then
-    java -jar build/x86_64-debug/cells/craftr.examples-java/main.jar
-  fi
+- "craftr -m ${BUILD_MODULE} $BUILD_OPTIONS build :run"
