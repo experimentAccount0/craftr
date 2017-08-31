@@ -18,3 +18,12 @@ java_binary(
   deps = [':main_lib'],
   main_class = 'main.Main'
 )
+
+gentarget(
+  name = 'run',
+  deps = [':main'],
+  commands = [
+    ['java', '-jar', resolve(':main').jar_filename]
+  ],
+  explicit = True
+)
