@@ -4,6 +4,11 @@ python:
 - '3.6.2'
 - nightly
 
+env:
+- BUILD_MODULE=examples/java BUILD_OPTIONS="-d java.dist_type=onejar"
+- BUILD_MODULE=examples/java BUILD_OPTIONS="-d java.dist_type=merge"
+
+
 install:
 - pip install git+https://github.com/nodepy/nodepy.git@master
 - nodepy --version
@@ -11,9 +16,7 @@ install:
 - export PATH="nodepy_modules/.bin:$PATH"
 
 script:
-# Build the example Java project (OneJar).
-- craftr -m ./examples/java -d java.dist_type=onejar build
-- java -jar build/x86_64-debug/cells/craftr.examples-java/main.jar
-# Build the example Java project (MergeJar).
-- craftr -m ./examples/java -d java.dist_type=merge build
-- java -jar build/x86_64-debug/cells/craftr.examples-java/main.jar
+- craftr -m ${BUILD_MODULE} $BUILD_OPTIONS build
+- if [ ${BUILD_MODULE} == "examples/java" ]; then
+    java -jar build/x86_64-debug/cells/craftr.examples-java/main.jar
+  fi
