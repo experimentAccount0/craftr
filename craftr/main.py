@@ -102,6 +102,10 @@ def main(subcommand, *, module, define, debug, release, arch, target,
     if not sep:
       print('fatal: invalid value for -d,--define: {!r}'.format(string), file=sys.stderr)
       return 1
+    if value.lower() in ('off', 'false'):
+      value = False
+    elif value.lower() in ('on', 'true'):
+      value = True
     if value == '':
       config.pop(key, None)
     else:
