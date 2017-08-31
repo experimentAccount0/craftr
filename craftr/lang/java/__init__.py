@@ -88,7 +88,6 @@ class _JarBase(AnnotatedTargetImpl):
   javac_jar: str = None
 
   def __init__(self, target, **kwargs):
-    kwargs.setdefault('jar_name', target.name)
     super().__init__(target, **kwargs)
     if self.jar_dir:
       self.jar_dir = canonicalize(self.jar_dir, self.cell.builddir)
