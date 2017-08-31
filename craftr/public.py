@@ -56,3 +56,23 @@ def canonicalize(paths, parent = None):
     return path.canonical(path.abs(paths, parent))
   else:
     return [path.canonical(path.abs(x, parent)) for x in paths]
+
+
+@target_factory
+class gentarget(AnnotatedTargetImpl):
+
+  commands: list
+  environ: dict = None
+  cwd: str = None
+  explicit: bool = False
+
+  def translate(self):
+    self.action(
+      actions.Commands,
+      name = 'run',
+      deps = self.target.transitive_deps(),
+      commands = self.commands,
+      environ = self.environ,
+      cwd = self.cwd,
+      explicit = self.explicit
+    )
