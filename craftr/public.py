@@ -58,6 +58,14 @@ def canonicalize(paths, parent = None):
     return [path.canonical(path.abs(x, parent)) for x in paths]
 
 
+def resolve(ref):
+  """
+  Resolve a target reference and return the #TargetImpl object.
+  """
+
+  return session.find_target(ref).impl
+
+
 @target_factory
 class gentarget(AnnotatedTargetImpl):
 
