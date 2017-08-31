@@ -41,6 +41,9 @@ class LoaderSupport(nodepy.FilesystemLoaderSupport):
       cell = self.session.get_main_cell()
     module = CraftrModule(cell, **kwargs)
     module.extensions.append('!require-import-syntax')
+
+    if not self.session.main_cell:
+      self.session.main_cell = cell
     return module
 
   def suggest_try_files(self, filename):

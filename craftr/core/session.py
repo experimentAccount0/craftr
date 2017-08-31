@@ -40,6 +40,7 @@ class Session:
     self.maindir = maindir or os.getcwd()
     self.builddir = builddir or 'build'
     self.main_module_name = '.'
+    self.main_cell = None
 
   @staticmethod
   def get_current():
@@ -69,10 +70,12 @@ class Session:
       self.cells[name] = cell
     return cell
 
-  def find_target(self, identifier):
+  def find_target(self, identifier, cell=None):
     scope, name = parse_target_reference(identifier)
     if not scope:
-      scope = get_current_module().cell.name
+      if not cell:
+        cell = get_current_module().cell
+      scope = cell.name
       identifier = '//{}:{}'.format(scope, name)
 
     cell = self.cells.get(scope)
@@ -94,6 +97,9 @@ class Session:
   def load_targets(self):
     with self.with_loader():
       require(self.main_module_name, current_dir=self.maindir)
+
+  def resolve_targets(self, targets):
+    return [self.find_target(x, self.main_cell) for x in targets]
 
   def create_target_graph(self):
     g = TargetGraph()
@@ -156,4 +162,8 @@ class TargetGraph(BaseGraph):
 
 
 class ActionGraph(BaseGraph):
+  pass
+
+
+class NoSuchTargetError(Exception):
   pass
