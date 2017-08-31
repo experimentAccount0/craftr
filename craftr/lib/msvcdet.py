@@ -118,6 +118,10 @@ class MsvcInstallation(t.NamedTuple):
       value = value.rstrip('\\')
       if not value or not os.path.isdir(value):
         continue
+      if os.path.basename(value).lower() == 'tools':
+        # The VS_COMNTOOLS variable points to the Common7\Tools
+        # subdirectory, usually.
+        value = os.path.dirname(os.path.dirname(value))
 
       results.append(cls(version=ver, directory=value))
 
@@ -140,3 +144,15 @@ class MsvcInstallation(t.NamedTuple):
     # TODO: Special handling for newer MSVC versions?
 
     return sorted(results, key=operator.attrgetter('version'), reverse=True)
+
+
+def main():
+  if not MsvcInstallation.list():
+    print('no MSVC installations could be detected.', file=sys.stderr)
+    sys.exit(1)
+  for inst in MsvcInstallation.list():
+    print('- %03d: %s' % inst)
+
+
+if require.main == module:
+  main()
