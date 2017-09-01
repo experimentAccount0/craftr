@@ -21,32 +21,36 @@
 import sys
 import base from '../../core/builder'
 import {TargetGraph} from '../../core/graph'
+import logger from '../../logger'
 
 
 class PythonBuilder(base.Builder):
 
   def generate(self, session):
-    print('error: the Python build backend does not require a "generate" step.')
+    logger.error('the Python build backend does not require a "generate" step.')
     sys.exit(1)
 
   def build(self, session, targets):
-    print('Loading build files...')
-    session.load_targets()
+    logger.debug('loading build files')
+    with logger.indent():
+      session.load_targets()
 
     if targets:
-      print('Resolving targets...')
+      logger.debug('resolving targets')
       targets = session.resolve_targets(targets)
 
-    print('Creating target graph...')
+    logger.debug('creating target graph')
     graph = TargetGraph.from_(targets or session.targets())
 
-    print('Creating action graph...')
+    logger.debug('creating action graph')
     actions = graph.translate()
     actions.with_actions_from_targets(targets)
 
-    print('note: the Python build backend currently executed actions sequentially.')
+    logger.warn('the Python build backend currently executed actions sequentially.')
     for action in actions.topo_sort():
-      print('[{}]: {}'.format(action.long_name, action.display(full=True)))
+      logger.info('%[cyan][[{}\]]'.format(action.long_name))
+      with logger.indent():
+        logger.info(action.display(full=True))
       action.execute()
       action.wait()
       code = action.exit_code()

@@ -18,20 +18,31 @@
 # OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
 # SOFTWARE.
 
+import builtins
 import contextlib
+import functools
 import os
 import sys
 import {Session} from './core/session'
 import {Configuration} from './lib/config'
 import trick from './lib/trick'
 import platform from './lib/platform'
+import terminal from './lib/terminal'
+import logger from './logger'
+
+VERSION = module.package.json['version']
+AUTHOR = module.package.json['author']
 
 
 def load_config(config, filename, format):
   filename = os.path.expanduser(filename)
   if format == 'toml':
-    with contextlib.suppress(FileNotFoundError):
-      config.read(filename)
+    if os.path.isfile(filename):
+      try:
+        logger.debug('read configuration: {}'.format(filename))
+        config.read(filename)
+      except FileNotFoundError as e:
+        logger.debug('  failed: {}'.format(e))
   elif format == 'python':
     try:
       module = require(filename, current_dir=os.getcwd(), exec_=False, exports=False)
@@ -39,6 +50,7 @@ def load_config(config, filename, format):
       if e.request.name != filename:
         raise
     else:
+      logger.debug('exec configuration: {}'.format(filename))
       module.namespace.config = config
       module.exec_()
   else:
@@ -53,6 +65,30 @@ def load_backend(prefix, name):
     if e.request.name != request:
       raise
   return require(name)
+
+
+@contextlib.contextmanager
+def with_print_hook():
+  """
+  Hooks the built-in #print() function to redirect the output to the #logger,
+  unless the *fp* argument is specified.
+  """
+
+  yield
+  return
+
+  old_print = builtins.print
+  @functools.wraps(old_print)
+  def new_print(*objects, **kwargs):
+    if not kwargs.get('fp'):
+      logger.info(kwargs.get('sep', ' ').join(map(str, objects)))
+    else:
+      old_print(*objects, **kwargs)
+  builtins.print = new_print
+  try:
+    yield
+  finally:
+    builtins.print = old_print
 
 
 @trick.group()
@@ -72,11 +108,21 @@ def load_backend(prefix, name):
   help='The build output directory. Defaults to "build/{arch}-{target}".')
 @trick.argument('--builder', metavar='BUILDER',
   help='The build backend to use. Defaults to "python".')
+@trick.argument('--no-colorize', action='store_true')
+@trick.argument('--log-level', choices=['error', 'warn', 'info', 'debug'])
 def main(subcommand, *, module, define, debug, release, arch, target,
-         build_dir, builder):
+         build_dir, builder, no_colorize, log_level):
   """
   The Craftr build system.
   """
+
+  if no_colorize:
+    terminal.set_colorize_enabled(False)
+
+  if log_level:
+    logger.setLevel(getattr(logger, log_level.upper()))
+  logger.info('The Craftr build system v{}'.format(VERSION))
+  logger.info('Copyright (c) 2016 {}'.format(AUTHOR))
 
   if sum(map(bool, (debug, release, target))) > 1:
     print('fatal: --target, --debug and --release can not be combined.', file=sys.stderr)
@@ -164,4 +210,5 @@ def viz(actions):
 
 
 if require.main == module:
-  sys.exit(main())
+  with with_print_hook():
+    sys.exit(main())

@@ -56,7 +56,10 @@ class Formatter(logging.Formatter):
     lines =  []
     for line in message.split('\n'):
       lines += textwrap.wrap(line, term.terminal_size()[0] - 1 - len(indent_chars))
-    message = '\n'.join(indent_chars + x for x in lines)
+    if prefix:
+      lines = (prefix + x if i == 0 else ' ' * len(prefix) + x for i, x in enumerate(lines))
+    lines = (indent_chars + x for x in lines)
+    message = '\n'.join(lines)
 
     if 'color' in info or 'on_color' in info:
       message = term.colored(message, color=info.get('color'), on_color=info.get('on_color'))
