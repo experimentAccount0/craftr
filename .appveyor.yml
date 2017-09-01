@@ -1,0 +1,28 @@
+
+image:
+- Visual Studio 2013
+- Visual Studio 2015
+- Visual Studio 2017
+
+environment:
+  matrix:
+  - BUILD_MODULE: examples/java
+    BUILD_OPTIONS: -d java.dist_type=onejar
+    ADD_PATH: C:\Program Files\Java\jdk1.8.0\bin
+  - BUILD_MODULE: examples/java
+    BUILD_OPTIONS: -d java.dist_type=merge
+  - BUILD_MODULE: examples/csharp
+  - BUILD_MODULE: examples/csharp
+    BUILD_OPTIONS: -d csharp.csc=mcs
+
+build: off
+
+install:
+- set PATH=C:\Python36-x64;C:\Python36-x64\Scripts;%PATH%;%ADD_PATH%
+- pip --version
+- pip install git+https://github.com/nodepy/nodepy.git@master
+- nodepy --version
+- nppm install -I
+- set PATH=nodepy_modules/.bin;%PATH%
+
+- craftr -m %BUILD_MODULE% %BUILD_OPTIONS% build :run

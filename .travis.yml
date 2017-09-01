@@ -27,4 +27,4 @@ install:
   fi
 
 script:
-- "craftr -m ${BUILD_MODULE} $BUILD_OPTIONS build :run"
+- craftr -m ${BUILD_MODULE} $BUILD_OPTIONS build :run
