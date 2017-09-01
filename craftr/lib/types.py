@@ -30,7 +30,12 @@ if sys.version < '3.6':
 
 class NamedObject:
   """
-  A base-class similar to the #typing.NamedTuple.
+  A base-class similar to #typing.NamedTuple, but mutable and with a proper
+  #asdict() method (no `_asdict()`).
+
+  Note that this class is also preferred as there is a bug in Python 3.6.0
+  which prevents you from accessing additional members declared on the
+  NamedTuple subclass (eg. functions and properties).
   """
 
   def __init_subclass__(cls, **kwargs):
