@@ -12,8 +12,7 @@ csharp(
   name = 'main',
   deps = [':lib'],
   srcs = glob('src/*.cs'),
-  type = 'exe',
-  main = 'Main'
+  type = 'exe'
 )
 
 gentarget(
