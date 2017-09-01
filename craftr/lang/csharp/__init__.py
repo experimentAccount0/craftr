@@ -183,6 +183,7 @@ class CsharpRun(AnnotatedTargetImpl):
     self.action(
       actions.Commands,
       name = 'run',
+      deps = self.target.transitive_deps(),
       input_files = [self.executable],
       output_files = [],
       explicit = self.explicit,

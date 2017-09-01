@@ -23,8 +23,9 @@ import contextlib
 import functools
 import os
 import sys
-import {Session} from './core/session'
 import {Configuration} from './lib/config'
+import {TargetGraph} from './core/graph'
+import {Session} from './core/session'
 import trick from './lib/trick'
 import platform from './lib/platform'
 import terminal from './lib/terminal'
@@ -193,18 +194,20 @@ def build(targets):
 
 
 @main.command()
+@trick.argument('targets', nargs='*')
 @trick.argument('--actions', action='store_true', help='Visualize the action '
   'graph instead of the target graph.')
-def viz(actions):
+def viz(targets, actions):
   """
   Generate a DOT graph from the target- or action-graph.
   """
 
   session.load_targets()
-  graph = session.create_target_graph()
+  targets = session.resolve_targets(targets) if targets else session.targets()
+  graph = TargetGraph.from_(targets)
   if actions:
-    graph.translate()
-    graph = session.create_action_graph()
+    graph = graph.translate()
+    graph.with_actions_from_targets(targets)
 
   graph.dotviz(sys.stdout)
 
