@@ -21,6 +21,7 @@
 import fnmatch
 import toml
 import typing as t
+import {NamedObject} from './types'
 
 
 def match(filter_type, filter_value, value):
@@ -41,7 +42,7 @@ def match(filter_type, filter_value, value):
     raise ValueError('unsupported filter type: {!r}'.format(filter_type))
 
 
-class OptionKey(t.NamedTuple):
+class OptionKey(NamedObject):
   scope: t.Optional[str]
   name: str
 
