@@ -1,6 +1,6 @@
 
-public class Hello1 {
-   public static void Main() {
-      System.Console.WriteLine("Hello, World!");
-   }
+public class Main {
+  public static void Main() {
+    HelloSayer.SayHello();
+  }
 }

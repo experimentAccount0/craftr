@@ -104,11 +104,23 @@ class Csharp(AnnotatedTargetImpl):
     # TODO: Take C# libraries and maybe even other native libraries
     #       into account.
     deps = self.target.transitive_deps()
+    modules = []
+    references = []
+    for dep in (x.impl for x in deps):
+      if isinstance(dep, Csharp):
+        if dep.type == 'module':
+          modules.append(dep.dll_filename)
+        else:
+          references.append(dep.dll_filename)
 
     command = [self.csc.program, '-nologo', '-target:' + self.type]
     command += ['-out:' + self.dll_filename]
     if self.main:
       command.append('-main:' + self.main)
+    if modules:
+      command.append('-addmodule:' + ';'.join(modules))
+    if references:
+      command += ['-reference:' + x for x in reference]
     if self.extra_arguments:
       command += self.extra_arguments
     command += self.srcs
