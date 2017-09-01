@@ -115,6 +115,7 @@ class MsvcToolkit(NamedObject):
   """
 
   CACHEFILE = path.join(session.builddir, '.config', 'msvc-toolkit.json')
+  CSC_VERSION_REGEX = re.compile(r'compiler\s+version\s+([\d\.]+)', re.I | re.M)
 
   version: int
   directory: str
@@ -200,7 +201,14 @@ class MsvcToolkit(NamedObject):
   def csc_version(self):
     if not self._csc_version:
       with override_environ(self.environ):
-        output = subprocess.check_output(['csc', '/version']).decode()
+        try:
+          output = subprocess.check_output(['csc', '/version'], stderr=subprocess.STDOUT).decode()
+        except subprocess.CalledProcessError as e:
+          # Older versions of CSC don't support the /version flag.
+          match = self.CSC_VERSION_REGEX.search(e.stdout.decode())
+          if not match:
+            raise
+          output = match.group(1)
         self._csc_version = output.strip()
     return self._csc_version
 
