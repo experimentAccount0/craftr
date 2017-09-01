@@ -70,6 +70,12 @@ def join(args):
   return ' '.join(map(quote, args))
 
 
+def shellify(args):
+  if os.name == 'nt':
+    return ['cmd.exe', '/c', join(args)]
+  return [os.getenv('SHELL', 'sh'), '-c', join(args)]
+
+
 @contextlib.contextmanager
 def override_environ(environ):
   old = os.environ.copy()
