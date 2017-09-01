@@ -15,6 +15,7 @@ environment:
   - BUILD_MODULE: examples/csharp
     BUILD_OPTIONS: -d csharp.csc=mcs
     APPVEYOR_BUILD_WORKER_IMAGE: Visual Studio 2015  # 2013 and 2015 have support for Mono
+    ADD_PATH: C:\Program Files\Mono\bin
 
 build: off
 
