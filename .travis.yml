@@ -1,9 +1,12 @@
 language: python
 python:
-- '3.6.0'
 - '3.6.1'
 - '3.6.2'
 - nightly
+
+# Currently fails because of a bug in typing.NamedTuple. We could
+# probably work around it using craftr/lib/types:NamedObject instead.
+#- '3.6.0'
 
 matrix:
 - fast_finish: true
