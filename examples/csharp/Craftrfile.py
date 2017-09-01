@@ -15,11 +15,8 @@ csharp(
   type = 'exe'
 )
 
-gentarget(
+csharp_run(
   name = 'run',
   deps = [':main'],
-  commands = [
-    [resolve(':main').dll_filename]
-  ],
   explicit = True
 )

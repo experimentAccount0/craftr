@@ -13,13 +13,25 @@ Compile C# projects.
 
 __Parameters__
 
-* `srcs`
-* `type`
-* `dll_dir`
-* `dll_name`
-* `main`
-* `extra_arguments`
-* `csc`
+* `srcs` (list)
+* `type` (str)
+* `dll_dir` (str)
+* `dll_name` (str)
+* `main` (str)
+* `extra_arguments` (list)
+* `csc` (CscInfo)
+
+### `csharp_run()`
+
+__Parameters__
+
+* `executable` (str): Automatically determined from the target's dependencies
+  if an executable `csharp()` target is found.
+* `explicit` (bool)
+* `environ` (dict)
+* `cwd` (str)
+* `extra_arguments` (list)
+* `csc` (CscInfo)
 
 ## Todo
 

@@ -25,20 +25,25 @@ Options:
   to `mcs`.
 """
 
-__all__ = ['csharp']
+__all__ = ['csharp', 'csharp_run']
 
 import functools
 import subprocess
 import typing as t
 import * from 'craftr'
 import msvc from 'craftr/lib/msvc/toolkit'
+import shell from 'craftr/lib/shell'
 import {NamedObject} from 'craftr/lib/types'
 
 
 class CscInfo(NamedObject):
-  program: str
+  program: t.List[str]
   environ: dict
   version: str
+
+  def is_mono(self):
+    # TODO: That's pretty dirty..
+    return self.program != ['csc']
 
   @staticmethod
   @functools.lru_cache()
@@ -46,12 +51,17 @@ class CscInfo(NamedObject):
     program = config.get('csharp.csc', None)
     if not program and platform == 'windows':
       toolkit = msvc.MsvcToolkit.get()
-      csc = CscInfo('csc', toolkit.environ, toolkit.csc_version)
+      csc = CscInfo(['csc'], toolkit.environ, toolkit.csc_version)
     else:
+      # NOTE: On windows, the mono compiler is available as .bat file, thus
+      #       we need to run it through the shell.
+      program = shell.split(program) if program else ['mcs']
+      if platform == 'windows':
+        program = shell.shellify(program)
+
       # TODO: Extract the implementation name and verison number
       # TODO: Cache the compiler version (like msvc toolkit).
-      program = program or 'mcs'
-      version = subprocess.check_output([program, '--version']).decode().strip()
+      version = subprocess.check_output(program + ['--version']).decode().strip()
       csc = CscInfo(program, {}, version)
     print('CSC v{}'.format(csc.version))
     return csc
@@ -110,7 +120,7 @@ class Csharp(AnnotatedTargetImpl):
         else:
           references.append(dep.dll_filename)
 
-    command = [self.csc.program, '-nologo', '-target:' + self.type]
+    command = self.csc.program + ['-nologo', '-target:' + self.type]
     command += ['-out:' + self.dll_filename]
     if self.main:
       command.append('-main:' + self.main)
@@ -138,4 +148,56 @@ class Csharp(AnnotatedTargetImpl):
     )
 
 
+class CsharpRun(AnnotatedTargetImpl):
+  """
+  At least under Windows+Mono, applications compiled with Mono should be run
+  through the Mono bootstrapper.
+  """
+
+  executable: str = None
+  explicit: bool = False
+  environ: t.Dict[str, str] = None
+  cwd: str = None
+  extra_arguments: t.List[str] = None
+  csc:  CscInfo = None
+
+  def __init__(self, target, **kwargs):
+    super().__init__(target, **kwargs)
+    if not self.executable:
+      for dep in (x.impl for x in self.target.deps):
+        if isinstance(dep, Csharp) and 'exe' in dep.type:
+          if self.executable:
+            raise ValueError('mulitple executable Csharp dependencies, '
+              'specify the one to run explicitly via `executable=...`')
+          self.executable = dep.dll_filename
+        # Inherit the CSC value from the dependency.
+        if isinstance(dep, Csharp) and not self.csc:
+          self.csc = dep.csc
+      if not self.executable:
+        raise ValueError('specify one Csharp executable dependency or the '
+          '`executable=...` parameter.')
+    self.csc = self.csc or CscInfo.get()
+
+  def translate(self):
+    if self.csc.is_mono():
+      command = ['mono']
+    else:
+      command = []
+    command += [self.executable]
+    if self.extra_arguments:
+      command += self.extra_arguments
+
+    self.action(
+      actions.Commands,
+      name = 'run',
+      input_files = [self.executable],
+      output_files = [],
+      explicit = self.explicit,
+      commands = [command],
+      environ = self.environ,
+      cwd = self.cwd,
+    )
+
+
 csharp = target_factory(Csharp)
+csharp_run = target_factory(CsharpRun)
