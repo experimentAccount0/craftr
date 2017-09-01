@@ -149,13 +149,11 @@ class JavaLibrary(_JarBase):
     extra_arguments = config.get('java.extra_arguments', []) + (self.extra_arguments or [])
     classpath = []
 
-    for dep in deps:
-      if isinstance(dep.impl, JavaLibrary):
-        # TODO: Make sure dependencies are already translated at the time
-        #       the target is executed.
-        classpath.append(dep.impl.jar_filename)
-      elif isinstance(dep.impl, JavaPrebuilt):
-        classpath.append(dep.impl.binary_jar)
+    for dep in (x.impl for x in deps):
+      if isinstance(dep, JavaLibrary):
+        classpath.append(dep.jar_filename)
+      elif isinstance(dep, JavaPrebuilt):
+        classpath.append(dep.binary_jar)
 
     # Calculate output files.
     classfiles = []
