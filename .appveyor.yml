@@ -1,9 +1,4 @@
 
-image:
-- Visual Studio 2013
-- Visual Studio 2015
-- Visual Studio 2017
-
 environment:
   matrix:
   - BUILD_MODULE: examples/java
@@ -12,6 +7,11 @@ environment:
   - BUILD_MODULE: examples/java
     BUILD_OPTIONS: -d java.dist_type=merge
   - BUILD_MODULE: examples/csharp
+    APPVEYOR_BUILD_WORKER_IMAGE: Visual Studio 2017
+  - BUILD_MODULE: examples/csharp
+    APPVEYOR_BUILD_WORKER_IMAGE: Visual Studio 2015
+  - BUILD_MODULE: examples/csharp
+    APPVEYOR_BUILD_WORKER_IMAGE: Visual Studio 2013
   - BUILD_MODULE: examples/csharp
     BUILD_OPTIONS: -d csharp.csc=mcs
 
