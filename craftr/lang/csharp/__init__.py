@@ -17,13 +17,6 @@
 # LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
 # OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
 # SOFTWARE.
-"""
-Options:
-
-- csharp.csc (str): The C# compiler. On Windows, it defaults to `csc` in the
-  most recent or the configured MSVC toolkit. On other platforms, it defaults
-  to `mcs`.
-"""
 
 __all__ = ['csharp', 'csharp_run']
 

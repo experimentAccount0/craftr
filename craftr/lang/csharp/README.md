@@ -4,12 +4,17 @@ Compile C# projects.
 
 ## Options
 
-* `csharp.csc` (str)
+* `csharp.csc` (str): The C# compiler. On Windows, it defaults to `csc` in the
+  most recent or the configured MSVC toolkit. On other platforms, it defaults
+  to `mcs`.
 * Options inherited from the `craftr/lib/msvc` module
 
 ## Functions
 
 ### `csharp()`
+
+Compile a set of C# source files into an executable or any other supported
+target type.
 
 __Parameters__
 
@@ -19,9 +24,12 @@ __Parameters__
 * `dll_name` (str)
 * `main` (str)
 * `extra_arguments` (list)
-* `csc` (CscInfo)
+* `csc` (CscInfo): The C# compiler. Defaults to the standard compiler that
+  can be retrieved with `CscInfo.get()`.
 
 ### `csharp_run()`
+
+Run a C# executable.
 
 __Parameters__
 
@@ -31,7 +39,9 @@ __Parameters__
 * `environ` (dict)
 * `cwd` (str)
 * `extra_arguments` (list)
-* `csc` (CscInfo)
+* `csc` (CscInfo): The C# compiler. If not specfied, inherits the compiler
+  from its dependencies (only if the `executable` is automatically determined)
+  or the standard C# compiler.
 
 ## Todo
 
