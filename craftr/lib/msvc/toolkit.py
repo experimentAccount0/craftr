@@ -224,8 +224,8 @@ class MsvcToolkit(NamedObject):
 
   @classmethod
   @functools.lru_cache()
-  def get():
-    toolkit = MsvcToolkit.from_config()
+  def get(cls):
+    toolkit = cls.from_config()
     print('MSVC v{}-{} ({})'.format(
       toolkit.version, toolkit.arch, toolkit.directory))
     return toolkit
