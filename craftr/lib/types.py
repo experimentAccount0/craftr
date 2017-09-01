@@ -72,5 +72,9 @@ class NamedObject:
     members = ', '.join('{}={!r}'.format(k, getattr(self, k)) for k in self.__annotations__)
     return '{}({})'.format(type(self).__name__, members)
 
+  def __iter__(self):
+    for key in self.__annotations__:
+      yield getattr(self, key)
+
   def asdict(self):
     return {k: getattr(self, k) for k in self.__annotations__}

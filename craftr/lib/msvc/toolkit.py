@@ -27,6 +27,8 @@ Options:
 - msvc.cache (bool)
 """
 
+__all__ = ['MsvcToolkit']
+
 import contextlib
 import functools
 import json
@@ -229,10 +231,10 @@ class MsvcToolkit(NamedObject):
         self._vbc_version = output.strip()
     return self._vbc_version
 
-
-@functools.lru_cache()
-def get_toolkit():
-  toolkit = MsvcToolkit.from_config()
-  print('MSVC v{}-{} ({})'.format(
-    toolkit.version, toolkit.arch, toolkit.directory))
-  return toolkit
+  @classmethod
+  @functools.lru_cache()
+  def get():
+    toolkit = MsvcToolkit.from_config()
+    print('MSVC v{}-{} ({})'.format(
+      toolkit.version, toolkit.arch, toolkit.directory))
+    return toolkit

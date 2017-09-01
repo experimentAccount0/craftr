@@ -40,24 +40,21 @@ class CscInfo(NamedObject):
   environ: dict
   version: str
 
-
-@functools.lru_cache()
-def get_csc():
-  program = config.get('csharp.csc', None)
-  if not program and platform == 'windows':
-    toolkit = msvc.get_toolkit()
-    csc = CscInfo('csc', toolkit.environ, toolkit.csc_version)
-  else:
-    # TODO: Extract the implementation name and verison number
-    # TODO: Cache the compiler version (like msvc toolkit).
-    program = program or 'mcs'
-    version = subprocess.check_output([program, '--version']).decode().strip()
-    csc = CscInfo(program, {}, version)
-  print('CSC v{}'.format(csc.version))
-  return csc
-
-
-csc = get_csc()
+  @staticmethod
+  @functools.lru_cache()
+  def get():
+    program = config.get('csharp.csc', None)
+    if not program and platform == 'windows':
+      toolkit = msvc.MsvcToolkit.get()
+      csc = CscInfo('csc', toolkit.environ, toolkit.csc_version)
+    else:
+      # TODO: Extract the implementation name and verison number
+      # TODO: Cache the compiler version (like msvc toolkit).
+      program = program or 'mcs'
+      version = subprocess.check_output([program, '--version']).decode().strip()
+      csc = CscInfo(program, {}, version)
+    print('CSC v{}'.format(csc.version))
+    return csc
 
 
 class Csharp(AnnotatedTargetImpl):
@@ -84,7 +81,7 @@ class Csharp(AnnotatedTargetImpl):
     else:
       self.dll_dir = self.cell.builddir
     self.dll_name = self.dll_name or (self.cell.name.split('/')[-1] + '-' + self.target.name + '-' + self.cell.version)
-    self.csc = self.csc or csc
+    self.csc = self.csc or CscInfo.get()
 
   @property
   def dll_filename(self):

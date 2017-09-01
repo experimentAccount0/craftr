@@ -21,6 +21,8 @@
 Detect MSVC installations on the current system (Windows only).
 """
 
+__all__ = ['MsvcInstallation']
+
 import json
 import operator
 import os
@@ -30,9 +32,10 @@ import sys
 import typing as t
 import platform from '../platform'
 import shell from '../shell'
+import {NamedObject} from '../types'
 
 
-class MsvcInstallation(t.NamedTuple):
+class MsvcInstallation(NamedObject):
   """
   Represents an MSVC installation directory.
   """
