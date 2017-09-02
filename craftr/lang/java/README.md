@@ -47,3 +47,4 @@ __Parameters__
 * Support inclusion of resource files in JARs
 * More options (warning flags, debug/release, linting, 
   provided dependencies, etc.)
+* Ability to download dependencies from mavencentral or other repositories
