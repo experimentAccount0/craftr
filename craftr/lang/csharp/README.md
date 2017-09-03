@@ -4,6 +4,8 @@ Compile C# projects.
 
 ## Options
 
+* `csharp.impl` (str): The name of the C# implementation. Defaults to `'net'`
+  on Windows and `'mono'` on all other platforms.
 * `csharp.csc` (str): The C# compiler. On Windows, it defaults to `csc` in the
   most recent or the configured MSVC toolkit. On other platforms, it defaults
   to `mcs`.
