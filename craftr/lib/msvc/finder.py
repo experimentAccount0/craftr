@@ -50,7 +50,7 @@ class MsvcInstallation(NamedObject):
     Generates the path to the `vcvarsall.bat`.
     """
 
-    if self.version >= 150:
+    if self.version >= 2017:
       return os.path.join(self.directory, 'VC', 'Auxiliary', 'Build', 'vcvarsall.bat')
     else:
       return os.path.join(self.directory, 'VC', 'vcvarsall.bat')
@@ -126,9 +126,9 @@ class MsvcInstallation(NamedObject):
 
     have_versions = set(x.version for x in results)
 
-    # Special handling for MSVC 150.
+    # Special handling for MSVC 2017.
     # TODO: Can MSVC 2017 be installed in an alternative location?
-    if 150 not in have_versions:
+    if 2017 not in have_versions:
       programfiles = os.getenv('ProgramFiles(x86)', '') or os.getenv('ProgramFiles', '')
       if programfiles:
         vspath = os.path.join(programfiles, 'Microsoft Visual Studio\\2017\\Community')
@@ -137,7 +137,7 @@ class MsvcInstallation(NamedObject):
         if not os.path.isdir(vspath):
           vspath = os.path.join(programfiles, 'Microsoft Visual Studio\\2017\\Enterprise')
         if os.path.isdir(vspath):
-          results.append(cls(150, vspath))
+          results.append(cls(2017, vspath))
 
     # TODO: Special handling for newer MSVC versions?
 
@@ -149,7 +149,7 @@ def main():
     print('no MSVC installations could be detected.', file=sys.stderr)
     sys.exit(1)
   for inst in MsvcInstallation.list():
-    print('- %03d: %s' % inst)
+    print('- %4d: %s' % (inst.version, inst.directory))
 
 
 if require.main == module:
