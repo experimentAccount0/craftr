@@ -26,5 +26,9 @@ Detect available MSVC versions.
 | --                 | 1200      |  v60\*    | MSVC++  6.0 |
 | --                 | 1100      |  v50\*    | MSVC++  5.0 |
 
-> <sub>source: https://en.wikipedia.org/wiki/Visual_C%2B%2B#Common_MSVC_version</sub></br>
-> <sub>\* confirmation needed</sub>
+*\* Confirmation needed*
+
+## Useful Links
+
+* [Microsoft: Modifying WINVER and \_WIN32_WINNT](https://msdn.microsoft.com/en-us/library/6sehtctf.aspx)
+* [Wikipedia: Visual C &ndash; Common MSVC Versions](https://en.wikipedia.org/wiki/Visual_C%2B%2B#Common_MSVC_version)
