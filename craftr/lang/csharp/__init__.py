@@ -49,15 +49,17 @@ class CscInfo(NamedObject):
   @functools.lru_cache()
   def get():
     impl = config.get('csharp.impl', 'net' if platform == 'windows' else 'mono')
+    if impl not in ('net', 'mono'):
+      raise ValueError('unsupported csharp.impl={!r}'.format(impl))
+
     program = config.get('csharp.csc')
-    if not program:
-      if impl == 'net':
-        program = 'csc'
-      elif impl == 'mono':
-        program = 'mcs'
-      else:
-        raise ValueError('can not determine compiler name from '
-          'csharp.impl={!r}, specify csharp.csc'.format(impl))
+    if impl == 'net' and program:
+      raise ValueError('csharp.csc not supported with csharp.impl={!r}'.format(impl))
+    elif impl == 'net':
+      program = 'csc'
+    elif impl == 'mono':
+      program = 'mcs'
+    else: assert False
 
     program = shell.split(program)
     if impl == 'net':
