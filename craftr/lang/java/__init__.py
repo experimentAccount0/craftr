@@ -294,6 +294,6 @@ class JavaPrebuilt(AnnotatedTargetImpl):
     )
 
 
-java_library = target_factory(JavaLibrary)
-java_binary = target_factory(JavaBinary)
-java_prebuilt = target_factory(JavaPrebuilt)
+java_library = library = target_factory(JavaLibrary)
+java_binary = binary = target_factory(JavaBinary)
+java_prebuilt = prebuilt = target_factory(JavaPrebuilt)

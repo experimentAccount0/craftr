@@ -11,7 +11,7 @@ Compile C# projects.
 
 ## Functions
 
-### `csharp()`
+### `csharp.build()`
 
 Compile a set of C# source files into an executable or any other supported
 target type.
@@ -27,7 +27,7 @@ __Parameters__
 * `csc` (CscInfo): The C# compiler. Defaults to the standard compiler that
   can be retrieved with `CscInfo.get()`.
 
-### `csharp_run()`
+### `csharp.run()`
 
 Run a C# executable.
 

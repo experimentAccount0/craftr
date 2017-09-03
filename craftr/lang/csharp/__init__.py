@@ -18,7 +18,7 @@
 # OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
 # SOFTWARE.
 
-__all__ = ['csharp', 'csharp_run']
+__all__ = ['csharp_build', 'csharp_run']
 
 import functools
 import subprocess
@@ -193,5 +193,5 @@ class CsharpRun(AnnotatedTargetImpl):
     )
 
 
-csharp = target_factory(Csharp)
-csharp_run = target_factory(CsharpRun)
+csharp_build = build = target_factory(Csharp)
+csharp_run = run = target_factory(CsharpRun)

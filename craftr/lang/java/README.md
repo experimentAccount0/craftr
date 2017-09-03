@@ -12,7 +12,7 @@ Compile Java projects.
 
 ## Functions
 
-### `java_library()`
+### `java.library()`
 
 __Parameters__
 
@@ -26,7 +26,7 @@ __Parameters__
 * `javac`
 * `extra_arguments`
 
-### `java_binary()`
+### `java.binary()`
 
 __Parameters__
 
@@ -36,7 +36,7 @@ __Parameters__
 * `main_class`
 * `dist_type`
 
-### `java_prebuilt()`
+### `java.prebuilt()`
 
 __Parameters__
 
