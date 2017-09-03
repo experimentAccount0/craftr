@@ -25,3 +25,6 @@ Detect available MSVC versions.
 | --                 | 1300      |  v70\*    | MSVC++  7.0 |
 | --                 | 1200      |  v60\*    | MSVC++  6.0 |
 | --                 | 1100      |  v50\*    | MSVC++  5.0 |
+
+> <sub>source: https://en.wikipedia.org/wiki/Visual_C%2B%2B#Common_MSVC_version</sub></br>
+> <sub>\* confirmation needed</sub>
