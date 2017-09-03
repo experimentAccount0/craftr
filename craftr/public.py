@@ -26,6 +26,7 @@ import {inherit_annotations, target_factory, AnnotatedTargetImpl} from './core/f
 import path from './lib/path'
 import {name as platform} from './lib/platform'
 
+import fnmatch as _fnmatch
 import werkzeug.local as _local
 
 cell = _local.LocalProxy(lambda: get_current_module().cell)
@@ -57,6 +58,44 @@ def canonicalize(paths, parent = None):
     return path.canonical(path.abs(paths, parent))
   else:
     return [path.canonical(path.abs(x, parent)) for x in paths]
+
+
+def match(string, kind, matchers=None, default=NotImplemented ):
+  """
+  Matches the specified *string* against a dictionary of patterns and returns
+  the first matching value. If the *matchers* is None, the value of this
+  argument is used from the *kind* argument, and *kind* will be None instead.
+
+  *kind* can be `'regex'` or `'glob'`. The default is `'glob'`. Note that
+  regular expressions are matched case-insensitive.
+
+  If no patterns in the *matchers* matches the *string*, the *default* value
+  will be returned. If the *default* is not specified, the function will
+  attempt to deduce the return type. If it is not possible to deduce the type
+  from the *matchers* values, a #ValueError will be raised.
+  """
+
+  if matchers is None:
+    kind, matchers = 'glob', kind
+  assert kind in ('regex', 'glob')
+
+  default_type = NotImplemented
+  for key, value in matchers.items():
+    if default_type is NotImplemented:
+      default_type = type(value)
+    elif default_type is not None and type(value) != default_type:
+      default_type = None
+    if kind == 'glob' and _fnmatch.fnmatch(string, key):
+      return value
+    elif kind == 'regex' and re.match(key, string, re.I) is not None:
+      return value
+
+  if default is NotImplemented:
+    if default_type in (NotImplemented, None):
+      raise ValueError('no patterns matched, default return value could '
+        'be determined.')
+    default = default_type()
+  return default
 
 
 def resolve(ref):
