@@ -21,6 +21,8 @@
 __all__ = ['csharp_build', 'csharp_run']
 
 import functools
+import os
+import re
 import subprocess
 import typing as t
 import * from 'craftr'
@@ -30,9 +32,14 @@ import {NamedObject} from 'craftr/lib/types'
 
 
 class CscInfo(NamedObject):
+  impl: str
   program: t.List[str]
   environ: dict
   version: str
+
+  def __repr__(self):
+    return '<CscInfo impl={!r} program={!r} environ=... version={!r}>'\
+      .format(self.impl, self.program, self.version)
 
   def is_mono(self):
     # TODO: That's pretty dirty..
@@ -41,21 +48,46 @@ class CscInfo(NamedObject):
   @staticmethod
   @functools.lru_cache()
   def get():
-    program = config.get('csharp.csc', None)
-    if not program and platform == 'windows':
-      toolkit = msvc.MsvcToolkit.get()
-      csc = CscInfo(['csc'], toolkit.environ, toolkit.csc_version)
-    else:
-      # NOTE: On windows, the mono compiler is available as .bat file, thus
-      #       we need to run it through the shell.
-      program = shell.split(program) if program else ['mcs']
-      if platform == 'windows':
-        program = shell.shellify(program)
+    impl = config.get('csharp.impl', 'net' if platform == 'windows' else 'mono')
+    program = config.get('csharp.csc')
+    if not program:
+      if impl == 'net':
+        program = 'csc'
+      elif impl == 'mono':
+        program = 'mcs'
+      else:
+        raise ValueError('can not determine compiler name from '
+          'csharp.impl={!r}, specify csharp.csc'.format(impl))
 
-      # TODO: Extract the implementation name and verison number
-      # TODO: Cache the compiler version (like msvc toolkit).
-      version = subprocess.check_output(program + ['--version']).decode().strip()
-      csc = CscInfo(program, {}, version)
+    program = shell.split(program)
+    if impl == 'net':
+      toolkit = msvc.MsvcToolkit.get()
+      csc = CscInfo(impl, program, toolkit.environ, toolkit.csc_version)
+    else:
+      environ = {}
+      if platform == 'windows':
+        # On windows, the mono compiler is available as .bat file, thus we
+        # need to run it through the shell.
+        program = shell.shellify(program)
+        # Also, just make sure that we can find some standard installation
+        # of Mono.
+        if match(arch, '*64'):
+          monobin = path.join(os.getenv('ProgramFiles'), 'Mono', 'bin')
+        else:
+          monobin = path.join(os.getenv('ProgramFiles(x86)'), 'Mono', 'bin')
+        environ['PATH'] = os.getenv('PATH') + path.pathsep + monobin
+
+      # TODO: Cache the compiler version (like the MsvcToolkit does).
+      with shell.override_environ(environ):
+        version = subprocess.check_output(program + ['--version']).decode().strip()
+      if impl == 'mono':
+        m = re.search('compiler\s+version\s+([\d\.]+)', version)
+        if not m:
+          raise ValueError('Mono compiler version could not be detected from:\n\n  ' + version)
+        version = m.group(1)
+
+      csc = CscInfo(impl, program, environ, version)
+
     print('CSC v{}'.format(csc.version))
     return csc
 
@@ -97,7 +129,7 @@ class Csharp(AnnotatedTargetImpl):
     elif self.type == 'library':
       suffix = '.dll'
     else:
-      raise ValueError('invalid target: {!r}'.format(self.type))
+      raise ValueError('invalid type: {!r}'.format(self.type))
     return path.join(self.dll_dir, self.dll_name) + suffix
 
   def translate(self):
@@ -169,7 +201,11 @@ class CsharpRun(AnnotatedTargetImpl):
       if not self.executable:
         raise ValueError('specify one Csharp executable dependency or the '
           '`executable=...` parameter.')
+
     self.csc = self.csc or CscInfo.get()
+    environ = self.environ.copy() if self.environ else {}
+    environ.update(self.csc.environ)
+    self.environ = environ
 
   def translate(self):
     if self.csc.is_mono():

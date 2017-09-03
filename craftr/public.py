@@ -24,7 +24,7 @@ import {Target, TargetImpl} from './core/target'
 import {get_current_module} from './core/loader'
 import {inherit_annotations, target_factory, AnnotatedTargetImpl} from './core/factory'
 import path from './lib/path'
-import {name as platform} from './lib/platform'
+import {name as platform, arch} from './lib/platform'
 
 import fnmatch as _fnmatch
 import werkzeug.local as _local
@@ -60,24 +60,32 @@ def canonicalize(paths, parent = None):
     return [path.canonical(path.abs(x, parent)) for x in paths]
 
 
-def match(string, kind, matchers=None, default=NotImplemented ):
+def match(string, matchers, kind='glob', default=NotImplemented):
   """
   Matches the specified *string* against a dictionary of patterns and returns
-  the first matching value. If the *matchers* is None, the value of this
-  argument is used from the *kind* argument, and *kind* will be None instead.
+  the first matching value. If *matchers* is just a string, it is considered
+  a single pattern and the function returns True or False, depending on
+  whether the pattern matches the *string*. Otherwise, it must be a dictionary
+  where every key is a pattern, and the value is returned if the pattern
+  matches.
 
-  *kind* can be `'regex'` or `'glob'`. The default is `'glob'`. Note that
-  regular expressions are matched case-insensitive.
-
-  If no patterns in the *matchers* matches the *string*, the *default* value
-  will be returned. If the *default* is not specified, the function will
-  attempt to deduce the return type. If it is not possible to deduce the type
-  from the *matchers* values, a #ValueError will be raised.
+  # Parameters
+  string (str): The string to match.
+  matchers (str, dict): The pattern or patterns to match.
+  kind (str): Either `'glob'` or `'regex'`.
+  default (any): If *matchers* is a dictionary, the default value to return
+    when no pattern matched. When no pattern matched, it tries to determine
+    the default value by using the type of the values in *matchers*. If they
+    are no all of the same type, the deduction fails and a #ValueError is
+    raised.
   """
 
-  if matchers is None:
-    kind, matchers = 'glob', kind
   assert kind in ('regex', 'glob')
+  if isinstance(matchers, str):
+    if kind == 'glob':
+      return _fnmatch.fnmatch(string, matchers)
+    else:
+      return re.match(matchers, string, re.I) is not None
 
   default_type = NotImplemented
   for key, value in matchers.items():
